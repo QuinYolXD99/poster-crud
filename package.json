@@ -38,9 +38,12 @@
     },
     "extends": [
       "plugin:vue/essential",
-      "@vue/prettier"
+      "@vue/prettier",
+      "eslint:recommended"
     ],
-    "rules": {},
+    "rules": {
+      "no-console": "off"
+    },
     "parserOptions": {
       "parser": "babel-eslint"
     }

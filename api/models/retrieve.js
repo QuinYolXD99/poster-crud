@@ -1,6 +1,6 @@
 let models = require("../db.model");
 module.exports = function (res) {
-    models.Todos.find({}, (err, todos) => {
+    models.Post.find({}, (err, todos) => {
         if (err) {
             res.status(200).send({ error: { body: err, status: true }, success: false, data: null })
         } else {

@@ -20,7 +20,10 @@ const Schema = mongoose.Schema;
 
 var photoSchema = new Schema({
 
-    path: { type: String },
+    image: {
+        data: Buffer,
+        contentType: String
+    },
     caption: { type: String }
 }, { collection: "posts" });
 

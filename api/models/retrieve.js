@@ -1,10 +1,11 @@
 let models = require("../db.model");
-module.exports = function (res) {
-    models.Post.find({}, (err, todos) => {
+module.exports =  (res)=> {
+    models.Post.find({}, (err, images) => {
+        
         if (err) {
-            res.status(200).send({ error: { body: err, status: true }, success: false, data: null })
+            res.status(200).send({ error: { body: err, message:"no images",status: true }, success: false, data: null })
         } else {
-            res.status(200).send({ error: false, success: true, data: todos })
+            res.status(200).send({ error: false, success: true, data: images })
         }
     }).catch(err => {
         if (err) {

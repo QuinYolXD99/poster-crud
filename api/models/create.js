@@ -1,43 +1,37 @@
-let DB = require("../DB");
-var crypto = require("crypto")
 
-const GridFsStorage = require("multer-gridfs-storage");
-exports.storage = new GridFsStorage({
-    url: DB.DB,
-    file: (req, file) => {
-      return new Promise((resolve, reject) => {
-        crypto.randomBytes(16, (err, buf) => {
-          if (err) {
-              console.log("error!");
-              
-            return reject(err)
-          }else{
-              console.log("saved!");
-              
-          }
-          const filename = file.originalname
-          const fileInfo = {
-            filename: filename,
-            bucketName: 'uploads',
-          }
-          resolve(fileInfo)
-        })
-      })
-    },
-  })
+const multer = require('multer');
+const path   = require('path');
+
+/** Storage Engine */
+const storageEngine = multer.diskStorage({
+  destination: '../public/files',
+  filename: function(req, file, fn){
+    fn(null,  new Date().getTime().toString()+'-'+file.fieldname+path.extname(file.originalname));
+  }
+}); 
+
+//init
+
+const upload =  multer({
+  storage: storageEngine,
+  limits: { fileSize:200000 },
+  fileFilter: function(req, file, callback){
+    validateFile(file, callback);
+  }
+}).single('photo');
 
 
-// module.exports = (reqBody, res) => {
-//     console.log(reqBody);
+var validateFile = function(file, cb ){
+  allowedFileTypes = /jpeg|jpg|png|gif/;
+  const extension = allowedFileTypes.test(path.extname(file.originalname).toLowerCase());
+  const mimeType  = allowedFileTypes.test(file.mimetype);
+  if(extension && mimeType){
+    return cb(null, true);
+  }else{
+    cb("Invalid file type. Only JPEG, PNG and GIF file are allowed.")
+  }
+}
 
-//     res.end()
-//     // let todo_item = new models.Todos(reqBody);
-//     // todo_item.save()
-//     //     .then(res => {
-//     //         res.status(200).send({ error: false, success: true })
-//     //     })
-//     //     .catch(err => {
-//     //         res.status(200).send({ error: { body: err, status: true }, success: false })
 
-//     //     });
-// }
+module.exports = upload;
+

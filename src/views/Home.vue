@@ -79,7 +79,8 @@
         </v-card>
       </v-dialog>
       <div class="gallery" v-for="(image,i) in images" :key="i">
-        <p>{{image.filename}}</p>
+        <!-- <p>{{image.filename}}</p> -->
+        <img :src="image.filename" alt="">
         <!-- <v-card max-width="1000" class="mx-auto">
           <v-list-item>
             <v-list-item-avatar color="grey"></v-list-item-avatar>
@@ -138,7 +139,8 @@ export default {
       axios
         .get("http://localhost:4000/crud/retrieve")
         .then(res => {
-          console.log(res); // eslint-disable-line no-console
+          // this.images = res.data.iamges 
+          console.log(res.data.data); // eslint-disable-line no-console
         })
         .catch(err => {
           if (err) {
@@ -169,7 +171,7 @@ export default {
           }
         })
         .then(res => {
-          console.info(res); // eslint-disable-line no-console
+          console.info(res.data); // eslint-disable-line no-console
         })
         .catch(err => {
           console.error(err); // eslint-disable-line no-console

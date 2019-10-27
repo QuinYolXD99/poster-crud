@@ -1,6 +1,7 @@
 const express = require("express");
 const routes = express.Router();
 //MODELS
+const create = require("./models/create")
 const retrieve = require("./models/retrieve")
 const update = require("./models/update")
 const remove = require("./models/delete")

@@ -15,7 +15,7 @@ routes.route("/retrieve").get((req, res) => {
 });
 // update
 routes.route("/update").post((req, res) => {
-    update.updateTodo(req.body, res)
+    update(req.body, res)
 });
 // delete
 routes.route("/delete").post((req, res) => {

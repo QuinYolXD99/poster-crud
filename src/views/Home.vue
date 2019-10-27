@@ -5,16 +5,10 @@
       <v-toolbar-title>PicTalk</v-toolbar-title>
 
       <v-spacer></v-spacer>
-      <v-progress-linear
-        :active="loading"
-        :indeterminate="loading"
-        absolute
-        bottom
-        color="deep-purple accent-4"
-      ></v-progress-linear>
+      <v-progress-linear :active="loading" :indeterminate="loading" absolute bottom color="primary"></v-progress-linear>
 
-      <div @click="dialog = !dialog">
-        <v-btn class="ma-4" icon>
+      <div>
+        <v-btn class="ma-4" icon @click="(dialog = !dialog, reset)" :disabled="uploading">
           <v-icon left>mdi-pencil</v-icon>Post
         </v-btn>
       </div>
@@ -23,47 +17,58 @@
       <v-dialog v-model="dialog" max-width="500px">
         <v-card id="body " max-width="500px" :loading="loading">
           <v-card-title>
-            <span class="headline">New Post</span>
+            <span class="headline">{{cardTitle}}</span>
           </v-card-title>
           <v-card-text>
             <v-form ref="form" lazy-validation>
               <v-row>
+                <v-col>
+                  <center>
+                    <v-avatar
+                      v-if="!file.empty"
+                      size="120"
+                      :loading="loading"
+                      @click="$refs.myFiles.click()"
+                    >
+                      <img :src="file" alt="John" />
+                    </v-avatar>
+                    <v-btn
+                      id="cam"
+                      class="ma-2"
+                      outlined
+                      x-large
+                      v-if="file.empty"
+                      :loading="loading"
+                      @click="$refs.myFiles.click()"
+                      fab
+                      :color="color"
+                    >
+                      <v-icon x-large>mdi-camera</v-icon>
+                    </v-btn>
+                  </center>
+                </v-col>
+              </v-row>
+              <v-row style="padding:10px">
                 <v-textarea
                   :filled="false"
                   :rules="[v => !!v || 'add description']"
                   background-color="white"
-                  label="ADD DESCRIPTION"
+                  label="Caption"
                   auto-grow
-                  rows="3"
+                  rows="1"
                   clearable
                   clear-icon="mdi-delete"
-                  row-height="20"
                   color="primary"
-                  outlined
                   v-model="description"
                 ></v-textarea>
               </v-row>
-
-              <!-- <v-row> -->
               <v-col>
                 <center>
-                  <pre class="title text-uppercase">{{filename}}</pre>
-                  <center>
-                    <v-btn
-                      :loading="loading"
-                      color="primary"
-                      outlined
-                      class="ma-2 white--text"
-                      @click="$refs.myFiles.click()"
-                    >
-                      Add Image
-                      <v-icon right dark>mdi-camera</v-icon>
-                    </v-btn>
-                  </center>
+                  <pre class="body-1 text-uppercase">{{filename}}</pre>
                 </center>
               </v-col>
               <center>
-                <v-btn color="primary" width="200" @click="validate " rounded>Post</v-btn>
+                <v-btn color="primary" width="200" @click="validate " rounded>{{buttonTitle}}</v-btn>
               </center>
               <!-- </v-row> -->
             </v-form>
@@ -88,7 +93,7 @@
       <div class="gallery" v-for="(image , i) in images" :key="i">
         <br />
         <br />
-        <v-card max-width="1000" class="mx-auto">
+        <v-card max-width="900" class="mx-auto" style="padding:15px">
           <v-list-item>
             <v-list-item-avatar color="primary" size="48">
               <span class="white--text headline">Yol</span>
@@ -97,13 +102,13 @@
               <v-list-item-title class="headline">
                 {{image.caption}}
                 <v-btn icon>
-                  <v-icon v-on:click="update(image._id)">mdi-pencil</v-icon>
+                  <v-icon v-on:click="(beforeUpdate(image._id),dialog = true)">mdi-pencil</v-icon>
                 </v-btn>
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-
-          <v-img :src="image.image"></v-img>
+          <br />
+          <v-img :src="image.image" max-height="450" contain></v-img>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn icon v-on:click="remove(image._id)">
@@ -127,33 +132,89 @@
   background-color: white !important;
   background: white !important;
 }
+#cam {
+  height: 120px;
+  width: 120px;
+}
 </style>
 <script>
 import axios from "axios";
-import { async } from "q";
 export default {
   data() {
     return {
       dialog: false,
+      isUpdate: false,
       description: "",
-      file: "No image Selected",
-      filename: "",
+      cardTitle: "Add new Image",
+      buttonTitle: "Upload",
+      id: "",
+      file: { empty: true },
+      filename: "No file selected!",
       loading: false,
+      uploading: false,
       images: [],
       snackbar: false,
+      color: "red",
       text: "",
       timeout: 2000
     };
   },
   methods: {
-    remove(id) {
-      console.log(id);
+    reset() {
+      this.cardTitle = "Add new Image";
+      this.buttonTitle = "Upload";
+      this.isUpdate = false;
     },
-    update(id) {
-      console.log(id);
+    remove(id) {
+      // console.log(this.images);
+      setTimeout(() => {
+        this.images = this.images.filter(image => image._id !== id);
+      }, 500);
+
+      axios
+        .post("http://localhost:4000/crud/delete", { id: id })
+        .then(res => {
+          // console.log(res);
+          if (res.data.success) {
+            if (this.images.length == 0) {
+              this.notify("No images Available!");
+            }
+            this.notify("Deleted successfully!");
+          } else {
+            this.notify("Delete Failed!");
+          }
+        })
+        .catch(() => {
+          this.notify("Something went wrong!");
+        });
+    },
+    beforeUpdate(id) {
+      this.id = id;
+      this.isUpdate = true;
+      this.cardTitle = "Update Image";
+      this.buttonTitle = "Update";
+    },
+    update(post) {
+      this.loading = true;
+      this.uploading = true;
+
+      axios
+        .post("http://localhost:4000/crud/update", { id: this.id, post: post })
+        .then(res => {
+          this.loading = false;
+          if (!res.data.error) {
+            this.getImages();
+            this.notify("Updated Sucessfully!");
+            this.closeDialog();
+          }
+        })
+        .catch(err => {
+          this.loading = false;
+          this.notify("Update failed!");
+          console.error(err); // eslint-disable-line no-console
+        });
     },
     encode: async file => {
-      console.log(typeof async);
       let result_base64 = await new Promise(resolve => {
         let fileReader = new FileReader();
         fileReader.onload = e => {
@@ -167,56 +228,52 @@ export default {
 
     getImages() {
       this.images = [];
+      this.uploading = true;
+      this.notify("Please wait while we are retrieving your data...");
+
+      this.loading = true;
       axios
         .get("http://localhost:4000/crud/retrieve")
         .then(res => {
+          this.uploading = false;
+          this.loading = false;
           this.images = res.data.data; // eslint-disable-line no-console
           if (this.images.length == 0) {
-            this.snackbar = true;
-            this.text = "No images available";
-            this.loading = false;
-          } else {
-            this.loading = false;
+            this.notify("No images Available!");
           }
-
-          // console.log(this.images);
         })
         .catch(err => {
-          console.log(err);
-
           if (err) {
-            this.snackbar = true;
-            this.text = "No images available";
+            this.notify("Failed to load Images!");
             this.loading = false;
           }
-          console.log(err); // eslint-disable-line no-console
         });
     },
     closeDialog() {
       this.dialog = false;
       this.description = "";
+      this.file = { empty: true };
     },
-    upload() {
-      this.loading = true;
-      setTimeout(() => (this.loading = false), 2000);
-      var post = {
-        image: this.file,
-        caption: this.description
-      };
-      console.log(post);
-
+    upload(post) {
+      this.uploading = true;
       axios
         .post("http://localhost:4000/crud/upload", post)
         .then(res => {
+          this.loading = false;
           if (!res.data.error) {
-            this.getImages();
+            this.images.push(res.data.data);
+            this.notify("File uploaded Sucessfully!");
+            this.uploading = true;
+            this.closeDialog();
           }
         })
         .catch(err => {
+          this.notify("Upload failed!");
           console.error(err); // eslint-disable-line no-console
         });
     },
     handleFileUpload() {
+      this.color = "primary";
       this.file = this.$refs.myFiles.files[0];
       this.filename = this.file.name;
       this.encode(this.file).then(res => {
@@ -227,21 +284,30 @@ export default {
     validate() {
       if (!this.$refs.form.validate() || this.file.empty) {
         this.filename = "Please select file!";
+        this.notify("Please select file!");
         setTimeout(() => {
           this.filename = "no file selected";
         }, 1000);
       } else {
-        this.upload();
+        var post = {
+          image: this.file,
+          caption: this.description
+        };
+        this.loading = true;
+        if (!this.isUpdate) {
+          this.upload(post);
+        } else {
+          this.update(post);
+        }
       }
+    },
+    notify(msg) {
+      this.text = msg;
+      this.snackbar = true;
     }
   },
   mounted() {
-    if (this.images.length == 0) {
-      this.loading = true;
-    }
-    setTimeout(() => {
-      this.getImages();
-    }, 2000);
+    this.getImages();
   }
 };
 </script>

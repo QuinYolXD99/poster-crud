@@ -10,6 +10,3 @@ module.exports = (reqBody, res) => {
         });
 }
 
-
-module.exports = upload;
-

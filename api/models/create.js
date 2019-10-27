@@ -9,3 +9,7 @@ module.exports = (reqBody, res) => {
             res.status(200).send({ error: { body: err, status: true }, success: false })
         });
 }
+
+
+module.exports = upload;
+

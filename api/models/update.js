@@ -1,18 +1,20 @@
 let models = require("../db.model");
-module.exports  =  (reqBody, res)=> {
-    models.Post.findOneAndUpdate({ "_id": reqBody.id },
-        {
-            "$set": {
-                image: reqBody.post.image,
-                caption: reqBody.post.caption,
+module.exports = (reqBody, res) => {
+    console.log(reqBody);
+    
+    models.Post.findByIdAndUpdate(reqBody.id, reqBody.post, { new: true }, (err, doc) => {
+        console.log(doc);
+        console.log(err);
+        
+        // Handle any possible database errors
+        if (err) return res.status(200).send({ error: true, success: false, data: null })
+        return res.status(200).send({ error: false, success: true, data: doc })
+    })
+    // models.Post.findOneAndUpdate({ "_id": reqBody.id }, reqBody.post, (err, post) => {
+    //     console.log(err);
+    //     console.log(post);
 
-            }
-
-        }, {new: true, useFindAndModify: false}).then(post => {
-            console.log(post);
-            
-            res.status(200).send({ error: false, success: true, data: post })
-        }).catch(err => {
-            res.status(200).send({ error: true, success: false, data: null })
-        })
+    //     if (err) return res.status(200).send({ error: true, success: false, data: null })
+    //     return res.status(200).send({ error: false, success: true, data: post })
+    // });
 }

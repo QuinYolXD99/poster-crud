@@ -24,7 +24,7 @@
                     :loading="loading"
                     @click="$refs.myFiles.click()"
                   >
-                    <img :src="file" alt="John" />
+                    <img :src="file" alt="dp" />
                   </v-avatar>
                   <v-btn
                     id="cam"
@@ -68,7 +68,6 @@
         </v-card-text>
         <input
           type="file"
-          id="file"
           ref="myFiles"
           hidden
           v-show="false"
@@ -98,7 +97,7 @@ export default {
     cardTitle: String,
     buttonTitle: String,
     isUpdate: Boolean,
-    disabled:Boolean,
+    disabled: Boolean,
     uploading: Boolean
   },
   data() {
@@ -116,7 +115,7 @@ export default {
     validate() {
       if (!this.$refs.form.validate() || this.file.empty) {
         this.filename = "Please select file!";
-        this.notify("Please select file!",null);
+        this.notify("Please select file!", null);
         setTimeout(() => {
           this.filename = "no file selected";
         }, 1000);
@@ -154,22 +153,19 @@ export default {
       });
       return result_base64;
     },
-    beforeUpdate(id) {
-      this.id = id;
-      this.isUpdate = true;
-      this.cardTitle = "Update Image";
-      this.buttonTitle = "Update";
-    },
     update(post) {
       this.loading = true;
       this.uploading_local = true;
       axios
-        .post("http://localhost:4000/crud/update", { id: this.id, post: post })
+        .post("http://localhost:4000/crud/update", {
+          id: this.$parent.$options.parent.id,
+          post: post
+        })
         .then(res => {
           this.loading = false;
           if (!res.data.error) {
             // this.getImages();
-            this.notify("Updated Sucessfully!",null);
+            this.notify("Updated Sucessfully!", res.data.data,true);
             this.loading = false;
             this.uploading_local = false;
             this.uploading = false;
@@ -178,7 +174,7 @@ export default {
         })
         .catch(err => {
           this.loading = false;
-          this.notify("Update failed!",null);
+          this.notify("Update failed!", null);
           console.error(err); // eslint-disable-line no-console
         });
     },
@@ -190,7 +186,7 @@ export default {
           this.loading = false;
           if (!res.data.error) {
             // this.images.push(res.data.data);
-            this.notify("File uploaded Sucessfully!", res.data.data);
+            this.notify("File uploaded Sucessfully!", res.data.data,false);
             this.loading = false;
             this.uploading_local = false;
             this.uploading = false;
@@ -198,7 +194,7 @@ export default {
           }
         })
         .catch(err => {
-          this.notify("Upload failed!",null);
+          this.notify("Upload failed!", null);
           console.error(err); // eslint-disable-line no-console
         });
     },
@@ -209,10 +205,10 @@ export default {
       this.file = { empty: true };
     },
 
-    notify(msg, data) {
+    notify(msg, data, update) {            
       this.$emit("message", {
         message: msg,
-        response: { image: true, images: data }
+        response: { update: update, images: data }
       });
     }
   }

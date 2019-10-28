@@ -10,7 +10,12 @@ const routes = require("./db.route");
 mongoose.Promise = global.Promise;
 console.log("connecting....");
 
-mongoose.connect(config.DB, { useNewUrlParser: true }, (err, data) => {
+mongoose.connect(config.DB, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true
+}, (err, data) => {
     if (err) {
         console.log("error : " + err);
     } else {

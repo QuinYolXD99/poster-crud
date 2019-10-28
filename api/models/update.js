@@ -8,7 +8,9 @@ module.exports  =  (reqBody, res)=> {
 
             }
 
-        }, { new: true }).then(post => {
+        }, {new: true, useFindAndModify: false}).then(post => {
+            console.log(post);
+            
             res.status(200).send({ error: false, success: true, data: post })
         }).catch(err => {
             res.status(200).send({ error: true, success: false, data: null })

@@ -1,5 +1,7 @@
 let models = require("../db.model");
 module.exports = (reqBody, res) => {
+    console.log(reqBody);
+
     let post = new models.Post(reqBody);
     post.save()
         .then(result => {
@@ -9,4 +11,3 @@ module.exports = (reqBody, res) => {
             res.status(200).send({ error: { body: err, status: true }, success: false })
         });
 }
-

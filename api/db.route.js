@@ -5,8 +5,8 @@ const create = require("./models/create")
 const retrieve = require("./models/retrieve")
 const update = require("./models/update")
 const remove = require("./models/delete")
-//create
-routes.route("/upload").post((req, res) => {    
+    //create
+routes.route("/upload").post((req, res) => {
     create(req.body, res)
 });
 //retrieve
@@ -20,9 +20,10 @@ routes.route("/update").post((req, res) => {
 // delete
 routes.route("/delete").post((req, res) => {
     // console.log(req.body);
-    
+
     remove(req.body, res);
 });
+
 // routes.route("/mark").post((req, res) => {
 //     update.markTodo(req.body, res);
 // });

@@ -30,6 +30,6 @@ app.use(bodyParser.json({ limit: '50mb' }));
 
 app.use("/crud", routes);
 
-app.listen(PORT, function () {
+app.listen(PORT, function() {
     console.log("Server is running on Port:", PORT);
 });

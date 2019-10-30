@@ -21,7 +21,6 @@
                   <v-avatar
                     v-if="!file.empty"
                     size="120"
-                    :loading="loading"
                     @click="$refs.myFiles.click()"
                   >
                     <img :src="file" alt="dp" />
@@ -32,7 +31,6 @@
                     outlined
                     x-large
                     v-if="file.empty"
-                    :loading="loading"
                     @click="$refs.myFiles.click()"
                     fab
                     :color="color"
@@ -107,8 +105,8 @@ export default {
       description: "",
       color: "red",
       dialog: false,
-      loading: false,
-      file: { empty: true }
+      file: { empty: true },
+      this_parent: this.$parent.$options.parent
     };
   },
   methods: {
@@ -122,11 +120,9 @@ export default {
       } else {
         var post = {
           image: this.file,
-          caption: this.description
+          caption: this.description,
+          priority: false
         };
-        console.log(post);
-
-        this.loading = true;
         if (!this.isUpdate) {
           this.upload(post);
         } else {
@@ -137,10 +133,13 @@ export default {
     handleFileUpload() {
       this.color = "primary";
       this.file = this.$refs.myFiles.files[0];
-      this.filename = this.file.name;
+      this.filename = this.trimString(this.file.name);
       this.encode(this.file).then(res => {
         this.file = res;
       });
+    },
+    trimString(string) {
+      return string.length > 20 ? string.substring(0, 20) + "..." : string;
     },
     encode: async file => {
       let result_base64 = await new Promise(resolve => {
@@ -154,42 +153,50 @@ export default {
       return result_base64;
     },
     update(post) {
-      this.loading = true;
-      this.uploading_local = true;
+      this.this_parent.loading = true;
+      this.notify("Updating....", null);
+      this.this_parent.timeout = 100000;
       axios
         .post("http://localhost:4000/crud/update", {
-          id: this.$parent.$options.parent.id,
+          id: this.this_parent.id,
           post: post
         })
         .then(res => {
-          this.loading = false;
+          this.this_parent.snackbar = false;
+          this.this_parent.timeout = 2000;
+          var updated = res.data.data;
+          console.log(updated);
+
+          this.this_parent.loading = false;
           if (!res.data.error) {
-            // this.getImages();
-            this.notify("Updated Sucessfully!", res.data.data,true);
-            this.loading = false;
-            this.uploading_local = false;
-            this.uploading = false;
+            this.notify("Updated Sucessfully!", res.data.data, true);
+            this.this_parent.images[
+              this.this_parent.images.findIndex(
+                image => image._id === updated._id
+              )
+            ] = updated;
             this.closeDialog();
+          } else {
+            this.notify("Update failed!", null);
           }
         })
         .catch(err => {
-          this.loading = false;
+          this.this_parent.loading = false;
           this.notify("Update failed!", null);
           console.error(err); // eslint-disable-line no-console
         });
     },
     upload(post) {
-      this.uploading_local = true;
+      this.this_parent.loading = true;
+      this.notify("Upload in progress......", null, false);
+
       axios
         .post("http://localhost:4000/crud/upload", post)
         .then(res => {
-          this.loading = false;
           if (!res.data.error) {
-            // this.images.push(res.data.data);
-            this.notify("File uploaded Sucessfully!", res.data.data,false);
-            this.loading = false;
-            this.uploading_local = false;
-            this.uploading = false;
+            this.this_parent.images.push(res.data.data);
+            this.this_parent.loading = false;
+            this.notify("File uploaded Sucessfully!", res.data.data, false);
             this.closeDialog();
           }
         })
@@ -205,12 +212,15 @@ export default {
       this.file = { empty: true };
     },
 
-    notify(msg, data, update) {            
+    notify(msg, data, update) {
       this.$emit("message", {
         message: msg,
         response: { update: update, images: data }
       });
     }
+  },
+  update() {
+    this.uploading_local = this.this_parent.loading;
   }
 };
 </script>

@@ -15,13 +15,18 @@ routes.route("/retrieve").get((req, res) => {
 });
 // update
 routes.route("/update").post((req, res) => {
-    update(req.body, res)
+    update.update(req.body, res)
 });
 // delete
 routes.route("/delete").post((req, res) => {
     // console.log(req.body);
-
     remove(req.body, res);
+});
+
+routes.route("/like").post((req, res) => {
+    // console.log(req.body);
+
+    update.like(req.body, res);
 });
 
 // routes.route("/mark").post((req, res) => {

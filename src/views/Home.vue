@@ -6,7 +6,7 @@
 
       <v-spacer></v-spacer>
       <v-progress-linear :active="loading" :indeterminate="loading" absolute bottom color="primary"></v-progress-linear>
-      <v-btn text small @click="slideshow">
+      <v-btn v-show="images.length!==0" text small @click="slideshow">
         <v-icon left>mdi-play</v-icon>
       </v-btn>
       <div>
@@ -53,8 +53,11 @@
                   <v-card-actions draggable>
                     <v-card-title class="body-2">{{image.caption}}</v-card-title>
                     <v-spacer></v-spacer>
+                       <v-btn icon>
+                      <v-icon :disabled="loading" :color="image.priority?'pink':'grey'" v-on:click="(image.priority = !image.priority,like(image))">mdi-heart</v-icon>
+                    </v-btn>
                     <v-btn icon>
-                      <v-icon v-on:click="(beforeUpdate(image._id),dialog = true)">mdi-pencil</v-icon>
+                      <v-icon :disabled="loading" v-on:click="beforeUpdate(image)">mdi-pencil</v-icon>
                     </v-btn>
                     <v-btn icon v-on:click="remove(image._id)">
                       <v-icon>mdi-delete</v-icon>
@@ -86,7 +89,6 @@ import axios from "axios";
 export default {
   data() {
     return {
-      dialog: false,
       isUpdate: false,
       description: "",
       cardTitle: "Add new Image",
@@ -157,6 +159,9 @@ export default {
           this.uploading = false;
           this.loading = false;
           this.images = res.data.data;
+          this.images.sort(function(a, b) {
+            return b.priority - a.priority;
+          });
           if (this.images.length == 0) {
             this.notify("No images Available!");
           }
@@ -169,26 +174,43 @@ export default {
           }
         });
     },
-    beforeUpdate(id) {
-      this.$refs.modal.dialog = true;
-      this.id = id;
+
+    beforeUpdate(item) {
+      var modal = this.$refs.modal;
+      modal.dialog = true;
+      modal.filename = modal.trimString(item.image);
+      modal.file = item.image;
+      modal.description = item.caption;
+      modal.color = "primary";
+      this.id = item._id;
       this.isUpdate = true;
       this.cardTitle = "Update Image";
       this.buttonTitle = "Update";
     },
+
+    like(image) {
+      if (!image.priority) {
+        this.notify("Unliked!");
+      } else {
+        this.notify("Liked!");
+      }
+      axios
+        .post("http://localhost:4000/crud/like", { id: image._id })
+        .then(res => {
+          throw res;
+        })
+        .catch(err => {
+          throw err;
+        });
+    },
     notify(msg) {
       this.text = typeof msg !== "string" ? msg.message : msg;
       this.snackbar = true;
-      if (typeof msg !== "string") {
-        if (msg.response.images !== null) {
-          if (msg.response.update) {
-            var item = msg.response.images;
-            this.images[
-              this.images.findIndex(el => el._id === item._id)
-            ] = item;
-          }
-        }
-      }
+    },
+    trimString(string, length) {
+      return string.length > length
+        ? string.substring(0, length) + "..."
+        : string;
     }
   },
   mounted() {

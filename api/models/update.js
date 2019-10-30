@@ -34,11 +34,3 @@ const like = (reqBody, res) => {
     });
 }
 module.exports = { update, like }
-        // models.Post.findOneAndUpdate({ "_id": reqBody.id }, reqBody.post, (err, post) => {
-        //     console.log(err);
-        //     console.log(post);
-
-        //     if (err) return res.status(200).send({ error: true, success: false, data: null })
-        //     return res.status(200).send({ error: false, success: true, data: post })
-        // });
-

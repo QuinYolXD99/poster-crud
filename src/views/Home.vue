@@ -3,7 +3,6 @@
   <div>
     <v-app-bar light app>
       <v-toolbar-title>PicTalk</v-toolbar-title>
-
       <v-spacer></v-spacer>
       <v-progress-linear :active="loading" :indeterminate="loading" absolute bottom color="primary"></v-progress-linear>
       <v-btn v-show="images.length!==0" text small @click="slideshow">
@@ -105,7 +104,7 @@ export default {
   },
   components: {
     Modal,
-    ImageViewer
+    ImageViewer,
   },
   methods: {
     imageViewer(img) {

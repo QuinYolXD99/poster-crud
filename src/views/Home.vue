@@ -21,57 +21,67 @@
       </div>
     </v-app-bar>
     <v-container id="body" fluid>
-      <!-- <SearchBar/> -->
       <div class="gallery">
-        <br>
-        <br>
         <v-container class="pa-1">
+          <v-row class="justify-center">
+            <v-col cols="12" md="5">
+              <v-text-field
+                placeholder="search image"
+                prepend-inner-icon="mdi-magnify"
+                v-model="search"
+                color="dark"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <br>
           <v-item-group multiple>
             <v-row>
               <v-img
                 height="300"
                 aspect-ratio="1.4"
                 src="@/assets/placeholder.png"
-                v-if="images.length == 0"
+                v-if="!filteredList.length"
                 contain
               ></v-img>
-              <v-col v-for="(image , i) in images" :key="i" cols="12" md="4">
-                <v-card max-height="400" hover>
-                  <v-card-text>
-                    <v-item>
-                      <v-img
-                        @click="imageViewer(image)"
-                        :src="image.image"
-                        cover
-                        height="300"
-                        aspect-ratio="1.4"
-                        class="text-right pa-2"
-                      ></v-img>
-                    </v-item>
-                  </v-card-text>
-                  <v-divider></v-divider>
-                  <v-card-actions draggable>
-                    <v-card-title class="body-2">{{image.caption}}</v-card-title>
-                    <v-spacer></v-spacer>
-                    <v-btn icon>
-                      <v-icon
-                        :disabled="loading"
-                        :color="image.priority?'pink':'grey'"
-                        v-on:click="(image.priority = !image.priority,like(image))"
-                      >mdi-heart</v-icon>
-                    </v-btn>
-                    <v-btn icon>
-                      <v-icon :disabled="loading" v-on:click="beforeUpdate(image)">mdi-pencil</v-icon>
-                    </v-btn>
-                    <v-btn icon v-on:click="remove(image._id)">
-                      <v-icon>mdi-delete</v-icon>
-                    </v-btn>
-                  </v-card-actions>
-                  <v-footer dark padless>
-                    <v-card class="flex" flat tile></v-card>
-                  </v-footer>
-                </v-card>
-              </v-col>
+              
+                <v-col v-for="(image , i) in filteredList" :key="i" cols="12" md="4">
+                  <v-card transition="fade-transition" max-height="400" hover>
+                    <v-card-text>
+                      <v-item>
+                        <v-img
+                          @click="imageViewer(image)"
+                          :src="image.image"
+                          cover
+                          height="300"
+                          aspect-ratio="1.4"
+                          class="text-right pa-2"
+                        ></v-img>
+                      </v-item>
+                    </v-card-text>
+                    <v-divider></v-divider>
+                    <v-card-actions draggable>
+                      <v-card-title class="body-2">{{image.caption}}</v-card-title>
+                      <v-spacer></v-spacer>
+                      <v-btn icon>
+                        <v-icon
+                          :disabled="loading"
+                          :color="image.priority?'pink':'grey'"
+                          v-on:click="(image.priority = !image.priority,like(image))"
+                        >mdi-heart</v-icon>
+                      </v-btn>
+                      <v-btn icon>
+                        <v-icon :disabled="loading" v-on:click="beforeUpdate(image)">mdi-pencil</v-icon>
+                      </v-btn>
+                      <v-btn icon v-on:click="remove(image._id)">
+                        <v-icon>mdi-delete</v-icon>
+                      </v-btn>
+                    </v-card-actions>
+                    <v-footer dark padless>
+                      <v-card class="flex" flat tile></v-card>
+                    </v-footer>
+                  </v-card>
+                </v-col>
+            
             </v-row>
           </v-item-group>
         </v-container>
@@ -86,9 +96,11 @@
     </div>
   </div>
 </template>
+<style scoped>
+</style>
+
 <script>
 import Modal from "@/components/Modal.vue";
-// import SearchBar from "@/components/SearchBar.vue";
 import ImageViewer from "./ImageViewer.vue";
 import axios from "axios";
 export default {
@@ -96,6 +108,7 @@ export default {
     return {
       isUpdate: false,
       description: "",
+      search: "",
       cardTitle: "Add new Image",
       buttonTitle: "Upload",
       id: "",
@@ -110,8 +123,14 @@ export default {
   },
   components: {
     Modal,
-    ImageViewer,
-    // SearchBar
+    ImageViewer
+  },
+  computed: {
+    filteredList() {
+      return this.images.filter(image => {
+        return image.caption.toLowerCase().includes(this.search.toLowerCase());
+      });
+    }
   },
   methods: {
     imageViewer(img) {
@@ -139,7 +158,6 @@ export default {
       axios
         .post("http://localhost:4000/crud/delete", { id: id })
         .then(res => {
-          // console.log(res);
           if (res.data.success) {
             if (this.images.length == 0) {
               this.notify("No images Available!");
@@ -205,7 +223,7 @@ export default {
       } else {
         this.notify("Liked!");
       }
-      this.images = this.sortImages();  
+      this.images = this.sortImages();
       axios
         .post("http://localhost:4000/crud/like", { id: image._id })
         .then(res => {

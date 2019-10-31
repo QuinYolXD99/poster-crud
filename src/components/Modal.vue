@@ -18,12 +18,8 @@
             <v-row>
               <v-col>
                 <center>
-                  <v-avatar
-                    v-if="!file.empty"
-                    size="120"
-                    @click="$refs.myFiles.click()"
-                  >
-                    <img :src="file" alt="dp" />
+                  <v-avatar v-if="!file.empty" size="120" @click="$refs.myFiles.click()">
+                    <img :src="file" alt="dp">
                   </v-avatar>
                   <v-btn
                     id="cam"
@@ -43,16 +39,27 @@
             <v-row style="padding:10px">
               <v-textarea
                 :filled="false"
-                :rules="[v => !!v || 'add description']"
+                :rules="[v => !!v || 'add description!']"
                 background-color="white"
                 label="Caption"
                 auto-grow
                 rows="1"
+                prepend-inner-icon="mdi-comment"
                 clearable
                 clear-icon="mdi-delete"
                 color="primary"
                 v-model="description"
               ></v-textarea>
+            </v-row>
+            <v-row style="padding:10px">
+              <v-text-field
+                label="add tag"
+                clearable
+                :rules="[v => !!v || 'add tag!']"
+                prepend-inner-icon="mdi-tag"
+                v-model="tag"
+                color="dark"
+              ></v-text-field>
             </v-row>
             <v-col>
               <center>
@@ -76,8 +83,8 @@
           prepend-icon="mdi-image"
           v-on:change="handleFileUpload"
           accept="image/*"
-        />
-        <input />
+        >
+        <input>
       </v-card>
     </v-dialog>
   </div>
@@ -104,6 +111,7 @@ export default {
       filename: "No file selected!",
       description: "",
       color: "red",
+      tag: "",
       dialog: false,
       file: { empty: true },
       this_parent: this.$parent.$options.parent

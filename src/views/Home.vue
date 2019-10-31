@@ -21,9 +21,10 @@
       </div>
     </v-app-bar>
     <v-container id="body" fluid>
+      <!-- <SearchBar/> -->
       <div class="gallery">
-        <br />
-        <br />
+        <br>
+        <br>
         <v-container class="pa-1">
           <v-item-group multiple>
             <v-row>
@@ -52,8 +53,12 @@
                   <v-card-actions draggable>
                     <v-card-title class="body-2">{{image.caption}}</v-card-title>
                     <v-spacer></v-spacer>
-                       <v-btn icon>
-                      <v-icon :disabled="loading" :color="image.priority?'pink':'grey'" v-on:click="(image.priority = !image.priority,like(image))">mdi-heart</v-icon>
+                    <v-btn icon>
+                      <v-icon
+                        :disabled="loading"
+                        :color="image.priority?'pink':'grey'"
+                        v-on:click="(image.priority = !image.priority,like(image))"
+                      >mdi-heart</v-icon>
                     </v-btn>
                     <v-btn icon>
                       <v-icon :disabled="loading" v-on:click="beforeUpdate(image)">mdi-pencil</v-icon>
@@ -72,7 +77,7 @@
         </v-container>
       </div>
     </v-container>
-    <ImageViewer ref="viewer" />
+    <ImageViewer ref="viewer"/>
     <div class="text-center ma-2">
       <v-snackbar v-model="snackbar" :timeout="timeout">
         {{ text }}
@@ -83,6 +88,7 @@
 </template>
 <script>
 import Modal from "@/components/Modal.vue";
+// import SearchBar from "@/components/SearchBar.vue";
 import ImageViewer from "./ImageViewer.vue";
 import axios from "axios";
 export default {
@@ -105,6 +111,7 @@ export default {
   components: {
     Modal,
     ImageViewer,
+    // SearchBar
   },
   methods: {
     imageViewer(img) {
@@ -158,9 +165,7 @@ export default {
           this.uploading = false;
           this.loading = false;
           this.images = res.data.data;
-          this.images.sort(function(a, b) {
-            return b.priority - a.priority;
-          });
+          this.images = this.sortImages();
           if (this.images.length == 0) {
             this.notify("No images Available!");
           }
@@ -172,6 +177,13 @@ export default {
             this.getImages();
           }
         });
+    },
+
+    sortImages() {
+      this.images.sort(function(a, b) {
+        return b.priority - a.priority;
+      });
+      return this.images;
     },
 
     beforeUpdate(item) {
@@ -193,6 +205,7 @@ export default {
       } else {
         this.notify("Liked!");
       }
+      this.images = this.sortImages();  
       axios
         .post("http://localhost:4000/crud/like", { id: image._id })
         .then(res => {

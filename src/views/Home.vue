@@ -43,15 +43,19 @@
                 v-if="!filteredList.length"
                 contain
               ></v-img>
-              
-                <v-col v-for="(image , i) in filteredList" :key="i" cols="12" md="4">
-                  <v-card transition="fade-transition" max-height="400" hover>
+
+                <v-col v-for="(image , i) in filteredList" :key="i" cols="12" md="4" class="img">
+                  <v-card max-height="400" :key="i+'x'" hover>
                     <v-card-text>
                       <v-item>
+                        <!-- 
+                        @click="imageViewer(image)"
+                          @click="showLightbox(image.image)"
+                        -->
                         <v-img
-                          @click="imageViewer(image)"
                           :src="image.image"
                           cover
+                          @click="openGallery(image.image)"
                           height="300"
                           aspect-ratio="1.4"
                           class="text-right pa-2"
@@ -81,13 +85,20 @@
                     </v-footer>
                   </v-card>
                 </v-col>
-            
+              <LightBox 
+                id="mylightbox"
+                ref="lightbox"
+                :images="assets"
+              />
             </v-row>
           </v-item-group>
         </v-container>
       </div>
     </v-container>
     <ImageViewer ref="viewer"/>
+    <!-- <LightBox :images="images"></LightBox> -->
+
+
     <div class="text-center ma-2">
       <v-snackbar v-model="snackbar" :timeout="timeout">
         {{ text }}
@@ -97,11 +108,31 @@
   </div>
 </template>
 <style scoped>
+.img {
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+
+.thumbnailfade-leave-active,
+.thumbnailfade-enter-active {
+  transition: all 0.4s ease;
+}
+
+.thumbnailfade-enter-active {
+  transition-delay: 0.4s;
+}
+
+.thumbnailfade-enter,
+.thumbnailfade-leave-to {
+  opacity: 0;
+}
 </style>
 
 <script>
 import Modal from "@/components/Modal.vue";
 import ImageViewer from "./ImageViewer.vue";
+import LightBox from 'vue-image-lightbox'
+
 import axios from "axios";
 export default {
   data() {
@@ -115,6 +146,7 @@ export default {
       loading: false,
       uploading: false,
       images: [],
+      assets:[],
       snackbar: false,
       color: "red",
       text: "",
@@ -123,7 +155,8 @@ export default {
   },
   components: {
     Modal,
-    ImageViewer
+    ImageViewer,
+    LightBox  
   },
   computed: {
     filteredList() {
@@ -137,6 +170,11 @@ export default {
       this.$refs.viewer.dialog = true;
       this.$refs.viewer.watch(img);
       this.$refs.viewer.hidden = true;
+    },
+    openGallery(index) {
+      console.log(this.$refs.lightbox.showImage);
+      
+      this.$refs.lightbox.showImage(index)
     },
     slideshow() {
       this.$refs.viewer.dialog = true;
@@ -245,6 +283,10 @@ export default {
   },
   mounted() {
     this.getImages();
+    this.assets = this.filteredList.map(image=>{
+      image.src = image.image,
+      image.thumb = image.image
+    })
   }
 };
 </script>

@@ -2,6 +2,8 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import vuetify from "./plugins/vuetify";
+
+
 /*eslint no-console: ["error", { allow: ["warn", "error"] }] */
 
 Vue.config.productionTip = false;

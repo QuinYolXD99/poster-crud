@@ -129,6 +129,7 @@ export default {
         var post = {
           image: this.file,
           caption: this.description,
+          tag:this.tag,
           priority: false
         };
         if (!this.isUpdate) {
@@ -229,6 +230,11 @@ export default {
   },
   update() {
     this.uploading_local = this.this_parent.loading;
-  }
+    if (!this.dialog) {
+     console.log(this);
+      
+    }
+  },
+  
 };
 </script>

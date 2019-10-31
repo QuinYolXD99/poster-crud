@@ -17,6 +17,7 @@
           :isUpdate="isUpdate"
           :uploading="uploading"
           @message="notify"
+          @click="reset"
         />
       </div>
     </v-app-bar>
@@ -27,6 +28,7 @@
             <v-col cols="12" md="5">
               <v-text-field
                 placeholder="search image"
+                v-if="!images.length==0"
                 prepend-inner-icon="mdi-magnify"
                 v-model="search"
                 color="dark"
@@ -43,62 +45,49 @@
                 v-if="!filteredList.length"
                 contain
               ></v-img>
-
-                <v-col v-for="(image , i) in filteredList" :key="i" cols="12" md="4" class="img">
-                  <v-card max-height="400" :key="i+'x'" hover>
-                    <v-card-text>
-                      <v-item>
-                        <!-- 
+              <v-col v-for="(image , i) in filteredList" :key="i" cols="12" md="4">
+                <v-card max-height="400" hover>
+                  <v-card-text>
+                    <v-item>
+                      <v-img
                         @click="imageViewer(image)"
-                          @click="showLightbox(image.image)"
-                        -->
-                        <v-img
-                          :src="image.image"
-                          cover
-                          @click="openGallery(image.image)"
-                          height="300"
-                          aspect-ratio="1.4"
-                          class="text-right pa-2"
-                        ></v-img>
-                      </v-item>
-                    </v-card-text>
-                    <v-divider></v-divider>
-                    <v-card-actions draggable>
-                      <v-card-title class="body-2">{{image.caption}}</v-card-title>
-                      <v-spacer></v-spacer>
-                      <v-btn icon>
-                        <v-icon
-                          :disabled="loading"
-                          :color="image.priority?'pink':'grey'"
-                          v-on:click="(image.priority = !image.priority,like(image))"
-                        >mdi-heart</v-icon>
-                      </v-btn>
-                      <v-btn icon>
-                        <v-icon :disabled="loading" v-on:click="beforeUpdate(image)">mdi-pencil</v-icon>
-                      </v-btn>
-                      <v-btn icon v-on:click="remove(image._id)">
-                        <v-icon>mdi-delete</v-icon>
-                      </v-btn>
-                    </v-card-actions>
-                    <v-footer dark padless>
-                      <v-card class="flex" flat tile></v-card>
-                    </v-footer>
-                  </v-card>
-                </v-col>
-              <LightBox 
-                id="mylightbox"
-                ref="lightbox"
-                :images="assets"
-              />
+                        :src="image.image"
+                        cover
+                        height="300"
+                        aspect-ratio="1.4"
+                        class="text-right pa-2"
+                      ></v-img>
+                    </v-item>
+                  </v-card-text>
+                  <v-divider></v-divider>
+                  <v-card-actions draggable>
+                    <v-card-title class="body-2 font-weight-bold text-capitalize	">#{{image.tag}}</v-card-title>
+                    <v-spacer></v-spacer>
+                    <v-btn icon>
+                      <v-icon
+                        :disabled="loading"
+                        :color="image.priority?'pink':'grey'"
+                        v-on:click="(image.priority = !image.priority,like(image))"
+                      >mdi-heart</v-icon>
+                    </v-btn>
+                    <v-btn icon>
+                      <v-icon :disabled="loading" v-on:click="beforeUpdate(image)">mdi-pencil</v-icon>
+                    </v-btn>
+                    <v-btn icon v-on:click="remove(image._id)">
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                  </v-card-actions>
+                  <v-footer dark padless>
+                    <v-card class="flex" flat tile></v-card>
+                  </v-footer>
+                </v-card>
+              </v-col>
             </v-row>
           </v-item-group>
         </v-container>
       </div>
     </v-container>
     <ImageViewer ref="viewer"/>
-    <!-- <LightBox :images="images"></LightBox> -->
-
-
     <div class="text-center ma-2">
       <v-snackbar v-model="snackbar" :timeout="timeout">
         {{ text }}
@@ -107,32 +96,9 @@
     </div>
   </div>
 </template>
-<style scoped>
-.img {
-  cursor: pointer;
-  transition: all 0.4s ease;
-}
-
-.thumbnailfade-leave-active,
-.thumbnailfade-enter-active {
-  transition: all 0.4s ease;
-}
-
-.thumbnailfade-enter-active {
-  transition-delay: 0.4s;
-}
-
-.thumbnailfade-enter,
-.thumbnailfade-leave-to {
-  opacity: 0;
-}
-</style>
-
 <script>
 import Modal from "@/components/Modal.vue";
 import ImageViewer from "./ImageViewer.vue";
-import LightBox from 'vue-image-lightbox'
-
 import axios from "axios";
 export default {
   data() {
@@ -146,7 +112,6 @@ export default {
       loading: false,
       uploading: false,
       images: [],
-      assets:[],
       snackbar: false,
       color: "red",
       text: "",
@@ -155,13 +120,15 @@ export default {
   },
   components: {
     Modal,
-    ImageViewer,
-    LightBox  
+    ImageViewer
   },
   computed: {
     filteredList() {
       return this.images.filter(image => {
-        return image.caption.toLowerCase().includes(this.search.toLowerCase());
+        return (
+          image.caption.toLowerCase().includes(this.search.toLowerCase()) ||
+          image.tag.toLowerCase().includes(this.search.toLowerCase())
+        );
       });
     }
   },
@@ -170,11 +137,6 @@ export default {
       this.$refs.viewer.dialog = true;
       this.$refs.viewer.watch(img);
       this.$refs.viewer.hidden = true;
-    },
-    openGallery(index) {
-      console.log(this.$refs.lightbox.showImage);
-      
-      this.$refs.lightbox.showImage(index)
     },
     slideshow() {
       this.$refs.viewer.dialog = true;
@@ -230,7 +192,9 @@ export default {
           if (err) {
             this.notify("Failed to load Images!");
             this.loading = false;
-            this.getImages();
+            setTimeout(() => {
+              this.getImages()
+            }, 1000);
           }
         });
     },
@@ -283,10 +247,8 @@ export default {
   },
   mounted() {
     this.getImages();
-    this.assets = this.filteredList.map(image=>{
-      image.src = image.image,
-      image.thumb = image.image
-    })
   }
+
+  // viewer : https://github.com/mirari/v-viewer
 };
 </script>

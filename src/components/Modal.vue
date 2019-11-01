@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-dialog v-model="dialog" max-width="500px">
+    <v-dialog v-model="dialog" max-width="400">
       <template v-slot:activator="{ on }">
         <div class="my-2" dark v-on="on">
           <v-btn text small :disabled="disabled">
@@ -9,57 +9,53 @@
         </div>
       </template>
 
-      <v-card id="body " max-width="500px" :loading="uploading_local">
+      <v-card id="body " max-width="400px" :loading="uploading_local">
         <v-card-title>
-          <span class="headline">{{cardTitle}}</span>
+          <span class="title text-center">{{cardTitle}}</span>
         </v-card-title>
+        <v-divider></v-divider>
         <v-card-text>
           <v-form ref="form" lazy-validation>
-            <v-row>
-              <v-col>
-                <center>
-                  <v-avatar v-if="!file.empty" size="120" @click="$refs.myFiles.click()">
-                    <img :src="file" alt="dp">
-                  </v-avatar>
-                  <v-btn
-                    id="cam"
-                    class="ma-2"
-                    outlined
-                    x-large
-                    v-if="file.empty"
-                    @click="$refs.myFiles.click()"
-                    fab
-                    :color="color"
-                  >
-                    <v-icon x-large>mdi-camera</v-icon>
-                  </v-btn>
-                </center>
+            <v-row style="padding:10px" class="justify-center">
+              <v-avatar v-if="!file.empty" size="100" @click="$refs.myFiles.click()">
+                <img :src="file" alt="dp">
+              </v-avatar>
+              <v-btn
+                id="cam"
+                class="ma-2"
+                outlined
+                large
+                size="80"
+                v-if="file.empty"
+                @click="$refs.myFiles.click()"
+                fab
+                :color="color"
+              >
+                <v-icon x-large>mdi-camera</v-icon>
+              </v-btn>
+              <v-col cols="12" md="11">
+                <v-textarea
+                  :filled="false"
+                  :rules="[v => !!v || 'add description!']"
+                  background-color="white"
+                  label="Description"
+                  auto-grow
+                  rows="1"
+                  prepend-inner-icon="mdi-comment"
+                  clearable
+                  clear-icon="mdi-delete"
+                 color="dark" 
+                  v-model="description"
+                ></v-textarea>
+                <v-text-field
+                  label="add tag"
+                  clearable
+                  :rules="[v => !!v || 'add tag!']"
+                  prepend-inner-icon="mdi-tag"
+                  v-model="tag"
+                  color="dark"
+                ></v-text-field>
               </v-col>
-            </v-row>
-            <v-row style="padding:10px">
-              <v-textarea
-                :filled="false"
-                :rules="[v => !!v || 'add description!']"
-                background-color="white"
-                label="Caption"
-                auto-grow
-                rows="1"
-                prepend-inner-icon="mdi-comment"
-                clearable
-                clear-icon="mdi-delete"
-                color="primary"
-                v-model="description"
-              ></v-textarea>
-            </v-row>
-            <v-row style="padding:10px">
-              <v-text-field
-                label="add tag"
-                clearable
-                :rules="[v => !!v || 'add tag!']"
-                prepend-inner-icon="mdi-tag"
-                v-model="tag"
-                color="dark"
-              ></v-text-field>
             </v-row>
             <v-col>
               <center>
@@ -67,7 +63,7 @@
               </center>
             </v-col>
             <center>
-              <v-btn color="primary" width="200" @click="validate " rounded>{{buttonTitle}}</v-btn>
+              <v-btn color="dark" outlined width="200" @click="validate " rounded>{{buttonTitle}}</v-btn>
             </center>
           </v-form>
         </v-card-text>
@@ -91,8 +87,8 @@
 </template>
 <style lang="css">
 #cam {
-  height: 120px;
-  width: 120px;
+  height: 100px;
+  width: 100px;
 }
 </style>
 <script>
@@ -110,7 +106,7 @@ export default {
       uploading_local: false,
       filename: "No file selected!",
       description: "",
-      color: "red",
+      color: "pink",
       tag: "",
       dialog: false,
       file: { empty: true },
@@ -121,15 +117,17 @@ export default {
     validate() {
       if (!this.$refs.form.validate() || this.file.empty) {
         this.filename = "Please select file!";
-        this.notify("Please select file!", null);
+        this.notify("All fields are required", null);
         setTimeout(() => {
-          this.filename = "no file selected";
+          this.filename = this.file.empty
+            ? "No file selected!"
+            : this.trimString(this.file.name);
         }, 1000);
       } else {
         var post = {
           image: this.file,
           caption: this.description,
-          tag:this.tag,
+          tag: this.tag,
           priority: false
         };
         if (!this.isUpdate) {
@@ -140,7 +138,7 @@ export default {
       }
     },
     handleFileUpload() {
-      this.color = "primary";
+      this.color = "pink";
       this.file = this.$refs.myFiles.files[0];
       this.filename = this.trimString(this.file.name);
       this.encode(this.file).then(res => {
@@ -230,11 +228,11 @@ export default {
   },
   update() {
     this.uploading_local = this.this_parent.loading;
-    if (!this.dialog) {
-     console.log(this);
-      
-    }
   },
-  
+  mounted() {
+    if (!this.isUpdate) {
+      this.$emit("reset");
+    }
+  }
 };
 </script>

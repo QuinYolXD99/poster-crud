@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 var photoSchema = new Schema({
 
     image: { type: String },
+    imageName: { type: String },
     caption: { type: String },
     tag: { type: String },
     priority: { type: Boolean },

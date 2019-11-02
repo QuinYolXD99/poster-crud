@@ -20,26 +20,27 @@
           @reset="reset()"
         />
       </div>
+      <!-- <v-btn icon x-large >
+        <v-icon color="pink" left>mdi-account-circle</v-icon>
+      </v-btn>-->
     </v-app-bar>
     <v-container id="body" fluid>
-      <div class="gallery">
-        <v-container class="pa-1">
-          <v-row class="justify-center">
-            <v-col cols="12" md="5" >
-              <v-text-field
-                placeholder="search image"
-                v-if="!images.length==0"
-                prepend-inner-icon="mdi-magnify"
-                v-model="search"
-                color="dark"
-                clearable
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <br>
-          <ImageViewer ref="viewer"/>
-        </v-container>
-      </div>
+      <v-container class="pa-1">
+        <v-row class="justify-center">
+          <v-col cols="12" md="5">
+            <v-text-field
+              placeholder="search image caption , tags , or dates"
+              v-if="!images.length==0"
+              prepend-inner-icon="mdi-magnify"
+              v-model="search"
+              color="dark"
+              clearable
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <br>
+        <ImageViewer ref="viewer"/>
+      </v-container>
     </v-container>
     <DeletePrompt ref="prompt"/>
     <Snackbar ref="notif"/>
@@ -51,7 +52,8 @@ import Snackbar from "@/components/Snackbar.vue";
 import DeletePrompt from "@/components/DeletePrompt.vue";
 import ImageViewer from "./ImageViewer.vue";
 import axios from "axios";
-import { isNullOrUndefined } from 'util';
+import bus from "@/bus";
+import { isNullOrUndefined } from "util";
 export default {
   data() {
     return {
@@ -79,12 +81,13 @@ export default {
         return this.images.filter(image => {
           return (
             image.caption.toLowerCase().includes(this.search.toLowerCase()) ||
-            image.tag.toLowerCase().includes(this.search.toLowerCase())
+            image.tag.toLowerCase().includes(this.search.toLowerCase()) ||
+            image.createdAt.toLowerCase().includes(this.search.toLowerCase()) ||
+            image.updatedAt.toLowerCase().includes(this.search.toLowerCase())
           );
         });
-      }
-      else{
-        return this.images
+      } else {
+        return this.images;
       }
     }
   },
@@ -106,9 +109,7 @@ export default {
       this.$refs.prompt.id = id;
     },
     remove(id) {
-      setTimeout(() => {
-        this.images = this.images.filter(image => image._id !== id);
-      }, 500);
+      this.removeImage(id);
 
       axios
         .post("http://localhost:4000/crud/delete", { id: id })
@@ -118,6 +119,7 @@ export default {
               this.notify("No images Available!");
             }
             this.notify("Deleted successfully!");
+            bus.$emit("remove", id);
           } else {
             this.notify("Delete Failed!");
           }
@@ -126,7 +128,11 @@ export default {
           this.notify("Something went wrong!");
         });
     },
-
+    removeImage(id) {
+      setTimeout(() => {
+        this.images = this.images.filter(image => image._id !== id);
+      }, 500);
+    },
     getImages() {
       this.images = [];
       this.notify("Please wait while we are retrieving your data...");
@@ -164,7 +170,7 @@ export default {
     beforeUpdate(item) {
       var modal = this.$refs.modal;
       modal.dialog = true;
-      modal.filename = modal.trimString(item.image);
+      modal.filename = modal.trimString(item.imageName);
       modal.file = item.image;
       modal.description = item.caption;
       modal.tag = item.tag;

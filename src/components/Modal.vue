@@ -29,7 +29,7 @@
                 v-if="file.empty"
                 @click="$refs.myFiles.click()"
                 fab
-                :color="color"
+                color="pink"
               >
                 <v-icon x-large>mdi-camera</v-icon>
               </v-btn>
@@ -44,7 +44,7 @@
                   prepend-inner-icon="mdi-comment"
                   clearable
                   clear-icon="mdi-delete"
-                 color="dark" 
+                  color="dark"
                   v-model="description"
                 ></v-textarea>
                 <v-text-field
@@ -63,7 +63,7 @@
               </center>
             </v-col>
             <center>
-              <v-btn color="dark" outlined width="200" @click="validate " rounded>{{buttonTitle}}</v-btn>
+              <v-btn color="pink" outlined width="200" @click="validate " rounded>{{buttonTitle}}</v-btn>
             </center>
           </v-form>
         </v-card-text>
@@ -106,7 +106,6 @@ export default {
       uploading_local: false,
       filename: "No file selected!",
       description: "",
-      color: "pink",
       tag: "",
       dialog: false,
       file: { empty: true },
@@ -126,6 +125,7 @@ export default {
       } else {
         var post = {
           image: this.file,
+          imageName: this.filename,
           caption: this.description,
           tag: this.tag,
           priority: false
@@ -138,7 +138,6 @@ export default {
       }
     },
     handleFileUpload() {
-      this.color = "pink";
       this.file = this.$refs.myFiles.files[0];
       this.filename = this.trimString(this.file.name);
       this.encode(this.file).then(res => {

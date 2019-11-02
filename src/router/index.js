@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
-// import ImageViewer from "../views/ImageViewer.vue";
+import Login from "../views/Login.vue";
 
 Vue.use(VueRouter);
 
@@ -11,13 +11,13 @@ const routes = [
     name: "home",
     component: Home
   },
-  // {
-  //   path: "/imageViewer",
-  //   name: "ImageViewer",
-  //   component: ImageViewer,
-  //   props: true
+  {
+    path: "/login",
+    name: "Login",
+    component: Login,
+    props: true
 
-  // }
+  }
 ];
 
 const router = new VueRouter({

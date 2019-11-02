@@ -128,7 +128,8 @@ export default {
           imageName: this.filename,
           caption: this.description,
           tag: this.tag,
-          priority: false
+          priority: false,
+          userId : this.this_parent.account.id
         };
         if (!this.isUpdate) {
           this.upload(post);
@@ -232,6 +233,7 @@ export default {
     if (!this.isUpdate) {
       this.$emit("reset");
     }
+    
   }
 };
 </script>

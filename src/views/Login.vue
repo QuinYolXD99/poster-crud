@@ -215,6 +215,8 @@ export default {
           }
         })
         .catch(err => {
+          console.log(err);
+          
           this.loading = false;
           this.credentials.password = "";
           this.credentials.username = "";
@@ -222,6 +224,9 @@ export default {
           this.$refs.snackbar.message("Something went wrong!");
         });
     }
+  },
+  updated(){
+    
   }
 };
 </script>

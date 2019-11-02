@@ -13,11 +13,12 @@ routes.route("/upload").post((req, res) => {
 });
 //retrieve
 routes.route("/retrieve").get((req, res) => {
-    retrieve.retrieveOwn(res)
+
+    return retrieve.retrieveOwn(req.body.id, res)
 });
 //retrieve
 routes.route("/retrieveAll").get((req, res) => {
-    retrieve.retrieveAll(res)
+    retrieve.retrieveAll(req.body._id, res)
 });
 // update
 routes.route("/update").post((req, res) => {
@@ -39,7 +40,7 @@ routes.route("/login").post((req, res) => {
     login(req.body, res);
 });
 
-routes.route("/register").post((req, res) => {    
+routes.route("/register").post((req, res) => {
     register(req.body, res);
 });
 

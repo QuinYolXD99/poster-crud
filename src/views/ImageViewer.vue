@@ -61,23 +61,25 @@
                   <v-btn icon>
                     <v-icon color="pink" v-on:click="download($parent.filteredList[i])">mdi-download</v-icon>
                   </v-btn>
-                  <v-btn icon>
-                    <v-icon
-                      :disabled="$parent.loading"
-                      :color="$parent.filteredList[i].priority?'pink':'grey'"
-                      v-on:click="($parent.filteredList[i].priority = !$parent.filteredList[i].priority,$parent.like($parent.filteredList[i]))"
-                    >mdi-heart</v-icon>
-                  </v-btn>
-                  <v-btn icon>
-                    <v-icon
-                      color="pink"
-                      :disabled="$parent.loading"
-                      v-on:click="$parent.beforeUpdate($parent.filteredList[i])"
-                    >mdi-pencil</v-icon>
-                  </v-btn>
-                  <v-btn icon v-on:click="$parent.prompt($parent.filteredList[i]._id)">
-                    <v-icon color="pink">mdi-delete</v-icon>
-                  </v-btn>
+                  <div v-if="!$parent.allImageMode">
+                    <v-btn icon>
+                      <v-icon
+                        :disabled="$parent.loading"
+                        :color="$parent.filteredList[i].priority?'pink':'grey'"
+                        v-on:click="($parent.filteredList[i].priority = !$parent.filteredList[i].priority,$parent.like($parent.filteredList[i]))"
+                      >mdi-heart</v-icon>
+                    </v-btn>
+                    <v-btn icon>
+                      <v-icon
+                        color="pink"
+                        :disabled="$parent.loading"
+                        v-on:click="$parent.beforeUpdate($parent.filteredList[i])"
+                      >mdi-pencil</v-icon>
+                    </v-btn>
+                    <v-btn icon v-on:click="$parent.prompt($parent.filteredList[i]._id)">
+                      <v-icon color="pink">mdi-delete</v-icon>
+                    </v-btn>
+                  </div>
                 </v-card-actions>
                 <v-footer dark padless>
                   <v-card class="flex" flat tile></v-card>

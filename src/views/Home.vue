@@ -2,7 +2,9 @@
   <!-- <v-row justify="center"> -->
   <div>
     <v-app-bar light app>
-      <v-toolbar-title>PicTalk</v-toolbar-title>
+      <v-btn text @click="(allImageMode = false,getImages)">
+        <v-toolbar-title>PicTalk</v-toolbar-title>
+      </v-btn>
       <v-spacer></v-spacer>
       <v-progress-linear :active="loading" :indeterminate="loading" absolute bottom color="pink"></v-progress-linear>
       <v-btn v-show="images.length!==0" text small @click="show">
@@ -20,6 +22,7 @@
           @reset="reset()"
         />
       </div>
+      <v-btn text @click="(allImageMode = true , getImages)">Explore</v-btn>
       <v-btn icon x-large>
         <v-icon color="pink" left>mdi-account-circle</v-icon>
       </v-btn>
@@ -99,7 +102,7 @@ export default {
     },
     account() {
       return !isNullOrUndefined(localStorage.getItem("token"))
-        ? jwt_decode(localStorage.getItem("token")).user.id
+        ? jwt_decode(localStorage.getItem("token")).user
         : null;
     },
     isLoggedin() {
@@ -150,12 +153,19 @@ export default {
     },
     getImages() {
       var url = "http://localhost:4000/crud/retrieve";
-      var query = {};
-      if (!this.allImageMode) {
-        this.sendImageRequest(url, query);
+      var query = {
+        id: isNullOrUndefined(this.account) ? "" : this.account.id
+      };
+
+      if (isNullOrUndefined(this.account)) {
+        this.notify("You must log in first!");
+        this.$router.push("/login");
       } else {
-        query._id = account.id
-        this.sendImageRequest(url+"All", query);
+        if (!this.allImageMode) {
+          this.sendImageRequest(url, query);
+        } else {
+          this.sendImageRequest(url + "All", query);
+        }
       }
     },
     sendImageRequest(url, query) {
@@ -179,13 +189,17 @@ export default {
             this.notify("Failed to load Images!");
             this.loading = false;
             setTimeout(() => {
-              this.getMyImages();
+              this.getImages();
             }, 1000);
           }
         });
     },
-    getAllImages() {},
-    getMyImages() {},
+    // getAllImages() {
+    //   sendImageRequest(url, query);
+    // },
+    // getMyImages() {
+    //   sendImageRequest(url, query);
+    // },
 
     sortImages() {
       this.images.sort(function(a, b) {
@@ -233,8 +247,11 @@ export default {
     }
   },
   mounted() {
-    this.getMyImages();
-    console.log(this.isLoggedin);
+    this.getImages();
+  },
+  updated() {
+    console.log(this.account);
+    // console.log();
   }
 };
 </script>

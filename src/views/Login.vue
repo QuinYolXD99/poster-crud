@@ -1,64 +1,88 @@
-<template>
+<template >
   <v-container id="body" fluid>
     <v-row id="content" align="center" justify="center">
       <v-col cols="11" sm="8" md="4">
         <center>
-          <v-card class="mycard mx-10" :loading="loading">
+          <v-card class="mycard mx-10" :disabled="loading">
             <v-toolbar color="pink lighten-1" height="100" class="justify-center" dark flat>
               <v-icon x-large>mdi-camera</v-icon>
               <v-toolbar-title>
-                <span class="display-1">PicTalk   </span>
-                <small>{{"\t\t\t"+title}}</small>  
+                <span class="display-1">PicTalk</span>
+                <small>{{"\t\t\t"+title}}</small>
               </v-toolbar-title>
+              <v-progress-linear
+                :active="loading"
+                :indeterminate="loading"
+                absolute
+                top
+                color="white"
+              ></v-progress-linear>
             </v-toolbar>
 
             <v-card-text id="card-body">
-              <v-text-field
-                color="pink"
-                label="Username"
-                v-model="username"
-                name="login"
-                prepend-icon="mdi-account"
-                type="text"
-              ></v-text-field>
-              <v-text-field
-                id="confirm password"
-                color="pink"
-                v-model="password"
-                label="Password"
-                name="password"
-                prepend-icon="mdi-lock"
-                type="password"
-                @keyup.enter="login"
-              ></v-text-field>
-
-              <v-expand-transition>
-                <div v-if="signup">
-                  <v-text-field
-                    id="confirm password"
-                    color="pink"
-                    v-model="confirm_password"
-                    label="confirm Password"
-                    name="password"
-                    prepend-icon="mdi-lock"
-                    type="password"
-                    @keyup.enter="login"
-                  ></v-text-field>
-                </div>
-              </v-expand-transition>
-
-              <br>
-              <center>
-                <v-btn
+              <v-form ref="form" lazy-validation>
+                <!-- usernmae input -->
+                <v-text-field
                   color="pink"
-                  v-if="!signup"
-                  outlined
-                  width="200"
-                  :disabled="disable"
-                  rounded
-                >Login</v-btn>
-                <v-btn color="pink" v-else outlined width="200" :disabled="disable" rounded>Sign up</v-btn>
-              </center>
+                  label="Username"
+                  :rules="[v => !!v || 'username is required!']"
+                  v-model="credentials.username"
+                  name="login"
+                  prepend-icon="mdi-account"
+                  type="text"
+                ></v-text-field>
+
+                <!-- password field -->
+                <v-text-field
+                  id="confirm password"
+                  color="pink"
+                  :rules="[v => !!v || 'password is required!']"
+                  v-model="credentials.password"
+                  label="Password"
+                  name="password"
+                  prepend-icon="mdi-lock"
+                  type="password"
+                  @keyup.enter="login"
+                ></v-text-field>
+
+                <v-expand-transition>
+                  <div v-if="signup">
+                    <v-text-field
+                      id="confirm password"
+                      color="pink"
+                      :rules="matchPassword"
+                      v-model="confirm_password"
+                      label="Confirm Password"
+                      name="password"
+                      prepend-icon="mdi-lock"
+                      type="password"
+                      @keyup.enter="login"
+                    ></v-text-field>
+                  </div>
+                </v-expand-transition>
+
+                <br>
+                <center>
+                  <v-btn
+                    color="pink"
+                    v-if="!signup"
+                    outlined
+                    width="200"
+                    :disabled="disable"
+                    rounded
+                    @click="validate"
+                  >Login</v-btn>
+                  <v-btn
+                    color="pink"
+                    v-else
+                    outlined
+                    width="200"
+                    :disabled="disable"
+                    rounded
+                    @click="validate"
+                  >Sign up</v-btn>
+                </center>
+              </v-form>
             </v-card-text>
             <v-divider></v-divider>
 
@@ -118,16 +142,28 @@ export default {
   data() {
     return {
       signup: false,
-      loading: false,
       disable: false,
-      username: "",
-      password: "",
+      loading: false,
       confirm_password: "",
-      title: "Login"
+      title: "Login",
+      credentials: {
+        username: "",
+        password: ""
+      }
     };
   },
   components: {
     Snackbar
+  },
+  computed: {
+    matchPassword() {
+      return [
+        () =>
+          this.credentials.password === this.confirm_password ||
+          "Passwords don't match !",
+        v => !!v || "Please re-enter your password!"
+      ];
+    }
   },
   methods: {
     toggleForm() {
@@ -137,12 +173,21 @@ export default {
           break;
         case false:
           this.title = "Login";
-
           break;
       }
-
       this.$refs.snackbar.message(this.title);
-    }
+    },
+    validate() {
+      if (!this.$refs.form.validate()) {
+        console.log(this.$refs.form);
+
+        // this.$refs.snackbar.message(this.title);
+      } else {
+        console.log(this.signup);
+      }
+    },
+    register() {},
+    login() {}
   }
 };
 </script>

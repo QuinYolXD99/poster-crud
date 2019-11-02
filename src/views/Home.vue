@@ -208,7 +208,5 @@ export default {
   mounted() {
     this.getImages();
   }
-
-  // viewer : https://github.com/mirari/v-viewer
 };
 </script>

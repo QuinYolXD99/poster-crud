@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
+import { isNullOrUndefined } from "util";
 
 Vue.use(VueRouter);
 
@@ -15,9 +16,15 @@ const routes = [
     path: "/login",
     name: "Login",
     component: Login,
-    props: true
-
-  }
+    props: true,
+    beforeEnter: (to, from, next) => {
+      if (!isNullOrUndefined(localStorage.getItem("token"))) {
+        next("/");
+      } else {
+        next();
+      }
+    }
+  },
 ];
 
 const router = new VueRouter({

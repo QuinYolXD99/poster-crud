@@ -5,3 +5,4 @@ module.exports = {
         encrypt.secret_key() +
         "@cluster0-cb1ns.gcp.mongodb.net/PostApp?retryWrites=true&w=majority"
 };
+

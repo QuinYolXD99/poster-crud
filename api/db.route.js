@@ -1,17 +1,23 @@
 const express = require("express");
 const routes = express.Router();
-//MODELS
-const create = require("./models/create")
-const retrieve = require("./models/retrieve")
-const update = require("./models/update")
-const remove = require("./models/delete")
-    //create
+//modules
+const create = require("./modules/create")
+const retrieve = require("./modules/retrieve")
+const update = require("./modules/update")
+const remove = require("./modules/delete")
+const login = require("./modules/login")
+const register = require("./modules/register")
+//create
 routes.route("/upload").post((req, res) => {
     create(req.body, res)
 });
 //retrieve
 routes.route("/retrieve").get((req, res) => {
-    retrieve(res)
+    retrieve.retrieveOwn(res)
+});
+//retrieve
+routes.route("/retrieveAll").get((req, res) => {
+    retrieve.retrieveAll(res)
 });
 // update
 routes.route("/update").post((req, res) => {
@@ -24,11 +30,21 @@ routes.route("/delete").post((req, res) => {
 });
 
 routes.route("/like").post((req, res) => {
-    // console.log(req.body);
-
+    // console.log(req.body);   
     update.like(req.body, res);
 });
 
+// login
+routes.route("/login").post((req, res) => {
+    login(req.body, res);
+});
+
+routes.route("/register").post((req, res) => {    
+    register(req.body, res);
+});
+
+
+// register
 // routes.route("/mark").post((req, res) => {
 //     update.markTodo(req.body, res);
 // });

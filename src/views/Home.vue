@@ -11,7 +11,7 @@
       <div @click="reset()">
         <Modal
           ref="modal"
-          v-if="!loading"
+          v-if="!loading && isLoggedin"
           :cardTitle="cardTitle"
           :buttonTitle="buttonTitle"
           :isUpdate="isUpdate"
@@ -20,9 +20,9 @@
           @reset="reset()"
         />
       </div>
-      <!-- <v-btn icon x-large >
+      <v-btn icon x-large>
         <v-icon color="pink" left>mdi-account-circle</v-icon>
-      </v-btn>-->
+      </v-btn>
     </v-app-bar>
     <v-container id="body" fluid>
       <v-container class="pa-1">
@@ -47,12 +47,14 @@
   </div>
 </template>
 <script>
+/* eslint-disable */
 import Modal from "@/components/Modal.vue";
 import Snackbar from "@/components/Snackbar.vue";
 import DeletePrompt from "@/components/DeletePrompt.vue";
 import ImageViewer from "./ImageViewer.vue";
 import axios from "axios";
 import bus from "@/bus";
+import jwt_decode from "jwt-decode";
 import { isNullOrUndefined } from "util";
 export default {
   data() {
@@ -66,7 +68,8 @@ export default {
       loading: false,
       uploading: false,
       images: [],
-      color: "red"
+      color: "red",
+      allImageMode: false
     };
   },
   components: {
@@ -79,16 +82,28 @@ export default {
     filteredList() {
       if (!isNullOrUndefined(this.search)) {
         return this.images.filter(image => {
-          return (
-            image.caption.toLowerCase().includes(this.search.toLowerCase()) ||
-            image.tag.toLowerCase().includes(this.search.toLowerCase()) ||
-            image.createdAt.toLowerCase().includes(this.search.toLowerCase()) ||
-            image.updatedAt.toLowerCase().includes(this.search.toLowerCase())
-          );
+          if (!isNullOrUndefined(image.image)) {
+            return (
+              image.caption.toLowerCase().includes(this.search.toLowerCase()) ||
+              image.tag.toLowerCase().includes(this.search.toLowerCase()) ||
+              image.createdAt
+                .toLowerCase()
+                .includes(this.search.toLowerCase()) ||
+              image.updatedAt.toLowerCase().includes(this.search.toLowerCase())
+            );
+          }
         });
       } else {
         return this.images;
       }
+    },
+    account() {
+      return !isNullOrUndefined(localStorage.getItem("token"))
+        ? jwt_decode(localStorage.getItem("token")).user.id
+        : null;
+    },
+    isLoggedin() {
+      return !isNullOrUndefined(this.account);
     }
   },
   methods: {
@@ -134,11 +149,21 @@ export default {
       }, 500);
     },
     getImages() {
+      var url = "http://localhost:4000/crud/retrieve";
+      var query = {};
+      if (!this.allImageMode) {
+        this.sendImageRequest(url, query);
+      } else {
+        query._id = account.id
+        this.sendImageRequest(url+"All", query);
+      }
+    },
+    sendImageRequest(url, query) {
       this.images = [];
       this.notify("Please wait while we are retrieving your data...");
       this.loading = true;
       axios
-        .get("http://localhost:4000/crud/retrieve")
+        .get(url, query)
         .then(res => {
           this.uploading = false;
           this.loading = false;
@@ -154,11 +179,13 @@ export default {
             this.notify("Failed to load Images!");
             this.loading = false;
             setTimeout(() => {
-              this.getImages();
+              this.getMyImages();
             }, 1000);
           }
         });
     },
+    getAllImages() {},
+    getMyImages() {},
 
     sortImages() {
       this.images.sort(function(a, b) {
@@ -206,7 +233,8 @@ export default {
     }
   },
   mounted() {
-    this.getImages();
+    this.getMyImages();
+    console.log(this.isLoggedin);
   }
 };
 </script>

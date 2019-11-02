@@ -107,6 +107,7 @@
         </center>
       </v-col>
       <Snackbar ref="snackbar"/>
+
     </v-row>
   </v-container>
 </template>
@@ -117,7 +118,7 @@
   height: 100% !important;
   width: 100% !important;
   background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-    url("https://source.unsplash.com/user/the_roaming_platypus");
+    url("https://source.unsplash.com/user/cinquantesix");
   background-size: cover !important  ;
   background-position: top center !important;
   background-attachment: fixed !important;
@@ -138,6 +139,7 @@
 </style>
 <script>
 import Snackbar from "@/components/Snackbar.vue";
+import axios from "axios";
 export default {
   data() {
     return {
@@ -169,6 +171,7 @@ export default {
     toggleForm() {
       switch (this.signup) {
         case true:
+          this.confirm_password = "";
           this.title = "Sign up";
           break;
         case false:
@@ -177,17 +180,48 @@ export default {
       }
       this.$refs.snackbar.message(this.title);
     },
-    validate() {
-      if (!this.$refs.form.validate()) {
-        console.log(this.$refs.form);
 
-        // this.$refs.snackbar.message(this.title);
-      } else {
-        console.log(this.signup);
+    validate() {
+      if (this.$refs.form.validate()) {
+        var port = 4000;
+        var url = "http://localhost:" + port + "/crud/";
+        if (this.signup) {
+          this.sendRequest(url + "register");
+        } else {
+          this.sendRequest(url + "login");
+        }
       }
     },
-    register() {},
-    login() {}
+    sendRequest(url) {
+      this.loading = true;
+      axios
+        .post(url, this.credentials)
+        .then(res => {
+          console.log(res);
+          this.loading = false;
+          if (res.data.auth) {
+            this.$refs.snackbar.message("Welcome " + this.credentials.username);
+            localStorage.setItem("token", res.data.token);
+            this.$router.push("/");
+          } else {
+            this.credentials.password = "";
+            this.credentials.username = "";
+            this.confirm_password = "";
+            if (this.signup) {
+              this.$refs.snackbar.message("Failed!!");
+            } else {
+              this.$refs.snackbar.message("Account not found!");
+            }
+          }
+        })
+        .catch(err => {
+          this.loading = false;
+          this.credentials.password = "";
+          this.credentials.username = "";
+          this.confirm_password = "";
+          this.$refs.snackbar.message("Something went wrong!");
+        });
+    }
   }
 };
 </script>

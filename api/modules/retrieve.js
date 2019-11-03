@@ -1,7 +1,6 @@
 let models = require("../db.model");
 let retrieveOwn = (id, res) => {
     models.Post.find({ userId: id }, (err, images) => {
-
         if (err) {
             res.status(200).send({ error: { body: err, message: "no images", status: true }, success: false, data: null })
         } else {
@@ -14,7 +13,7 @@ let retrieveOwn = (id, res) => {
     });
 }
 let retrieveAll = (res) => {
-    models.Post.find({ userId: { "$ne": id } }, (err, images) => {
+    models.Post.find({}, (err, images) => {
 
         if (err) {
             res.status(200).send({ error: { body: err, message: "no images", status: true }, success: false, data: null })

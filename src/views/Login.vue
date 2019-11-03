@@ -42,7 +42,7 @@
                   name="password"
                   prepend-icon="mdi-lock"
                   type="password"
-                  @keyup.enter="login"
+                  @keyup.enter="validate"
                 ></v-text-field>
 
                 <v-expand-transition>
@@ -56,7 +56,7 @@
                       name="password"
                       prepend-icon="mdi-lock"
                       type="password"
-                      @keyup.enter="login"
+                      @keyup.enter="validate"
                     ></v-text-field>
                   </div>
                 </v-expand-transition>
@@ -118,7 +118,7 @@
   height: 100% !important;
   width: 100% !important;
   background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-    url("https://source.unsplash.com/user/cinquantesix");
+    url("https://source.unsplash.com/user/andyjh07");
   background-size: cover !important  ;
   background-position: top center !important;
   background-attachment: fixed !important;
@@ -216,7 +216,6 @@ export default {
         })
         .catch(err => {
           console.log(err);
-          
           this.loading = false;
           this.credentials.password = "";
           this.credentials.username = "";
@@ -230,63 +229,3 @@ export default {
   }
 };
 </script>
-
-<!--<script>
-import axios from "axios";
-export default {
-  data() {
-    return {
-      loading: false,
-      disable: false,
-      username: "",
-      password: "",
-    };
-  },
-  methods: {
-    login() {
-      var credentials = {
-        account: {
-          username: this.username,
-          password: this.password
-        }
-      };
-      this.loader(true);
-      const url = "http://localhost:4000/admin/login";
-      axios
-        .post(url, credentials)
-        .then(res => {
-          setTimeout(() => {
-            this.loader(false);
-          }, 1000);
-          if (this.username != "" && this.password != "") {
-            if (res.data.auth) {
-              this.$emit("notify", "Welcome " + this.username + " !");
-              localStorage.setItem("token", res.data.token);
-              localStorage.setItem("default", res.data.default_pass);
-              this.$emit("loggedIn",localStorage.getItem("token"))
-              
-              this.$router.push("/")
-            } else {
-              this.password = "";
-              this.username = "";
-              this.$emit("notify", "Invalid Credentials");
-            }
-          } else {
-            this.$emit("notify", "Fields cannot be empty");
-          }
-        })
-        .catch(err => {
-          this.$emit("notify", "Cannot connect to the server!");
-
-          setTimeout(() => {
-            this.loader(false);
-          }, 1000);
-        });
-    },
-    loader(status) {
-      this.loading = status;
-      this.disable = status;
-    }
-  }
-};
-</script>-->

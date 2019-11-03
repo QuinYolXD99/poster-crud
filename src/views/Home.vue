@@ -2,7 +2,7 @@
   <!-- <v-row justify="center"> -->
   <div>
     <v-app-bar light app>
-      <v-btn text @click="(allImageMode = false,getImages)">
+      <v-btn text>
         <v-toolbar-title>PicTalk</v-toolbar-title>
       </v-btn>
       <v-spacer></v-spacer>
@@ -22,10 +22,43 @@
           @reset="reset()"
         />
       </div>
-      <v-btn text @click="(allImageMode = true , getImages)">Explore</v-btn>
-      <v-btn icon x-large>
+      <v-btn
+        text
+        :disabled="loading"
+        :color=" !allImageMode ? 'pink' : 'grey' "
+        @click="(allImageMode = false , getImages())"
+      >My Photos</v-btn>|
+      <v-btn
+        text
+        :disabled="loading"
+        @click="(allImageMode = true , getImages())"
+        :color=" allImageMode ? 'pink' : 'grey' "
+      >Explore</v-btn>
+      <!-- <v-btn icon x-large @click="menu = !menu">
         <v-icon color="pink" left>mdi-account-circle</v-icon>
       </v-btn>
+      <v-expand-x-transition>
+        <v-card v-show="menu" height="100" width="100" class="mx-auto"></v-card>
+      </v-expand-x-transition>-->
+
+      <v-menu left offset-y>
+        <template v-slot:activator="{ on }">
+          <v-btn icon x-large v-on="on" color="pink">
+            <v-icon>mdi-account-circle</v-icon>
+          </v-btn>
+        </template>
+
+        <v-list dense>
+          <v-list-item v-for="(item, i) in menus" :key="i" @click="menuClick(item.icon.split('-')[1])">
+            <v-list-item-icon>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
     <v-container id="body" fluid>
       <v-container class="pa-1">
@@ -33,9 +66,10 @@
           <v-col cols="12" md="5">
             <v-text-field
               placeholder="search image caption , tags , or dates"
-              v-if="!images.length==0"
+              :v-if="!images.length==0"
               prepend-inner-icon="mdi-magnify"
               v-model="search"
+              @keypress="keymonitor"
               color="dark"
               clearable
             ></v-text-field>
@@ -72,7 +106,12 @@ export default {
       uploading: false,
       images: [],
       color: "red",
-      allImageMode: false
+      menu: false,
+      allImageMode: true,
+      menus: [
+        { title: "Account Settings", icon: "mdi-settings" },
+        { title: "Logout", icon: "mdi-logout" }
+      ]
     };
   },
   components: {
@@ -110,6 +149,25 @@ export default {
     }
   },
   methods: {
+    menuClick(action) {
+      switch (action) {
+        case "logout":
+          this.logout();
+          break;
+        case "settings":
+          break;
+        default:
+          break;
+      }
+    },
+    logout() {
+      localStorage.removeItem("token");
+      this.$router.push("/login");
+    },
+    keymonitor(e) {
+      this.allImageMode = true;
+      this.getImages();
+    },
     reset() {
       this.cardTitle = "Add new Image";
       this.buttonTitle = "Upload";
@@ -154,18 +212,12 @@ export default {
     getImages() {
       var url = "http://localhost:4000/crud/retrieve";
       var query = {
-        id: isNullOrUndefined(this.account) ? "" : this.account.id
+        id: this.account.id
       };
-
-      if (isNullOrUndefined(this.account)) {
-        this.notify("You must log in first!");
-        this.$router.push("/login");
+      if (!this.allImageMode) {
+        this.sendImageRequest(url, query);
       } else {
-        if (!this.allImageMode) {
-          this.sendImageRequest(url, query);
-        } else {
-          this.sendImageRequest(url + "All", query);
-        }
+        this.sendImageRequest(url + "All", query);
       }
     },
     sendImageRequest(url, query) {
@@ -173,7 +225,7 @@ export default {
       this.notify("Please wait while we are retrieving your data...");
       this.loading = true;
       axios
-        .get(url, query)
+        .post(url, query)
         .then(res => {
           this.uploading = false;
           this.loading = false;
@@ -194,13 +246,6 @@ export default {
           }
         });
     },
-    // getAllImages() {
-    //   sendImageRequest(url, query);
-    // },
-    // getMyImages() {
-    //   sendImageRequest(url, query);
-    // },
-
     sortImages() {
       this.images.sort(function(a, b) {
         return b.priority - a.priority;
@@ -247,11 +292,13 @@ export default {
     }
   },
   mounted() {
-    this.getImages();
-  },
-  updated() {
-    console.log(this.account);
-    // console.log();
+    if (isNullOrUndefined(this.account)) {
+      setTimeout(() => {
+        this.$router.replace("/login");
+      }, 1500);
+    } else {
+      this.getImages();
+    }
   }
 };
 </script>

@@ -12,13 +12,12 @@ routes.route("/upload").post((req, res) => {
     create(req.body, res)
 });
 //retrieve
-routes.route("/retrieve").get((req, res) => {
-
-    return retrieve.retrieveOwn(req.body.id, res)
+routes.route("/retrieve").post((req, res) => {
+     retrieve.retrieveOwn(req.body.id, res)
 });
 //retrieve
-routes.route("/retrieveAll").get((req, res) => {
-    retrieve.retrieveAll(req.body._id, res)
+routes.route("/retrieveAll").post((req, res) => {
+    retrieve.retrieveAll(res)
 });
 // update
 routes.route("/update").post((req, res) => {

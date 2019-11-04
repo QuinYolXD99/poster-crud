@@ -1,3 +1,4 @@
+/* eslint-disable  */
 let models = require("../db.model");
 const jwt = require("jsonwebtoken");
 
@@ -11,8 +12,8 @@ module.exports = function (credentials, res) {
                     let new_user = new models.User(credentials);
                     new_user
                         .save()
-                        .then(() => {
-                            let token = jwt.sign({ user: { id: user._id, username: user.username } }, "pictalk");
+                        .then(data => {
+                            let token = jwt.sign({ user: { id: data._id , username: data.username } }, "pictalk");
                             res.status(201).json({ error: { status: false, message: null }, auth: true, token: token, exist: false });
                         })
                         .catch(err => {

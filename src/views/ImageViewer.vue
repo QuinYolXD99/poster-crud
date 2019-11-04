@@ -43,6 +43,8 @@
                         Date created : "{{$parent.filteredList[i].createdAt}}"
                         <br>
                         Last Modified : "{{$parent.filteredList[i].updatedAt}}"
+                        <br>
+                        Posted by <strong>{{$parent.filteredList[i].username}} </strong>
                       </v-card-text>
                     </small>
                   </div>
@@ -54,7 +56,7 @@
                     class="body-2 font-weight-bold text-capitalize"
                   >#{{$parent.filteredList[i].tag}}</v-card-title>
                   <v-btn icon @click="toggle">
-                    <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+                    <v-icon>{{ active ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
                   </v-btn>
 
                   <v-spacer></v-spacer>

@@ -18,7 +18,7 @@
           <v-form ref="form" lazy-validation>
             <v-row style="padding:10px" class="justify-center">
               <v-avatar v-if="!file.empty" size="100" @click="$refs.myFiles.click()">
-                <img :src="file" alt="dp">
+                <img :src="file" alt="dp" />
               </v-avatar>
               <v-btn
                 id="cam"
@@ -46,6 +46,7 @@
                   clear-icon="mdi-delete"
                   color="dark"
                   v-model="description"
+                  @keydown.enter="validate"
                 ></v-textarea>
                 <v-text-field
                   label="add tag"
@@ -54,6 +55,7 @@
                   prepend-inner-icon="mdi-tag"
                   v-model="tag"
                   color="dark"
+                  @keydown.enter="validate "
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -79,8 +81,8 @@
           prepend-icon="mdi-image"
           v-on:change="handleFileUpload"
           accept="image/*"
-        >
-        <input>
+        />
+        <input />
       </v-card>
     </v-dialog>
   </div>
@@ -129,7 +131,8 @@ export default {
           caption: this.description,
           tag: this.tag,
           priority: false,
-          userId : this.this_parent.account.id
+          userId: this.this_parent.account.id,
+          username: this.this_parent.account.username
         };
         if (!this.isUpdate) {
           this.upload(post);
@@ -172,8 +175,6 @@ export default {
           this.this_parent.snackbar = false;
           this.this_parent.timeout = 2000;
           var updated = res.data.data;
-          console.log(updated);
-
           this.this_parent.loading = false;
           if (!res.data.error) {
             this.notify("Updated Sucessfully!", res.data.data, true);
@@ -202,6 +203,7 @@ export default {
         .then(res => {
           if (!res.data.error) {
             this.this_parent.images.push(res.data.data);
+            this.this_parent.updateImage();
             this.this_parent.loading = false;
             this.notify("File uploaded Sucessfully!", res.data.data, false);
             this.closeDialog();
@@ -233,7 +235,6 @@ export default {
     if (!this.isUpdate) {
       this.$emit("reset");
     }
-    
   }
 };
 </script>

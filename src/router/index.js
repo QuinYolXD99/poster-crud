@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
-import Login from "../views/Login.vue";
+import Login from "../views/LoginSignup.vue";
 import { isNullOrUndefined } from "util";
 
 Vue.use(VueRouter);
@@ -24,7 +24,7 @@ const routes = [
         next();
       }
     }
-  },
+  }
 ];
 
 const router = new VueRouter({

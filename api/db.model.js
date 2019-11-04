@@ -10,7 +10,8 @@ var photoSchema = new Schema({
     priority: { type: Boolean },
     createdAt: { type: String },
     updatedAt: { type: String },
-    userId: { type: String }
+    userId: { type: String },
+    username: { type: String }
 }, { collection: "posts" });
 
 var userSchema = new Schema({

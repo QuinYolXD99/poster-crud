@@ -25,7 +25,7 @@
                 <v-text-field
                   color="pink"
                   label="Username"
-                  :rules="[v => !!v || 'username is required!']"
+                  :rules="[rules.required]"
                   v-model="credentials.username"
                   name="login"
                   prepend-icon="mdi-account"
@@ -36,12 +36,16 @@
                 <v-text-field
                   id="confirm password"
                   color="pink"
-                  :rules="[v => !!v || 'password is required!']"
+                  :rules="[rules.required,rules.min]"
+                  :type="show ? 'text' : 'password'"
+                  :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
                   v-model="credentials.password"
+                  @click:append="show = !show"
+                  hint="At least 8 characters"
                   label="Password"
                   name="password"
+                  value
                   prepend-icon="mdi-lock"
-                  type="password"
                   @keyup.enter="validate"
                 ></v-text-field>
 
@@ -50,18 +54,20 @@
                     <v-text-field
                       id="confirm password"
                       color="pink"
-                      :rules="matchPassword"
+                      :rules="[rules.matchPassword , rules.required]"
+                      @click:append="show1= !show1"
+                      :type="show1 ? 'text' : 'password'"
+                      :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                       v-model="confirm_password"
                       label="Confirm Password"
                       name="password"
                       prepend-icon="mdi-lock"
-                      type="password"
                       @keyup.enter="validate"
                     ></v-text-field>
                   </div>
                 </v-expand-transition>
 
-                <br>
+                <br />
                 <center>
                   <v-btn
                     color="pink"
@@ -106,8 +112,7 @@
           </v-card>
         </center>
       </v-col>
-      <Snackbar ref="snackbar"/>
-
+      <Snackbar ref="snackbar" />
     </v-row>
   </v-container>
 </template>
@@ -147,31 +152,30 @@ export default {
       disable: false,
       loading: false,
       confirm_password: "",
+      show: false,
+      show1: false,
       title: "Login",
       credentials: {
         username: "",
         password: ""
+      },
+      rules: {
+        required: value => !!value || "Required.",
+        min: v => (!!v && v.length >= 8) || "Min 8 characters",
+        matchPassword: () =>
+          this.credentials.password === this.confirm_password ||
+          "Passwords don't match !"
       }
     };
   },
   components: {
     Snackbar
   },
-  computed: {
-    matchPassword() {
-      return [
-        () =>
-          this.credentials.password === this.confirm_password ||
-          "Passwords don't match !",
-        v => !!v || "Please re-enter your password!"
-      ];
-    }
-  },
   methods: {
     toggleForm() {
+      this.$refs.form.reset();
       switch (this.signup) {
         case true:
-          this.confirm_password = "";
           this.title = "Sign up";
           break;
         case false:
@@ -204,28 +208,22 @@ export default {
             localStorage.setItem("token", res.data.token);
             this.$router.push("/");
           } else {
-            this.credentials.password = "";
-            this.credentials.username = "";
-            this.confirm_password = "";
             if (this.signup) {
               this.$refs.snackbar.message("Failed!!");
             } else {
               this.$refs.snackbar.message("Account not found!");
             }
+            this.$refs.form.reset();
           }
         })
         .catch(err => {
           console.log(err);
+          this.$refs.form.reset();
           this.loading = false;
-          this.credentials.password = "";
-          this.credentials.username = "";
-          this.confirm_password = "";
+          this.$refs.form.reset();
           this.$refs.snackbar.message("Something went wrong!");
         });
     }
-  },
-  updated(){
-    
   }
 };
 </script>

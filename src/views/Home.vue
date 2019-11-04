@@ -26,20 +26,14 @@
         text
         :disabled="loading"
         :color=" !allImageMode ? 'pink' : 'grey' "
-        @click="(allImageMode = false , getImages())"
+        @click="(allImageMode = false , togglePhotos())"
       >My Photos</v-btn>|
       <v-btn
         text
         :disabled="loading"
-        @click="(allImageMode = true , getImages())"
+        @click="(allImageMode = true , togglePhotos())"
         :color=" allImageMode ? 'pink' : 'grey' "
       >Explore</v-btn>
-      <!-- <v-btn icon x-large @click="menu = !menu">
-        <v-icon color="pink" left>mdi-account-circle</v-icon>
-      </v-btn>
-      <v-expand-x-transition>
-        <v-card v-show="menu" height="100" width="100" class="mx-auto"></v-card>
-      </v-expand-x-transition>-->
 
       <v-menu left offset-y>
         <template v-slot:activator="{ on }">
@@ -49,12 +43,12 @@
         </template>
 
         <v-list dense>
-          <v-list-item v-for="(item, i) in menus" :key="i" @click="menuClick(item.icon.split('-')[1])">
+          <v-list-item @click="logout()">
             <v-list-item-icon>
-              <v-icon>{{ item.icon }}</v-icon>
+              <v-icon>mdi-logout</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
+              <v-list-item-title>logout</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -75,12 +69,12 @@
             ></v-text-field>
           </v-col>
         </v-row>
-        <br>
-        <ImageViewer ref="viewer"/>
+        <br />
+        <ImageViewer ref="viewer" />
       </v-container>
     </v-container>
-    <DeletePrompt ref="prompt"/>
-    <Snackbar ref="notif"/>
+    <DeletePrompt ref="prompt" />
+    <Snackbar ref="notif" />
   </div>
 </template>
 <script>
@@ -90,7 +84,6 @@ import Snackbar from "@/components/Snackbar.vue";
 import DeletePrompt from "@/components/DeletePrompt.vue";
 import ImageViewer from "./ImageViewer.vue";
 import axios from "axios";
-import bus from "@/bus";
 import jwt_decode from "jwt-decode";
 import { isNullOrUndefined } from "util";
 export default {
@@ -104,14 +97,11 @@ export default {
       id: "",
       loading: false,
       uploading: false,
+      tempImage: [],
       images: [],
       color: "red",
       menu: false,
-      allImageMode: true,
-      menus: [
-        { title: "Account Settings", icon: "mdi-settings" },
-        { title: "Logout", icon: "mdi-logout" }
-      ]
+      allImageMode: true
     };
   },
   components: {
@@ -123,7 +113,7 @@ export default {
   computed: {
     filteredList() {
       if (!isNullOrUndefined(this.search)) {
-        return this.images.filter(image => {
+        return this.tempImage.filter(image => {
           if (!isNullOrUndefined(image.image)) {
             return (
               image.caption.toLowerCase().includes(this.search.toLowerCase()) ||
@@ -149,24 +139,12 @@ export default {
     }
   },
   methods: {
-    menuClick(action) {
-      switch (action) {
-        case "logout":
-          this.logout();
-          break;
-        case "settings":
-          break;
-        default:
-          break;
-      }
-    },
     logout() {
       localStorage.removeItem("token");
       this.$router.push("/login");
     },
     keymonitor(e) {
       this.allImageMode = true;
-      this.getImages();
     },
     reset() {
       this.cardTitle = "Add new Image";
@@ -195,7 +173,6 @@ export default {
               this.notify("No images Available!");
             }
             this.notify("Deleted successfully!");
-            bus.$emit("remove", id);
           } else {
             this.notify("Delete Failed!");
           }
@@ -208,17 +185,15 @@ export default {
       setTimeout(() => {
         this.images = this.images.filter(image => image._id !== id);
       }, 500);
+      this.updateImage();
     },
     getImages() {
-      var url = "http://localhost:4000/crud/retrieve";
+      var url = "http://localhost:4000/crud/retrieveAll";
       var query = {
         id: this.account.id
       };
-      if (!this.allImageMode) {
-        this.sendImageRequest(url, query);
-      } else {
-        this.sendImageRequest(url + "All", query);
-      }
+
+      this.sendImageRequest(url, query);
     },
     sendImageRequest(url, query) {
       this.images = [];
@@ -234,6 +209,7 @@ export default {
           if (this.images.length == 0) {
             this.notify("No images Available!");
           }
+          this.updateImage();
           this.$refs.notif.snackbar = false;
         })
         .catch(err => {
@@ -242,7 +218,7 @@ export default {
             this.loading = false;
             setTimeout(() => {
               this.getImages();
-            }, 1000);
+            }, 2000);
           }
         });
     },
@@ -254,13 +230,12 @@ export default {
     },
 
     beforeUpdate(item) {
-      var modal = this.$refs.modal;
-      modal.dialog = true;
-      modal.filename = modal.trimString(item.imageName);
-      modal.file = item.image;
-      modal.description = item.caption;
-      modal.tag = item.tag;
-      modal.color = "pink";
+      this.$refs.modal.dialog = true;
+      this.$refs.modal.filename = this.$refs.modal.trimString(item.imageName);
+      this.$refs.modal.file = item.image;
+      this.$refs.modal.description = item.caption;
+      this.$refs.modal.tag = item.tag;
+      this.$refs.modal.color = "pink";
       this.id = item._id;
       this.isUpdate = true;
       this.cardTitle = "Update Image";
@@ -289,13 +264,23 @@ export default {
     },
     show() {
       this.$viewer.show();
+    },
+    togglePhotos() {
+      if (!this.allImageMode) {
+        this.tempImage = this.images.filter(
+          image => image.userId == this.account.id
+        );
+      } else {
+        this.updateImage();
+      }
+    },
+    updateImage() {
+      this.tempImage = this.images;
     }
   },
   mounted() {
     if (isNullOrUndefined(this.account)) {
-      setTimeout(() => {
-        this.$router.replace("/login");
-      }, 1500);
+      this.$router.replace("/login");
     } else {
       this.getImages();
     }

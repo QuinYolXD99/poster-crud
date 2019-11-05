@@ -184,8 +184,8 @@ export default {
     removeImage(id) {
       setTimeout(() => {
         this.images = this.images.filter(image => image._id !== id);
+        this.togglePhotos();
       }, 500);
-      this.updateImage();
     },
     getImages() {
       var url = "http://localhost:4000/crud/retrieveAll";
@@ -209,7 +209,9 @@ export default {
           if (this.images.length == 0) {
             this.notify("No images Available!");
           }
+          this.allImageMode = false;
           this.updateImage();
+          this.togglePhotos();
           this.$refs.notif.snackbar = false;
         })
         .catch(err => {

@@ -69,7 +69,7 @@
                         :disabled="$parent.loading"
                         :color="$parent.filteredList[i].priority?'pink':'grey'"
                         v-on:click="($parent.filteredList[i].priority = !$parent.filteredList[i].priority,$parent.like($parent.filteredList[i]))"
-                      >mdi-heart</v-icon>
+                      >mdi-star</v-icon>
                     </v-btn>
                     <v-btn icon>
                       <v-icon

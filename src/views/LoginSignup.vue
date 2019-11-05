@@ -48,7 +48,6 @@
                   prepend-icon="mdi-lock"
                   @keyup.enter="validate"
                 ></v-text-field>
-
                 <v-expand-transition>
                   <div v-if="signup">
                     <v-text-field
@@ -66,7 +65,6 @@
                     ></v-text-field>
                   </div>
                 </v-expand-transition>
-
                 <br />
                 <center>
                   <v-btn

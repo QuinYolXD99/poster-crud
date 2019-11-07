@@ -167,7 +167,7 @@ export default {
       this.notify("Updating....", null);
       this.this_parent.timeout = 100000;
       axios
-        .post(""https://pictalk-api.herokuapp.com//crud/update", {
+        .post(""https://pictalk-api.herokuapp.com/crud/update", {
           id: this.this_parent.id,
           post: post
         })

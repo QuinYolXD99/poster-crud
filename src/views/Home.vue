@@ -256,7 +256,7 @@ export default {
         }
       })
       this.images = this.sortImages();
-      console.log(image)
+      console.log(this.images)
       axios.post("https://pictalk-api.herokuapp.com/crud/like", { id: image._id });
     },
     notify(msg) {

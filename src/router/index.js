@@ -27,7 +27,7 @@ const routes = [
       if (!isNullOrUndefined(localStorage.getItem("token"))) {
         next("/");
       } else {
-        next();
+        next("/");
       }
     }
   }

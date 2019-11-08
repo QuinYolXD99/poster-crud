@@ -250,7 +250,13 @@ export default {
       } else {
         this.notify("Liked!");
       }
+      this.images.forEach(img=>{
+        if(img._id == image._id){
+          !img.priority = img.priority
+        }
+      })
       this.images = this.sortImages();
+      console.log(image)
       axios.post("https://pictalk-api.herokuapp.com/crud/like", { id: image._id });
     },
     notify(msg) {

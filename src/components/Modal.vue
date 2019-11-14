@@ -179,6 +179,8 @@ export default {
           if (!res.data.error) {
             this.notify("Updated Sucessfully!", res.data.data, true);
             this.this_parent.$refs.explore.click();
+            console.log(this.this_parent.$refs);
+            
             this.this_parent.images.map(
               image => (image = image._id == updated._id ? updated : image)
             );

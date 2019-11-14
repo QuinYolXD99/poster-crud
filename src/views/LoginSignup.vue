@@ -198,7 +198,6 @@ export default {
       axios
         .post(url, this.credentials)
         .then(res => {
-          console.log(res);
           this.loading = false;
           if (res.data.auth) {
             this.$refs.snackbar.message("Welcome " + this.credentials.username);
@@ -214,7 +213,6 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err);
           this.$refs.form.reset();
           this.loading = false;
           this.$refs.form.reset();

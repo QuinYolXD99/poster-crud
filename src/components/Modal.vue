@@ -178,11 +178,12 @@ export default {
           this.this_parent.loading = false;
           if (!res.data.error) {
             this.notify("Updated Sucessfully!", res.data.data, true);
-            this.this_parent.images[
-              this.this_parent.images.findIndex(
-                image => image._id === updated._id
-              )
-            ] = updated;
+            this.this_parent.images.map(image=>image = image._id == updated._id ? updated :image)
+            // this.this_parent.images[
+            //   this.this_parent.images.findIndex(
+            //     image => image._id === updated._id
+            //   )
+            // ] = updated;
             this.closeDialog();
           } else {
             this.notify("Update failed!", null);
@@ -197,7 +198,6 @@ export default {
     upload(post) {
       this.this_parent.loading = true;
       this.notify("Upload in progress......", null, false);
-
       axios
         .post("https://pictalk-api.herokuapp.com/crud/upload", post)
         .then(res => {
@@ -227,9 +227,6 @@ export default {
         response: { update: update, images: data }
       });
     }
-  },
-  update() {
-    this.uploading_local = this.this_parent.loading;
   },
   mounted() {
     if (!this.isUpdate) {

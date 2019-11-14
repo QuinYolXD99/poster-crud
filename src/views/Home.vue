@@ -252,7 +252,7 @@ export default {
       }
       this.images.forEach(img=>{
         if(img._id == image._id){
-          !img.priority = img.priority
+          img.priority = !img.priority
         }
       })
       this.images = this.sortImages();

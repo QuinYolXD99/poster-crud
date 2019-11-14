@@ -30,6 +30,7 @@
       >My Photos</v-btn>|
       <v-btn
         text
+        ref="explore"
         :disabled="loading"
         @click="(allImageMode = true , togglePhotos())"
         :color=" allImageMode ? 'pink' : 'grey' "

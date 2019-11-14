@@ -250,10 +250,14 @@ export default {
       } else {
         this.notify("Liked!");
       }
-      this.images.forEach(img=>{
-        if(img._id == image._id){
-          img.priority = !img.priority
-        }
+      // this.images.forEach(img=>{
+      //   if(img._id == image._id){
+      //     img.priority = !img.priority
+      //   }
+      // })
+
+      this.images.map(img=>{
+          img.priority = img._id == image._id?!image.priority:image.priority
       })
       this.images = this.sortImages();
       console.log(this.images)

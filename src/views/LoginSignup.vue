@@ -213,6 +213,7 @@ export default {
           }
         })
         .catch(err => {
+          console.log(err);
           this.$refs.form.reset();
           this.loading = false;
           this.$refs.form.reset();

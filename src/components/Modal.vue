@@ -178,7 +178,10 @@ export default {
           this.this_parent.loading = false;
           if (!res.data.error) {
             this.notify("Updated Sucessfully!", res.data.data, true);
-            this.this_parent.images.map(image=>image = image._id == updated._id ? updated :image)
+            this.this_parent.allImageMode = false;
+            this.this_parent.images.map(
+              image => (image = image._id == updated._id ? updated : image)
+            );
             // this.this_parent.images[
             //   this.this_parent.images.findIndex(
             //     image => image._id === updated._id
@@ -205,6 +208,8 @@ export default {
             this.this_parent.images.push(res.data.data);
             this.this_parent.updateImage();
             this.this_parent.loading = false;
+            this.this_parent.allImageMode = false;
+
             this.notify("File uploaded Sucessfully!", res.data.data, false);
             this.closeDialog();
           }

@@ -178,9 +178,8 @@ export default {
           this.this_parent.loading = false;
           if (!res.data.error) {
             this.notify("Updated Sucessfully!", res.data.data, true);
-            this.this_parent.$refs.explore.click();
-            console.log(this.this_parent.$refs);
-            
+            this.this_parent.allImageMode = false;
+            this.this_parent.togglePhotos();
             this.this_parent.images.map(
               image => (image = image._id == updated._id ? updated : image)
             );
@@ -211,7 +210,7 @@ export default {
             this.this_parent.updateImage();
             this.this_parent.loading = false;
             this.this_parent.allImageMode = false;
-            this.this_parent.$refs.explore.click();
+            this.this_parent.togglePhotos();
             this.notify("File uploaded Sucessfully!", res.data.data, false);
             this.closeDialog();
           }

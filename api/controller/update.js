@@ -1,4 +1,4 @@
-let models = require("../db.model");
+let models = require("../model/models");
 let timestamp = require("./timestamp")
 
 

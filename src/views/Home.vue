@@ -226,9 +226,7 @@ export default {
         });
     },
     sortImages() {
-      this.images.sort(function(a, b) {
-        return b.priority - a.priority;
-      });
+      this.images.sort((a, b) => (a.priority > b.priority ? -1 : 1));
       return this.images;
     },
 
@@ -251,18 +249,15 @@ export default {
       } else {
         this.notify("Liked!");
       }
-      // this.images.forEach(img=>{
-      //   if(img._id == image._id){
-      //     img.priority = !img.priority
-      //   }
-      // })
+      this.images.map(img => {
+        img.priority = img._id == image._id ? !image.priority : img.priority;
+      });
 
-      this.images.map(img=>{
-          img.priority = img._id == image._id?!image.priority:image.priority
-      })
-      this.images = this.sortImages();
-      console.log(this.images)
-      axios.post("https://pictalk-api.herokuapp.com/crud/like", { id: image._id });
+      this.tempImage = this.images.sortImages();
+
+      axios.post("https://pictalk-api.herokuapp.com/crud/like", {
+        id: image._id
+      });
     },
     notify(msg) {
       this.$refs.notif.message(msg);

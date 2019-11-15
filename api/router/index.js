@@ -1,12 +1,12 @@
 const express = require("express");
 const routes = express.Router();
 //controller
-const create = require("./controller/create")
-const retrieve = require("./controller/retrieve")
-const update = require("./controller/update")
-const remove = require("./controller/delete")
-const login = require("./controller/login")
-const register = require("./controller/register")
+const create = require("../controller/create")
+const retrieve = require("../controller/retrieve")
+const update = require("../controller/update")
+const remove = require("../controller/delete")
+const login = require("../controller/login")
+const register = require("../controller/register")
 //create
 routes.route("/upload").post((req, res) => {
     create(req.body, res)

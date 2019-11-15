@@ -52,7 +52,6 @@
                   </div>
                 </v-expand-transition>
                 <v-divider></v-divider>
-
                 <v-card-actions draggable>
                   <v-card-title
                     class="body-2 font-weight-bold text-capitalize"
@@ -62,32 +61,28 @@
                   </v-btn>
 
                   <v-spacer></v-spacer>
-                  <v-btn icon>
+                  <v-btn small icon>
                     <v-icon color="pink" v-on:click="download($parent.filteredList[i])">mdi-cloud-download</v-icon>
                   </v-btn>
                   <div v-if="!$parent.allImageMode">
-                    <div v-if="!active">
-                      <v-btn x-small icon>
+                      <v-btn small icon>
                         <v-icon
                           :disabled="$parent.loading"
                           :color="$parent.filteredList[i].priority?'pink':'grey'"
                           v-on:click="($parent.filteredList[i].priority = !$parent.filteredList[i].priority,$parent.like($parent.filteredList[i]))"
                         >mdi-star</v-icon>
                       </v-btn>
-                    </div>
-                    <div v-else>
-                      <v-btn icon>
+                      <v-btn small icon>
                         <v-icon
                           color="pink"
                           :disabled="$parent.loading"
                           v-on:click="$parent.beforeUpdate($parent.filteredList[i])"
                         >mdi-pencil</v-icon>
                       </v-btn>
-                      <v-btn icon v-on:click="$parent.prompt($parent.filteredList[i]._id)">
+                      <v-btn small icon v-on:click="$parent.prompt($parent.filteredList[i]._id)">
                         <v-icon color="pink">mdi-delete</v-icon>
                       </v-btn>
                     </div>
-                  </div>
                 </v-card-actions>
                 <v-footer dark padless>
                   <v-card class="flex" flat tile></v-card>

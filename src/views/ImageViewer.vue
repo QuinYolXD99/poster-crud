@@ -47,6 +47,7 @@
                         Last Modified : "{{$parent.filteredList[i].updatedAt}}"
                         <br />Posted by
                         <strong>{{$parent.filteredList[i].username}}</strong>
+                        
                       </v-card-text>
                     </small>
                   </div>

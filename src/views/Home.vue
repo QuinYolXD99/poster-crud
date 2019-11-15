@@ -258,7 +258,7 @@ export default {
       // })
 
       this.images.map(img=>{
-          img.priority = img._id == image._id?!image.priority:image.priorityzzzzzzz
+          img.priority = img._id == image._id?!image.priority:image.priority
       })
       this.images = this.sortImages();
       console.log(this.images)

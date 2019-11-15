@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Login from "../views/LoginSignup.vue";
+import NotFound from "../views/404.vue";
 import { isNullOrUndefined } from "util";
 
 Vue.use(VueRouter);
@@ -12,11 +13,10 @@ const routes = [
     name: "home",
     component: Home
   },
-   {
+  {
     path: "*",
-     redirect:{
-      path :"/"
-     }
+    name: "404",
+    component: NotFound
   },
   {
     path: "/login",
@@ -27,7 +27,7 @@ const routes = [
       if (!isNullOrUndefined(localStorage.getItem("token"))) {
         next("/");
       } else {
-        next("/");
+        next();
       }
     }
   }

@@ -202,6 +202,7 @@ export default {
     upload(post) {
       this.this_parent.loading = true;
       this.notify("Upload in progress......", null, false);
+
       axios
         .post("https://pictalk-api.herokuapp.com/crud/upload", post)
         .then(res => {
@@ -233,6 +234,9 @@ export default {
         response: { update: update, images: data }
       });
     }
+  },
+  update() {
+    this.uploading_local = this.this_parent.loading;
   },
   mounted() {
     if (!this.isUpdate) {

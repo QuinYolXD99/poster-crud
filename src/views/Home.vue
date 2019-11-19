@@ -250,7 +250,7 @@ export default {
         this.notify("Liked!");
       }
       this.images.map(img => {
-        img.priority = img._id == image._id ? !image.priority : img.priority;
+        img.priority = img._id == image._id ? image.priority : img.priority;
       });
 
       this.tempImage = this.images.sortImages();

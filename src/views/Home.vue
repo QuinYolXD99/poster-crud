@@ -226,7 +226,7 @@ export default {
         });
     },
     sortImages() {
-      this.images.sort((a, b) => (a.priority > b.priority ? -1 : 1));
+     this.images.sort((a, b) => (a.priority > b.priority) ? -1 : 1)
       return this.images;
     },
 
@@ -253,11 +253,12 @@ export default {
         img.priority = img._id == image._id ? image.priority : img.priority;
       });
 
-      this.tempImage = this.images.sortImages();
-
       axios.post("https://pictalk-api.herokuapp.com/crud/like", {
         id: image._id
       });
+      this.images.sortImages();
+      this.updateImage();
+      this.togglePhotos();
     },
     notify(msg) {
       this.$refs.notif.message(msg);

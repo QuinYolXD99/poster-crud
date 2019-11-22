@@ -7,6 +7,7 @@ const update = require("../controller/update")
 const remove = require("../controller/delete")
 const login = require("../controller/login")
 const register = require("../controller/register")
+
 //create
 routes.route("/upload").post((req, res) => {
     create(req.body, res)
@@ -36,6 +37,7 @@ routes.route("/like").post((req, res) => {
 
 // login
 routes.route("/login").post((req, res) => {
+    console.log(req.body)
     login(req.body, res);
 });
 

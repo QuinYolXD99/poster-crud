@@ -3,7 +3,7 @@ let models = require("../model/models");
 const jwt = require("jsonwebtoken");
 
 module.exports = function (credentials, res) {
-    models.User.find({ username: credentials.username },
+    models.Account.find({ username: credentials.username },
         (err, user) => {
             if (!err) {
                 if (user.length) {

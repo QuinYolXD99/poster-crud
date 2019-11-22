@@ -18,8 +18,14 @@ var userSchema = new Schema({
     username: { type: String },
     password: { type: String }
 }, {
-        collection: "users"
-    })
+    firstname: { type: String},
+    lastname: { type: String },
+    joined: {type: Date },
+    followers: { type:  [ObjectId]} 
+}, 
+{
+    collection: "users"
+})
 
 userSchema.pre("save", function (next) {
     if (!this.isModified("password")) {

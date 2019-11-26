@@ -65,7 +65,10 @@
                   @keydown.enter="validate "
                 ></v-text-field>
               </v-col>
-            </v-row>
+              <v-col>
+              <Map/>
+              </v-col>
+                          </v-row>
             <v-col>
               <center>
                 <pre class="body-1 text-uppercase">{{filename}}</pre>
@@ -102,7 +105,11 @@
 </style>
 <script>
 import axios from "axios";
+import Map from "./Map";
 export default {
+  components:{
+    Map
+  },
     props: {
         cardTitle: String,
         buttonTitle: String,

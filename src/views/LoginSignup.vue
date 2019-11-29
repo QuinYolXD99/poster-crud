@@ -38,26 +38,26 @@
                   type="text"
                 ></v-text-field>
 
-                <!-- fname input -->
+                <!-- firstname input -->
                 <v-expand-transition>
                   <div v-if="signup">
                     <v-text-field
                       color="pink"
                       label="Firstname"
                       :rules="[rules.required]"
-                      v-model="credentials.fname"
-                      name="fname"
+                      v-model="credentials.firstname"
+                      name="firstname"
                       prepend-icon="mdi-account"
                       type="text"
                     ></v-text-field>
 
-                    <!-- lname input -->
+                    <!-- lastname input -->
                     <v-text-field
                       color="pink"
                       label="Lastname"
                       :rules="[rules.required]"
-                      v-model="credentials.lname"
-                      name="lname"
+                      v-model="credentials.lastname"
+                      name="lastname"
                       prepend-icon="mdi-account"
                       type="text"
                     ></v-text-field>
@@ -214,8 +214,8 @@ export default {
       credentials: {
         username: "",
         password: "",
-        fname: "",
-        lname: "",
+        firstname: "",
+        lastname: "",
         contact: ""
       },
       rules: {
@@ -253,7 +253,7 @@ export default {
 
     validate() {
       if (this.$refs.form.validate()) {
-        var url = "http://localhost:4000/crud/";
+        var url = "http://localhost:4000/admin/";
         if (this.signup) {
           this.sendRequest(url + "register");
         } else {

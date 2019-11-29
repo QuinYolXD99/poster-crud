@@ -27,8 +27,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.use(bodyParser.json({ limit: '50mb' }));
 
-
-app.use("/crud", routes);
+app.use("/admin", routes.adminRoutes);
 
 app.listen(PORT, function() {
     console.log("Server is running on Port:", PORT);

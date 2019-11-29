@@ -1,16 +1,13 @@
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
 let models = require("../../model/models");
+const bcrypt = require("bcryptjs");
 
 module.exports = function (credentials, res) {
-    models.Admin.findOne({ 'account.username': credentials.username }, (err, admin) => {
-            console.log(admin.account.password);
-        
+    models.Admin.findOne({ 'account.username': credentials.username }, (err, admin) => {        
         if (err) {
             res.json(err);
         } else {
-           
-            
+             
             if (admin !== null) {
                 bcrypt
                     .compare(credentials.password, admin.account.password)

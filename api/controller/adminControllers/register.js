@@ -1,10 +1,11 @@
 /* eslint-disable  */
 let models = require("../../model/models");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 module.exports = function (credentials, res) {
     credentials.joined = new Date().toJSON().slice(0, 10).replace(/-/g, '/');
-
+    credentials.password = bcrypt.hashSync(credentials.password, 10);
 
     models.Admin.find({ username: credentials.username},
         (err, admin) => {

@@ -1,14 +1,20 @@
-<template >
+<template>
   <v-container id="body" fluid>
     <v-row id="content" align="center" justify="center">
       <v-col cols="11" sm="8" md="4">
         <center>
           <v-card class="mycard mx-10" :disabled="loading">
-            <v-toolbar color="pink lighten-1" height="100" class="justify-center" dark flat>
+            <v-toolbar
+              color="pink lighten-1"
+              height="100"
+              class="justify-center"
+              dark
+              flat
+            >
               <v-icon x-large>mdi-camera</v-icon>
               <v-toolbar-title>
                 <span class="display-1">PicTalk</span>
-                <small>{{"\t\t\t"+title}}</small>
+                <small>{{ "\t\t\t" + title }}</small>
               </v-toolbar-title>
               <v-progress-linear
                 :active="loading"
@@ -32,11 +38,49 @@
                   type="text"
                 ></v-text-field>
 
+                <!-- firstname input -->
+                <v-expand-transition>
+                  <div v-if="signup">
+                    <v-text-field
+                      color="pink"
+                      label="Firstname"
+                      :rules="[rules.required]"
+                      v-model="credentials.firstname"
+                      name="firstname"
+                      prepend-icon="mdi-account"
+                      type="text"
+                    ></v-text-field>
+
+                    <!-- lastname input -->
+                    <v-text-field
+                      color="pink"
+                      label="Lastname"
+                      :rules="[rules.required]"
+                      v-model="credentials.lastname"
+                      name="lastname"
+                      prepend-icon="mdi-account"
+                      type="text"
+                    ></v-text-field>
+
+                    <!-- contact input -->
+                    <v-text-field
+                      color="pink"
+                      label="Contact Number"
+                      :rules="[rules.cont, rules.required]"
+                      v-model="credentials.contact"
+                      name="contact"
+                      v-mask="mask"
+                      prepend-icon="mdi-account"
+                      type="text"
+                    ></v-text-field>
+                  </div>
+                </v-expand-transition>
+
                 <!-- password field -->
                 <v-text-field
                   id="confirm password"
                   color="pink"
-                  :rules="[rules.required,rules.min]"
+                  :rules="[rules.required, rules.min]"
                   :type="show ? 'text' : 'password'"
                   :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
                   v-model="credentials.password"
@@ -48,13 +92,14 @@
                   prepend-icon="mdi-lock"
                   @keyup.enter="validate"
                 ></v-text-field>
+
                 <v-expand-transition>
                   <div v-if="signup">
                     <v-text-field
                       id="confirm password"
                       color="pink"
-                      :rules="[rules.matchPassword , rules.required]"
-                      @click:append="show1= !show1"
+                      :rules="[rules.matchPassword, rules.required]"
+                      @click:append="show1 = !show1"
                       :type="show1 ? 'text' : 'password'"
                       :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                       v-model="confirm_password"
@@ -65,6 +110,7 @@
                     ></v-text-field>
                   </div>
                 </v-expand-transition>
+
                 <br />
                 <center>
                   <v-btn
@@ -75,7 +121,8 @@
                     :disabled="disable"
                     rounded
                     @click="validate"
-                  >Login</v-btn>
+                    >Login</v-btn
+                  >
                   <v-btn
                     color="pink"
                     v-else
@@ -84,7 +131,8 @@
                     :disabled="disable"
                     rounded
                     @click="validate"
-                  >Sign up</v-btn>
+                    >Sign up</v-btn
+                  >
                 </center>
               </v-form>
             </v-card-text>
@@ -94,7 +142,13 @@
               <v-spacer></v-spacer>
               <span class="caption" v-if="!signup">
                 New user ?
-                <v-btn color="pink" @click="(signup= true , toggleForm())" small text>register here</v-btn>
+                <v-btn
+                  color="pink"
+                  @click="(signup = true), toggleForm()"
+                  small
+                  text
+                  >register here</v-btn
+                >
               </span>
               <span class="caption" v-else>
                 Already have an account ?
@@ -102,9 +156,10 @@
                   color="pink"
                   small
                   text
-                  @click="(signup= false , toggleForm())"
+                  @click="(signup = false), toggleForm()"
                   signup="true"
-                >Login here</v-btn>
+                  >Login here</v-btn
+                >
               </span>
             </v-card-actions>
           </v-card>
@@ -142,10 +197,13 @@
 </style>
 <script>
 import Snackbar from "@/components/Snackbar.vue";
+import { mask } from "vue-the-mask";
+
 import axios from "axios";
 export default {
   data() {
     return {
+      mask: "####-###-####",
       signup: false,
       disable: false,
       loading: false,
@@ -155,16 +213,26 @@ export default {
       title: "Login",
       credentials: {
         username: "",
-        password: ""
+        password: "",
+        firstname: "",
+        lastname: "",
+        contact: ""
       },
       rules: {
         required: value => !!value || "Required.",
+        nameRules: v => /^[A-Z a-z]+$/.test(v) || "Name must be valid",
         min: v => (!!v && v.length >= 8) || "Min 8 characters",
+        cont: () =>
+          this.credentials.contact ===
+          /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im,
         matchPassword: () =>
           this.credentials.password === this.confirm_password ||
           "Passwords don't match !"
       }
     };
+  },
+  directives: {
+    mask
   },
   components: {
     Snackbar
@@ -185,7 +253,7 @@ export default {
 
     validate() {
       if (this.$refs.form.validate()) {
-        var url = "https://pictalk-api.herokuapp.com/crud/";
+        var url = "http://localhost:4000/crud/";
         if (this.signup) {
           this.sendRequest(url + "register");
         } else {

@@ -3,16 +3,16 @@ const bcrypt = require("bcryptjs");
 let models = require("../model/models");
 
 module.exports = function (credentials, res) {
-    models.User.findOne({ username: credentials.username }, (err, user) => {
+    models.User.findOne({ "profile.username": credentials.username }, (err, user) => {
         if (err) {
             res.json(err);
         } else {
             if (user !== null) {
                 bcrypt
-                    .compare(credentials.password, user.password)
+                    .compare(credentials.password, user.profile.password)
                     .then(match => {
                         if (match) {
-                            let token = jwt.sign({ user: { id: user._id, username: user.username } }, "pictalk");
+                            let token = jwt.sign({ user: { id: user._id, username: user.profile.username } }, "pictalk");
                             res.status(200).send({
                                 error: false,
                                 auth: true,

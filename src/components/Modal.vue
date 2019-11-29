@@ -136,11 +136,8 @@ export default {
                     image: this.file,
                     imageName: this.filename,
                     caption: this.description,
-                    tag: this.tag,
-                    priority: false,
-                    userId: this.this_parent.account.id,
-                    username: this.this_parent.account.username
-                };
+                    category: this.tag,
+                    userId: this.this_parent.account.id,                };
                 if (!this.isUpdate) {
                     this.upload(post);
                 } else {

@@ -167,7 +167,7 @@ export default {
       this.removeImage(id);
 
       axios
-        .post("https://pictalk-api.herokuapp.com/crud/delete", { id: id })
+        .post("http://localhost:4000/user/delete", { id: id })
         .then(res => {
           if (res.data.success) {
             if (this.images.length == 0) {
@@ -189,7 +189,7 @@ export default {
       }, 500);
     },
     getImages() {
-      var url = "https://pictalk-api.herokuapp.com/crud/retrieveAll";
+      var url = "http://localhost:4000/user/retrieveAll";
       var query = {
         id: this.account.id
       };
@@ -243,23 +243,6 @@ export default {
       this.buttonTitle = "Update";
     },
 
-    like(image) {
-      if (!image.priority) {
-        this.notify("Unliked!");
-      } else {
-        this.notify("Liked!");
-      }
-      this.images.map(img => {
-        img.priority = img._id == image._id ? image.priority : img.priority;
-      });
-
-      axios.post("https://pictalk-api.herokuapp.com/crud/like", {
-        id: image._id
-      });
-      this.images.sortImages();
-      this.updateImage();
-      this.togglePhotos();
-    },
     notify(msg) {
       this.$refs.notif.message(msg);
     },

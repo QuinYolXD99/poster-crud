@@ -68,13 +68,6 @@
                   <div v-if="!$parent.allImageMode">
                       <v-btn small icon>
                         <v-icon
-                          :disabled="$parent.loading"
-                          :color="$parent.filteredList[i].priority?'pink':'grey'"
-                          v-on:click="($parent.filteredList[i].priority = !$parent.filteredList[i].priority,$parent.like($parent.filteredList[i]))"
-                        >mdi-star</v-icon>
-                      </v-btn>
-                      <v-btn small icon>
-                        <v-icon
                           color="pink"
                           :disabled="$parent.loading"
                           v-on:click="$parent.beforeUpdate($parent.filteredList[i])"

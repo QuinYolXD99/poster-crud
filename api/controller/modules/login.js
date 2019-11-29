@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-let models = require("../model/models");
+let models = require("../../model/new_models");
 
 module.exports = function (credentials, res) {
     models.User.findOne({ username: credentials.username }, (err, user) => {

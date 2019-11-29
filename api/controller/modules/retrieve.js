@@ -1,4 +1,4 @@
-let models = require("../model/models");
+let models = require("../../model/new_models");
 let retrieveOwn = (id, res) => {
     models.Post.find({ userId: id }, (err, images) => {
         if (err) {

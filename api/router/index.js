@@ -1,54 +1,39 @@
 const express = require("express");
 const routes = express.Router();
+const upload = require("../config/multer_upload");
 //controller
-const create = require("../controller/create")
-const retrieve = require("../controller/retrieve")
-const update = require("../controller/update")
-const remove = require("../controller/delete")
-const login = require("../controller/login")
-const register = require("../controller/register")
+const main_contoller = require('../controller/main_contoller');
 //create
-routes.route("/upload").post((req, res) => {
-    create(req.body, res)
+routes.route("/upload").post(upload.single('img'),(req, res) => {
+    let details = JSON.parse(req.body.details)
+    details.image = `http://localhost:4000/files/${req.file.filename}`;
+    main_contoller.create_post(details, res)
 });
 //retrieve
 routes.route("/retrieve").post((req, res) => {
-     retrieve.retrieveOwn(req.body.id, res)
+    main_contoller.retrieve_posts.retrieveOwn(req.body.id, res)
 });
-//retrieve
+//retrieveAll
 routes.route("/retrieveAll").post((req, res) => {
-    retrieve.retrieveAll(res)
+    main_contoller.retrieve_posts.retrieveAll(res)
 });
 // update
 routes.route("/update").post((req, res) => {
-    update.update(req.body, res)
+    main_contoller.update_post(req.body, res)
 });
 // delete
 routes.route("/delete").post((req, res) => {
     // console.log(req.body);
-    remove(req.body, res);
-});
-
-routes.route("/like").post((req, res) => {
-    // console.log(req.body);   
-    update.like(req.body, res);
+    main_contoller.remove_post(req.body, res);
 });
 
 // login
 routes.route("/login").post((req, res) => {
-    login(req.body, res);
+    main_contoller.login(req.body, res);
 });
 
 routes.route("/register").post((req, res) => {
-    register(req.body, res);
+    main_contoller.register(req.body, res);
 });
-
-
-// register
-// routes.route("/mark").post((req, res) => {
-//     update.markTodo(req.body, res);
-// });
-
-
 
 module.exports = routes;

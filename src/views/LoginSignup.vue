@@ -185,7 +185,7 @@ export default {
 
     validate() {
       if (this.$refs.form.validate()) {
-        var url = "https://pictalk-api.herokuapp.com/crud/";
+        var url = "http://localhost:4000/user/";
         if (this.signup) {
           this.sendRequest(url + "register");
         } else {

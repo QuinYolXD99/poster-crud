@@ -4,7 +4,6 @@ import router from "./router";
 import vuetify from "./plugins/vuetify";
 import 'viewerjs/dist/viewer.css'
 import Viewer from 'v-viewer'
-import * as VueGoogleMaps from "vue2-google-maps";
 
 var defaultOpts = {
   toolbar: {
@@ -23,13 +22,6 @@ var defaultOpts = {
     flipVertical: 0,
   }
 }
-
-Vue.use(VueGoogleMaps, {
-  load: {
-    key: "AIzaSyA5iz1qKAI_-vCAP58JD11SmyeKytoOp3Y",
-    libraries: "places" // necessary for places input
-  }
-});
 Vue.use(Viewer,{
   defaultOptions:defaultOpts
 })

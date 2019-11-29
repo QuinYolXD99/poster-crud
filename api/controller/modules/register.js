@@ -1,5 +1,5 @@
 /* eslint-disable  */
-let models = require("../model/models");
+let models = require("../../model/new_models");
 const jwt = require("jsonwebtoken");
 
 module.exports = function (credentials, res) {

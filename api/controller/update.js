@@ -33,4 +33,7 @@ const like = (reqBody, res) => {
         });
     });
 }
+const auth= (reqBody, res) =>{
+
+}
 module.exports = { update, like }

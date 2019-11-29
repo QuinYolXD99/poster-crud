@@ -53,6 +53,16 @@
             </v-list-item-content>
           </v-list-item>
         </v-list>
+        <v-list dense>
+          <v-list-item @click="profile()">
+            <v-list-item-icon>
+              <v-icon>mdi-account</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>View Profile</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
       </v-menu>
     </v-app-bar>
     <v-container id="body" fluid>
@@ -140,6 +150,9 @@ export default {
     }
   },
   methods: {
+    profile() {
+      this.$router.push("/UpdateProfile");
+    },
     logout() {
       localStorage.removeItem("token");
       this.$router.push("/login");

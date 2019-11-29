@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const bcrypt = require("bcryptjs")
+// const bcrypt = require("bcryptjs")
 var photoSchema = new Schema({
 
     image: { type: String },
@@ -18,10 +18,10 @@ var userSchema = new Schema({
     username: { type: String },
     password: { type: String }
 }, {
-        collection: "users"
-    })
+    collection: "users"
+})
 
-userSchema.pre("save", function (next) {
+userSchema.pre("save", function(next) {
     if (!this.isModified("password")) {
         return next();
     }

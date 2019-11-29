@@ -4,8 +4,6 @@ let timestamp = require("./timestamp")
 
 const update = (reqBody, res) => {
     reqBody = timestamp(reqBody)
-    console.log("updating....");
-
     models.Post.findByIdAndUpdate(reqBody.id, reqBody.post, { new: true }, (err, doc) => {
         console.log("update done!");
 
@@ -21,10 +19,10 @@ const update = (reqBody, res) => {
     })
 }
 const like = (reqBody, res) => {
-    models.Post.findOne({ _id: reqBody.id }, function (err, post) {
+    models.Post.findOne({ _id: reqBody.id }, function(err, post) {
         post.priority = !post.priority
         post.updatedAt = new Date().toJSON().slice(0, 10).replace(/-/g, '/')
-        post.save(function (err, post) {
+        post.save(function(err, post) {
             if (err) {
                 res.status(200).send({ error: true, success: false })
             } else {

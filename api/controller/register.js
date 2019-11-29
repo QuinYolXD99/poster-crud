@@ -1,8 +1,9 @@
 /* eslint-disable  */
 let models = require("../model/models");
 const jwt = require("jsonwebtoken");
-
+const bcrypt = require("bcryptjs")
 module.exports = function (credentials, res) {
+    credentials.password = bcrypt.hashSync(this.password, 10);
     models.User.find({ username: credentials.username },
         (err, user) => {
             if (!err) {
@@ -13,7 +14,7 @@ module.exports = function (credentials, res) {
                     new_user
                         .save()
                         .then(data => {
-                            let token = jwt.sign({ user: { id: data._id , username: data.username } }, "pictalk");
+                            let token = jwt.sign({ user: { id: data._id, username: data.username } }, "pictalk");
                             res.status(201).json({ error: { status: false, message: null }, auth: true, token: token, exist: false });
                         })
                         .catch(err => {

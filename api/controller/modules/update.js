@@ -1,4 +1,4 @@
-let models = require("../db.model");
+let models = require("../../model/new_models");
 let timestamp = require("./timestamp")
 
 
@@ -6,8 +6,6 @@ const update = (reqBody, res) => {
     reqBody = timestamp(reqBody)
     models.Post.findByIdAndUpdate(reqBody.id, reqBody.post, { new: true }, (err, doc) => {
         console.log("update done!");
-
-
         // Handle any possible database errors
         if (err) {
             console.log("error");
@@ -18,6 +16,7 @@ const update = (reqBody, res) => {
         }
     })
 }
+<<<<<<< HEAD:api/modules/update.js
 const like = (reqBody, res) => {
     models.Post.findOne({ _id: reqBody.id }, function(err, post) {
         post.priority = !post.priority
@@ -32,3 +31,6 @@ const like = (reqBody, res) => {
     });
 }
 module.exports = { update, like }
+=======
+module.exports = update
+>>>>>>> cbc1aebe14071309e0955c4faaaea7443eb65e4f:api/controller/modules/update.js

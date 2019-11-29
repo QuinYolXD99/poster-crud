@@ -32,4 +32,4 @@ export default {
     };
   }
 };
-</script>2
+</script>

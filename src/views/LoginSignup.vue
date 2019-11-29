@@ -48,7 +48,6 @@
                   prepend-icon="mdi-lock"
                   @keyup.enter="validate"
                 ></v-text-field>
-
                 <v-expand-transition>
                   <div v-if="signup">
                     <v-text-field
@@ -66,7 +65,6 @@
                     ></v-text-field>
                   </div>
                 </v-expand-transition>
-
                 <br />
                 <center>
                   <v-btn
@@ -187,8 +185,7 @@ export default {
 
     validate() {
       if (this.$refs.form.validate()) {
-        var port = 4000;
-        var url = "http://localhost:" + port + "/crud/";
+        var url = "http://localhost:4000/user/";
         if (this.signup) {
           this.sendRequest(url + "register");
         } else {
@@ -201,7 +198,6 @@ export default {
       axios
         .post(url, this.credentials)
         .then(res => {
-          console.log(res);
           this.loading = false;
           if (res.data.auth) {
             this.$refs.snackbar.message("Welcome " + this.credentials.username);

@@ -30,6 +30,7 @@
       >My Photos</v-btn>|
       <v-btn
         text
+        ref="explore"
         :disabled="loading"
         @click="(allImageMode = true , togglePhotos())"
         :color=" allImageMode ? 'pink' : 'grey' "
@@ -166,7 +167,7 @@ export default {
       this.removeImage(id);
 
       axios
-        .post("http://localhost:4000/crud/delete", { id: id })
+        .post("http://localhost:4000/user/delete", { id: id })
         .then(res => {
           if (res.data.success) {
             if (this.images.length == 0) {
@@ -184,11 +185,11 @@ export default {
     removeImage(id) {
       setTimeout(() => {
         this.images = this.images.filter(image => image._id !== id);
+        this.togglePhotos();
       }, 500);
-      this.updateImage();
     },
     getImages() {
-      var url = "http://localhost:4000/crud/retrieveAll";
+      var url = "http://localhost:4000/user/retrieveAll";
       var query = {
         id: this.account.id
       };
@@ -209,7 +210,9 @@ export default {
           if (this.images.length == 0) {
             this.notify("No images Available!");
           }
+          this.allImageMode = false;
           this.updateImage();
+          this.togglePhotos();
           this.$refs.notif.snackbar = false;
         })
         .catch(err => {
@@ -223,9 +226,7 @@ export default {
         });
     },
     sortImages() {
-      this.images.sort(function(a, b) {
-        return b.priority - a.priority;
-      });
+     this.images.sort((a, b) => (a.priority > b.priority) ? -1 : 1)
       return this.images;
     },
 
@@ -242,15 +243,6 @@ export default {
       this.buttonTitle = "Update";
     },
 
-    like(image) {
-      if (!image.priority) {
-        this.notify("Unliked!");
-      } else {
-        this.notify("Liked!");
-      }
-      this.images = this.sortImages();
-      axios.post("http://localhost:4000/crud/like", { id: image._id });
-    },
     notify(msg) {
       this.$refs.notif.message(msg);
     },

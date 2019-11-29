@@ -6,7 +6,7 @@
     ref="viewer"
   >
     <template slot-scope="scope">
-      <img v-for="(src , i) in scope.images" :src="src" :key="i+'src'" :ref="'img'" hidden>
+      <img v-for="(src , i) in scope.images" :src="src" :key="i+'src'" :ref="'img'" hidden />
       <v-item-group multiple>
         <v-row>
           <v-img
@@ -37,20 +37,22 @@
                     <small>
                       <v-card-text class="font-italic caption">
                         Filename : "{{$parent.filteredList[i].imageName}}"
-                        <br>
+                        <br />
                         Description : "{{$parent.filteredList[i].caption}}"
-                        <br>
+                        <br />
+                        Tag : "{{$parent.filteredList[i].tag}}"
+                        <br />
                         Date created : "{{$parent.filteredList[i].createdAt}}"
-                        <br>
+                        <br />
                         Last Modified : "{{$parent.filteredList[i].updatedAt}}"
-                        <br>
-                        Posted by <strong>{{$parent.filteredList[i].username}} </strong>
+                        <br />Posted by
+                        <strong>{{$parent.filteredList[i].username}}</strong>
+                        
                       </v-card-text>
                     </small>
                   </div>
                 </v-expand-transition>
                 <v-divider></v-divider>
-
                 <v-card-actions draggable>
                   <v-card-title
                     class="body-2 font-weight-bold text-capitalize"
@@ -60,28 +62,28 @@
                   </v-btn>
 
                   <v-spacer></v-spacer>
-                  <v-btn icon>
-                    <v-icon color="pink" v-on:click="download($parent.filteredList[i])">mdi-download</v-icon>
+                  <v-btn small icon>
+                    <v-icon color="pink" v-on:click="download($parent.filteredList[i])">mdi-cloud-download</v-icon>
                   </v-btn>
                   <div v-if="!$parent.allImageMode">
-                    <v-btn icon>
-                      <v-icon
-                        :disabled="$parent.loading"
-                        :color="$parent.filteredList[i].priority?'pink':'grey'"
-                        v-on:click="($parent.filteredList[i].priority = !$parent.filteredList[i].priority,$parent.like($parent.filteredList[i]))"
-                      >mdi-star</v-icon>
-                    </v-btn>
-                    <v-btn icon>
-                      <v-icon
-                        color="pink"
-                        :disabled="$parent.loading"
-                        v-on:click="$parent.beforeUpdate($parent.filteredList[i])"
-                      >mdi-pencil</v-icon>
-                    </v-btn>
-                    <v-btn icon v-on:click="$parent.prompt($parent.filteredList[i]._id)">
-                      <v-icon color="pink">mdi-delete</v-icon>
-                    </v-btn>
-                  </div>
+                      <v-btn small icon>
+                        <v-icon
+                          :disabled="$parent.loading"
+                          :color="$parent.filteredList[i].priority?'pink':'grey'"
+                          v-on:click="($parent.filteredList[i].priority = !$parent.filteredList[i].priority,$parent.like($parent.filteredList[i]))"
+                        >mdi-star</v-icon>
+                      </v-btn>
+                      <v-btn small icon>
+                        <v-icon
+                          color="pink"
+                          :disabled="$parent.loading"
+                          v-on:click="$parent.beforeUpdate($parent.filteredList[i])"
+                        >mdi-pencil</v-icon>
+                      </v-btn>
+                      <v-btn small icon v-on:click="$parent.prompt($parent.filteredList[i]._id)">
+                        <v-icon color="pink">mdi-delete</v-icon>
+                      </v-btn>
+                    </div>
                 </v-card-actions>
                 <v-footer dark padless>
                   <v-card class="flex" flat tile></v-card>
@@ -92,7 +94,7 @@
         </v-row>
       </v-item-group>
     </template>
-    <DeletePrompt ref="prompt"/>
+    <DeletePrompt ref="prompt" />
   </viewer>
 </template>
 <script>

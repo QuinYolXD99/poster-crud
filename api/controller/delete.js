@@ -1,4 +1,4 @@
-let models = require("../db.model");
+let models = require("../model/models");
 module.exports = (reqBody, res) => {
     models.Post.deleteOne({ _id: reqBody.id }, (err) => {
         if (err) {

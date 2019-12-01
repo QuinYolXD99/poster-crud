@@ -221,7 +221,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      mask: "####-###-####",
+      mask: "+639##-###-####",
       signup: false,
       disable: false,
       loading: false,

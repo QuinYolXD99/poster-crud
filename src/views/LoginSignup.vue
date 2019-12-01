@@ -284,7 +284,7 @@ export default {
         this.sendRequest(url + "register");
         this.credentials = {
           username: this.credentials.username,
-          password = this.credentials.password
+          password : this.credentials.password
         }
       }
       axios

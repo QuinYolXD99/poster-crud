@@ -1,13 +1,27 @@
 <template>
   <!-- <v-row justify="center"> -->
   <div>
-    <v-app-bar light app>
+    <v-app-bar
+      light
+      app
+    >
       <v-btn text>
         <v-toolbar-title>PicTalk</v-toolbar-title>
       </v-btn>
       <v-spacer></v-spacer>
-      <v-progress-linear :active="loading" :indeterminate="loading" absolute bottom color="pink"></v-progress-linear>
-      <v-btn v-show="images.length!==0" text small @click="show">
+      <v-progress-linear
+        :active="loading"
+        :indeterminate="loading"
+        absolute
+        bottom
+        color="pink"
+      ></v-progress-linear>
+      <v-btn
+        v-show="images.length!==0"
+        text
+        small
+        @click="show"
+      >
         <v-icon left>mdi-play</v-icon>
       </v-btn>
       <div @click="reset()">
@@ -36,9 +50,17 @@
         :color=" allImageMode ? 'pink' : 'grey' "
       >Explore</v-btn>
 
-      <v-menu left offset-y>
+      <v-menu
+        left
+        offset-y
+      >
         <template v-slot:activator="{ on }">
-          <v-btn icon x-large v-on="on" color="pink">
+          <v-btn
+            icon
+            x-large
+            v-on="on"
+            color="pink"
+          >
             <v-icon>mdi-account-circle</v-icon>
           </v-btn>
         </template>
@@ -55,10 +77,16 @@
         </v-list>
       </v-menu>
     </v-app-bar>
-    <v-container id="body" fluid>
+    <v-container
+      id="body"
+      fluid
+    >
       <v-container class="pa-1">
         <v-row class="justify-center">
-          <v-col cols="12" md="5">
+          <v-col
+            cols="12"
+            md="5"
+          >
             <v-text-field
               placeholder="search image caption , tags , or dates"
               :v-if="!images.length==0"
@@ -226,7 +254,7 @@ export default {
         });
     },
     sortImages() {
-     this.images.sort((a, b) => (a.priority > b.priority) ? -1 : 1)
+      this.images.sort((a, b) => (a.priority > b.priority) ? -1 : 1)
       return this.images;
     },
 

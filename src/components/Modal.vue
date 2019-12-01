@@ -152,9 +152,9 @@ export default {
     handleFileUpload() {
       this.file = this.$refs.myFiles.files[0];
       this.filename = this.trimString(this.file.name);
-      // this.encode(this.file).then(res => {
-      //     this.file = res;
-      // });
+      this.encode(this.file).then(res => {
+          this.file = res;
+      });
     },
     trimString(string) {
       return string.length > 20 ? string.substring(0, 20) + "..." : string;

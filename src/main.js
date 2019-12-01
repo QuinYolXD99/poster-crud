@@ -4,6 +4,8 @@ import router from "./router";
 import vuetify from "./plugins/vuetify";
 import 'viewerjs/dist/viewer.css'
 import Viewer from 'v-viewer'
+
+
 var defaultOpts = {
   toolbar: {
     zoomOut: 1,

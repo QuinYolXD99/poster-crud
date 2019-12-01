@@ -4,7 +4,19 @@ import Home from "../views/Home.vue";
 import Login from "../views/LoginSignup.vue";
 import NotFound from "../views/404.vue";
 import { isNullOrUndefined } from "util";
+import loadGoogleCharts from './../lib/google-charts-loader'
 
+
+// Install the components
+export function install (Vue) {
+  Vue.component('Home', Home)
+}
+
+// Expose the components
+export {
+  loadGoogleCharts,
+  Home
+}
 Vue.use(VueRouter);
 
 const routes = [

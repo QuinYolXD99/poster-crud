@@ -14,10 +14,9 @@ let retrieveOwn = (id, res) => {
 }
 let retrieveAll = (res) => {
     models.Post
-        .find()
-        .populate('user')
+        .find({}, { __v: false })
+        .populate('user', '-posts -profile.password -profile._id -__v')
         .exec((err, images) => {
-            console.log(images);
             if (err) {
                 res.status(200).send({ error: { body: err, message: "no images", status: true }, success: false, data: null })
             } else {

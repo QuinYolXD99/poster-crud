@@ -71,7 +71,6 @@
               :v-if="!images.length==0"
               prepend-inner-icon="mdi-magnify"
               v-model="search"
-              @keypress="keymonitor"
               color="dark"
               clearable
             ></v-text-field>
@@ -85,8 +84,6 @@
           <Feed :details="details" />
           <br>
         </div>
-
-        <!-- <ImageViewer ref="viewer" /> -->
       </v-container>
     </v-container>
     <DeletePrompt ref="prompt" />
@@ -98,7 +95,6 @@
 import Modal from "@/components/Modal.vue";
 import Snackbar from "@/components/Snackbar.vue";
 import DeletePrompt from "@/components/DeletePrompt.vue";
-import ImageViewer from "./ImageViewer.vue";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import Feed from "@/components/Feed.vue";
@@ -115,16 +111,13 @@ export default {
       id: "",
       loading: false,
       uploading: false,
-      tempImage: [],
       images: [],
       color: "red",
       menu: false,
-      allImageMode: true
     };
   },
   components: {
     Modal,
-    ImageViewer,
     Snackbar,
     Feed,
     DeletePrompt
@@ -156,11 +149,7 @@ export default {
   methods: {
     logout() {
       localStorage.removeItem("token");
-
       this.$router.push("/login");
-    },
-    keymonitor(e) {
-      this.allImageMode = true;
     },
     reset() {
       this.cardTitle = "Add new Image";
@@ -204,17 +193,14 @@ export default {
     },
     getImages() {
       var url = "http://localhost:4000/user/retrieveAll";
-      var query = {
-        id: this.account.id
-      };
-      this.sendImageRequest(url, query);
+      this.sendImageRequest(url);
     },
-    sendImageRequest(url, query) {
+    sendImageRequest(url) {
       this.images = [];
       this.notify("Please wait while we are retrieving your data...");
       this.loading = true;
       axios
-        .post(url, query)
+        .post(url)
         .then(res => {
           this.uploading = false;
           this.loading = false;
@@ -222,7 +208,6 @@ export default {
           if (this.images.length == 0) {
             this.notify("No images Available!");
           }
-          this.allImageMode = false;
           this.updateImage();
           this.togglePhotos();
           this.$refs.notif.snackbar = false;
@@ -245,9 +230,7 @@ export default {
     if (isNullOrUndefined(this.account)) {
       this.$router.replace("/login");
     } else {
-      console.log(this.$jwt_decode(this.$route.params.token).user);
-
-      // this.getImages();
+      this.getImages();
     }
   }
 };

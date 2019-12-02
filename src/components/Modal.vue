@@ -279,7 +279,7 @@ export default {
       this.notify("Updating....", null);
       this.this_parent.timeout = 100000;
       axios
-        .post("https://pictalk-api.herokuapp.com/crud/update", {
+        .post(this.$_CONFIG.requestuserRequestURL + "update", {
           id: this.this_parent.id,
           post: post
         })
@@ -318,7 +318,7 @@ export default {
       this.this_parent.loading = true;
       this.notify("Upload in progress......", null, false);
       axios
-        .post("http://localhost:4000/user/upload", post)
+        .post(this.$_CONFIG.userRequestURL + "upload", post)
         .then(res => {
           if (!res.data.error) {
             this.this_parent.images.push(res.data.data);

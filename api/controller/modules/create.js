@@ -8,7 +8,7 @@ module.exports = (reqBody, res) => {
     let post = new models.Post(reqBody);
     post.save()
         .then(result => {
-            models.User.findByIdAndUpdate({ _id: reqBody.user }, { $push: { posts: result._id } }, { upsert: true },
+            models.User.findByIdAndUpdate({ _id: reqBody.user }, { $push: { posts: result._id } }, { new: true },
                 (error, success) => {
                     if (error) {
                         console.log(error);

@@ -13,7 +13,7 @@ var postSchema = new Schema({
 }, { collection: "posts" });
 
 var profileSchema = new Schema({
-    avatar: { type: String },
+    avatar: { type: String, default: null },
     username: { type: String, required: true },
     password: { type: String, required: true },
     firstname: { type: String, required: true },

@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div>
 
     <v-dialog
@@ -32,6 +33,26 @@
         max-width="700px"
         :loading="uploading_local"
       >
+=======
+    <div>
+    
+        <v-dialog v-model="dialog" max-width="700">
+    
+            <template v-slot:activator="{ on }">
+    
+            <div class="my-2" dark v-on="on">
+    
+              <v-btn text small :disabled="disabled">
+    
+                <v-icon left>mdi-pencil</v-icon>Post
+    
+              </v-btn>
+    
+            </div>
+</template>
+
+      <v-card id="body " max-width="700px" :loading="uploading_local">
+>>>>>>> 6c69458a519f5a1bcdebd226ec8daba3f4797ff6
         <v-card-title>
           <span class="title text-center">{{cardTitle}}</span>
         </v-card-title>

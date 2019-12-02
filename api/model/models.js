@@ -5,14 +5,14 @@ var uniqueValidator = require('mongoose-unique-validator');
 
 var photoSchema = new Schema({
     image: { type: String },
-    imageName: { type: String },
-    caption: { type: String },
-    tag: { type: String },
-    priority: { type: Boolean },
-    createdAt: { type: String },
-    updatedAt: { type: String },
-    userId: { type: String },
-    username: { type: String }
+    imageName: { type: String, required: true },
+    caption: { type: String, required: true },
+    priority: { type: Boolean, required: true },
+    category: { type: String, required: true },
+    location: { type: String, required: true },
+    createdAt: { type: String, required: true },
+    updatedAt: { type: String, required: true },
+    userId: { type: mongoose.Types.ObjectId, required: true, ref: 'User' }
 }, { collection: "posts" });
 
 var profileSchema = new Schema({
@@ -26,6 +26,7 @@ var profileSchema = new Schema({
 
 var userSchema = new Schema({
     account: profileSchema,
+    posts: { type: [mongoose.Types.ObjectId], ref: 'Post' }
 },
 {
     collection: "users"
@@ -33,6 +34,7 @@ var userSchema = new Schema({
 
 var adminSchema = new Schema({
     account: profileSchema,
+    posts: { type: [mongoose.Types.ObjectId], ref: 'Post' },
     role : {type: String, required: true}
 },
 {

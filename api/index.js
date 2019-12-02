@@ -10,9 +10,7 @@ router.get('/', function(req, res, next) {
 
     model.find({}, ['path','caption'], {sort:{ _id: -1} }, function(err, photos) {
     res.render('index', { title: 'NodeJS file upload tutorial', msg:req.query.msg, photolist : photos });
-    
   });
-
 });
 
 /** Upload file to path and add record to database */

@@ -1,7 +1,7 @@
 <template>
     <div>
     
-        <v-dialog v-model="dialog" max-width="400">
+        <v-dialog v-model="dialog" max-width="700">
     
             <template v-slot:activator="{ on }">
     
@@ -16,7 +16,7 @@
             </div>
 </template>
 
-      <v-card id="body " max-width="400px" :loading="uploading_local">
+      <v-card id="body " max-width="700px" :loading="uploading_local">
         <v-card-title>
           <span class="title text-center">{{cardTitle}}</span>
         </v-card-title>

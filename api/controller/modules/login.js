@@ -1,24 +1,25 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-let models = require("../../model/new_models");
+let models = require("../../model/models");
 
-module.exports = function (credentials, res) {
-    models.User.findOne({ username: credentials.username }, (err, user) => {
+module.exports = (credentials, res) => {
+    models.User.findOne({ 'profile.username': credentials.username }, (err, user) => {
         if (err) {
             res.json(err);
         } else {
+            console.log(user);
             if (user !== null) {
                 bcrypt
-                    .compare(credentials.password, user.password)
+                    .compare(credentials.password, user.profile.password)
                     .then(match => {
                         if (match) {
-                            let token = jwt.sign({ user: { id: user._id, username: user.username } }, "pictalk");
+                            let token = jwt.sign({ user: user }, "pictalk");
                             res.status(200).send({
                                 error: false,
                                 auth: true,
                                 token: token,
                             });
-                        } else {    
+                        } else {
                             return res
                                 .status(202)
                                 .send({ error: true, auth: false, token: null });
@@ -36,7 +37,7 @@ module.exports = function (credentials, res) {
     }).catch(err => {
         if (err) {
             console.log(err);
-            res.status(503).send({ error: true , auth: false, token: null });
+            res.status(503).send({ error: true, auth: false, token: null });
         }
     });
 };

@@ -11,16 +11,16 @@
       <v-col
         cols="11"
         sm="8"
-        md="4"
+        md="5"
       >
         <center>
           <v-card
-            class="mycard mx-10"
+            class="mycard mx-10 "
             :disabled="loading"
           >
             <v-toolbar
               color="pink lighten-1"
-              height="100"
+              height="70"
               class="justify-center"
               dark
               flat
@@ -39,7 +39,10 @@
               ></v-progress-linear>
             </v-toolbar>
 
-            <v-card-text id="card-body">
+            <v-card-text
+              id="card-body"
+              class="px-10"
+            >
               <v-form
                 ref="form"
                 lazy-validation
@@ -83,6 +86,7 @@
                     <v-text-field
                       color="pink"
                       label="Contact Number"
+                      value="+639"
                       :rules="[rules.cont, rules.required]"
                       v-model="credentials.contact"
                       name="contact"
@@ -128,7 +132,6 @@
                   </div>
                 </v-expand-transition>
 
-                <br />
                 <center>
                   <v-btn
                     color="pink"
@@ -217,7 +220,6 @@
 <script>
 import Snackbar from "@/components/Snackbar.vue";
 import { mask } from "vue-the-mask";
-import axios from "axios";
 export default {
   data() {
     return {
@@ -234,7 +236,7 @@ export default {
         password: "",
         firstname: "",
         lastname: "",
-        contact: ""
+        contact: "+639"
       },
       rules: {
         required: value => !!value || "Required.",
@@ -270,7 +272,7 @@ export default {
     },
     validate() {
       if (this.$refs.form.validate()) {
-        var url = "http://localhost:4000/admin/";
+        var url = "http://localhost:4000/user/";
         if (this.signup) {
           this.sendRequest(url + "register");
         } else {
@@ -281,20 +283,20 @@ export default {
     sendRequest(url) {
       this.loading = true;
       if (!this.signup) {
-        this.sendRequest(url + "register");
         this.credentials = {
           username: this.credentials.username,
-          password : this.credentials.password
+          password: this.credentials.password
         }
+
       }
-      axios
+      this.$axios
         .post(url, this.credentials)
         .then(res => {
           this.loading = false;
           if (res.data.auth) {
             this.$refs.snackbar.message("Welcome " + this.credentials.username);
             localStorage.setItem("token", res.data.token);
-            this.$router.push("/");
+            this.$router.push(`/home/${localStorage.getItem("token")}`);
           } else {
             if (this.signup) {
               this.$refs.snackbar.message("Failed!!");
@@ -312,6 +314,6 @@ export default {
           this.$refs.snackbar.message("Something went wrong!");
         });
     }
-  }
+  },
 };
 </script>

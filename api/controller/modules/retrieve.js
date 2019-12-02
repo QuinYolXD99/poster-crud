@@ -1,8 +1,8 @@
-let models = require("../../model/new_models");
+let models = require("../../model/models");
 let retrieveOwn = (id, res) => {
     models.Post
         .find({ userId: id })
-        .populate('userId')
+        .populate('user')
         .exec((err, images) => {
             console.log(images);
             if (err) {
@@ -15,7 +15,7 @@ let retrieveOwn = (id, res) => {
 let retrieveAll = (res) => {
     models.Post
         .find()
-        .populate('userId')
+        .populate('user')
         .exec((err, images) => {
             console.log(images);
             if (err) {

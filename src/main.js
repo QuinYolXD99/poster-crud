@@ -2,36 +2,13 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import vuetify from "./plugins/vuetify";
-import 'viewerjs/dist/viewer.css'
-import Viewer from 'v-viewer'
-
-var defaultOpts = {
-  toolbar: {
-    zoomOut: 1,
-    oneToOne: 0,
-    reset: 0,
-    prev: 1,
-    play: {
-      show: 1,
-      size: 'large',
-    }, next: 1,
-    zoomIn: 1,
-    rotateLeft: 0,
-    rotateRight: 0,
-    flipHorizontal: 0,
-    flipVertical: 0,
-  }
-}
-Vue.use(Viewer,{
-  defaultOptions:defaultOpts
-})
-
-/*eslint no-console: ["error", { allow: ["warn", "error"] }] */
-
+import Axios from "axios";
+import jwt_decode from 'jwt-decode';
 Vue.config.productionTip = false;
-
+Vue.prototype.$axios = Axios;
+Vue.prototype.$jwt_decode = jwt_decode;
 new Vue({
-  router,
-  vuetify,
-  render: h => h(App)
+    router,
+    vuetify,
+    render: h => h(App)
 }).$mount("#app");

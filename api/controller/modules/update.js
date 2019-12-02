@@ -1,12 +1,7 @@
-let models = require("../../model/new_models");
-let timestamp = require("./timestamp")
-
-
+let models = require("../../model/models");
 const update = (reqBody, res) => {
-    reqBody = timestamp(reqBody)
+    reqBody.updatedAt = new Date().toJSON().slice(0, 10).replace(/-/g, '/');
     models.Post.findByIdAndUpdate(reqBody.id, reqBody.post, { new: true }, (err, doc) => {
-        console.log("update done!");
-        // Handle any possible database errors
         if (err) {
             console.log("error");
             res.status(200).send({ error: true, success: false, data: null })
@@ -16,4 +11,4 @@ const update = (reqBody, res) => {
         }
     })
 }
-module.exports = update
+module.exports = update;

@@ -1,9 +1,7 @@
-let models = require("../../model/new_models");
-let timestamp = require("./timestamp")
+let models = require("../../model/models");
 module.exports = (reqBody, res) => {
-    reqBody = timestamp(reqBody)
+    req.body.createdAt = new Date().toJSON().slice(0, 10).replace(/-/g, '/');
     let post = new models.Post(reqBody);
-    console.log(post);
     post.save()
         .then(result => {
             res.status(200).send({ error: false, success: true, data: result })
@@ -12,8 +10,3 @@ module.exports = (reqBody, res) => {
             res.status(200).send({ error: { body: err, status: true }, success: false })
         });
 }
-
-
-
-
-

@@ -3,12 +3,19 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Login from "../views/LoginSignup.vue";
 import NotFound from "../views/404.vue";
+import { isNullOrUndefined } from "util";
 // import { isNullOrUndefined } from "util";
 
 Vue.use(VueRouter);
 
 const routes = [{
         path: "/",
+        redirect: {
+            path: `/home/${localStorage.getItem('token')}`
+        }
+    },
+    {
+        path: "/home/:token",
         name: "home",
         component: Home
     },
@@ -22,13 +29,13 @@ const routes = [{
         name: "Login",
         component: Login,
         props: true,
-        // beforeEnter: (to, from, next) => {
-        //   if (!isNullOrUndefined(localStorage.getItem("token"))) {
-        //     next("/");
-        //   } else {
-        //     next();
-        //   }
-        // }
+        beforeEnter: (to, from, next) => {
+            if (!isNullOrUndefined(localStorage.getItem("token"))) {
+                next("/");
+            } else {
+                next();
+            }
+        }
     }
 ];
 

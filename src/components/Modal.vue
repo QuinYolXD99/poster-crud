@@ -1,26 +1,59 @@
-
-
 <template>
   <div>
-    <v-dialog v-model="dialog" max-width="400">
+
+    <v-dialog
+      v-model="dialog"
+      max-width="700"
+    >
+
       <template v-slot:activator="{ on }">
-        <div class="my-2" dark v-on="on">
-          <v-btn text small :disabled="disabled">
+
+        <div
+          class="my-2"
+          dark
+          v-on="on"
+        >
+
+          <v-btn
+            text
+            small
+            :disabled="disabled"
+          >
+
             <v-icon left>mdi-pencil</v-icon>Post
+
           </v-btn>
+
         </div>
       </template>
 
-      <v-card id="body " max-width="400px" :loading="uploading_local">
+      <v-card
+        id="body "
+        max-width="700px"
+        :loading="uploading_local"
+      >
         <v-card-title>
           <span class="title text-center">{{cardTitle}}</span>
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text>
-          <v-form ref="form" lazy-validation>
-            <v-row style="padding:10px" class="justify-center">
-              <v-avatar v-if="!file.empty" size="100" @click="$refs.myFiles.click()">
-                <img :src="file" alt="dp" />
+          <v-form
+            ref="form"
+            lazy-validation
+          >
+            <v-row
+              style="padding:10px"
+              class="justify-center"
+            >
+              <v-avatar
+                v-if="!file.empty"
+                size="100"
+                @click="$refs.myFiles.click()"
+              >
+                <img
+                  :src="file"
+                  alt="dp"
+                />
               </v-avatar>
               <v-btn
                 id="cam"
@@ -35,12 +68,15 @@
               >
                 <v-icon x-large>mdi-camera</v-icon>
               </v-btn>
-              <v-col cols="12" md="11">
+              <v-col
+                cols="12"
+                md="11"
+              >
                 <v-textarea
                   :filled="false"
-                  :rules="[v => !!v || 'add description!']"
+                  :rules="[v => !!v || 'add caption!']"
                   background-color="white"
-                  label="Description"
+                  label="Caption"
                   auto-grow
                   rows="1"
                   prepend-inner-icon="mdi-comment"
@@ -51,14 +87,26 @@
                   @keydown.enter="validate"
                 ></v-textarea>
                 <v-text-field
-                  label="add tag"
+                  label="Category"
                   clearable
-                  :rules="[v => !!v || 'add tag!']"
+                  :rules="[v => !!v || 'add category!']"
                   prepend-inner-icon="mdi-tag"
                   v-model="tag"
                   color="dark"
-                  @keydown.enter="validate"
+                  @keydown.enter="validate "
                 ></v-text-field>
+                <v-select
+                  :items="categories"
+                  label="Category"
+                  v-model="category"
+                  dense
+                ></v-select>
+                <v-select
+                  :items="locations"
+                  label="Location"
+                  dense
+                  v-model="location"
+                ></v-select>
               </v-col>
             </v-row>
             <v-col>
@@ -67,7 +115,13 @@
               </center>
             </v-col>
             <center>
-              <v-btn color="pink" outlined width="200" @click="validate " rounded>{{buttonTitle}}</v-btn>
+              <v-btn
+                color="pink"
+                outlined
+                width="200"
+                @click="validate "
+                rounded
+              >{{buttonTitle}}</v-btn>
             </center>
           </v-form>
         </v-card-text>
@@ -78,6 +132,7 @@
           v-show="false"
           label="Add Image"
           chips
+          multiple
           :rules="[v => !!v || 'file is required']"
           dense
           prepend-icon="mdi-image"
@@ -89,11 +144,10 @@
     </v-dialog>
   </div>
 </template>
-
 <style lang="css">
 #cam {
-  height: 100px;
-  width: 100px;
+    height: 100px;
+    width: 100px;
 }
 </style>
 <script>
@@ -112,9 +166,60 @@ export default {
       filename: "No file selected!",
       description: "",
       tag: "",
+      category: "",
+      location: "",
       dialog: false,
       file: { empty: true },
-      this_parent: this.$parent.$options.parent
+      this_parent: this.$parent.$options.parent,
+      locations: [
+        "Adlaon",
+        "Agsungot",
+        "Apas",
+        "Bacayan",
+        "Banilad",
+        "Binaliw",
+        "Budla-an",
+        "Busay",
+        "Zapatera",
+        "Day-as",
+        "Ermita",
+        "  Santa Cruz",
+        "Santo Niño",
+        "Sirao",
+        "  T Padilla",
+        "Talamban",
+        "Taptap",
+        "Tejero",
+        "Tinago",
+        'Carreta',
+        ' Cogon Ramos',
+        ' Day-as',
+        ' Ermita',
+        'Guba',
+        'Hipodromo',
+        'Kalubihan',
+        'Kamagayan',
+        'Kamputhaw (Camputhaw)',
+        'Kasambagan',
+        'Lahug',
+        'Lorega San Miguel',
+        'Lusaran',
+        'Luz',
+        'Mabini',
+        ' Mabolo Proper',
+        'Malubog',
+        'Pahina Central',
+        'Parian',
+        'Paril',
+        'Pit-os',
+        'Pulangbato',
+        'Sambag I',
+        'Sambag II',
+        ' San Antonio',
+        'San Jose',
+        'San Roque'
+      ],
+      categories: ['Waste', 'Crime', 'Traffic', 'Racism'],
     };
   },
   methods: {
@@ -123,38 +228,37 @@ export default {
         this.filename = "Please select file!";
         this.notify("All fields are required", null);
         setTimeout(() => {
-          this.filename = this.file.empty
-            ? "No file selected!"
-            : this.trimString(this.file.name);
+          this.filename = this.file.empty ?
+            "No file selected!" :
+            this.trimString(this.file.name);
         }, 1000);
       } else {
         var post = {
-          imageName: this.filename,
-          caption: this.description,
-          tag: this.tag,
-          priority: false,
-          userId: this.this_parent.account.id,
-          username: this.this_parent.account.username
+          description: this.description,
+          title: "title",
+          category: this.category,
+          user: this.$jwt_decode(this.$route.params.token).user._id,
+          location: this.location,
         };
-        
-        var data = new FormData();
-        data.append("img", this.file);
-        data.append("details", JSON.stringify(post));
-        let headers = { headers: { "Content-Type": "multipart/form-data" } };
+        var fd = new FormData();
+        // for (let i = 0; i < this.file.length; i++) {
+        //   fd.append('img', this.file[i])
+        // }
+        fd.append('img', this.file)
 
+        fd.append('details', JSON.stringify(post))
+        // fd.getAll()
+        console.log(fd.get('img'))
         if (!this.isUpdate) {
-          this.upload(data, headers);
+          this.upload(fd);
         } else {
-          this.update(data, headers);
+          this.update(post);
         }
       }
     },
     handleFileUpload() {
       this.file = this.$refs.myFiles.files[0];
       this.filename = this.trimString(this.file.name);
-      this.encode(this.file).then(res => {
-          this.file = res;
-      });
     },
     trimString(string) {
       return string.length > 20 ? string.substring(0, 20) + "..." : string;
@@ -170,19 +274,15 @@ export default {
       });
       return result_base64;
     },
-    update(post, headers) {
+    update(post) {
       this.this_parent.loading = true;
       this.notify("Updating....", null);
       this.this_parent.timeout = 100000;
       axios
-        .post(
-          "http://localhost:4000/user/update",
-          {
-            id: this.this_parent.id,
-            post: post
-          },
-          headers
-        )
+        .post("https://pictalk-api.herokuapp.com/crud/update", {
+          id: this.this_parent.id,
+          post: post
+        })
         .then(res => {
           this.this_parent.snackbar = false;
           this.this_parent.timeout = 2000;
@@ -196,11 +296,8 @@ export default {
             //     image => (image = image._id == updated._id ? updated : image)
             // );
 
-            var index = this.this_parent.images.findIndex(
-              img => img._id == updated._id
-            );
+            var index = this.this_parent.images.findIndex(img => img._id == updated._id);
             this.this_parent.images[index] = updated;
-            this.this_parent.togglePhotos();
             // this.this_parent.images[
             //   this.this_parent.images.findIndex(
             //     image => image._id === updated._id
@@ -217,19 +314,15 @@ export default {
           console.error(err); // eslint-disable-line no-console
         });
     },
-    upload(post, headers) {
+    upload(post) {
       this.this_parent.loading = true;
       this.notify("Upload in progress......", null, false);
-
       axios
-        .post("http://localhost:4000/user/upload", post, headers)
+        .post("http://localhost:4000/user/upload", post)
         .then(res => {
           if (!res.data.error) {
             this.this_parent.images.push(res.data.data);
-            this.this_parent.updateImage();
             this.this_parent.loading = false;
-            this.this_parent.allImageMode = false;
-            this.this_parent.togglePhotos();
             this.notify("File uploaded Sucessfully!", res.data.data, false);
             this.closeDialog();
           }

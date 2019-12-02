@@ -6,7 +6,7 @@ const main_contoller = require('../controller/main_contoller');
 //create
 routes.route("/upload").post(upload.single('img'), (req, res) => {
     let details = JSON.parse(req.body.details)
-    details.image = `http://localhost:4000/files/${req.file.filename}`;
+    details.images = [`http://localhost:4000/files/${req.file.filename}`];
     main_contoller.create_post(details, res);
 });
 //retrieve

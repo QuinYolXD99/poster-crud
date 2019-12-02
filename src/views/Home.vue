@@ -1,15 +1,22 @@
 <template>
   <!-- <v-row justify="center"> -->
   <div>
-    <v-app-bar light app>
+    <v-app-bar
+      light
+      app
+    >
       <v-btn text>
         <v-toolbar-title>PicTalk</v-toolbar-title>
       </v-btn>
       <v-spacer></v-spacer>
-      <v-progress-linear :active="loading" :indeterminate="loading" absolute bottom color="pink"></v-progress-linear>
-      <v-btn v-show="images.length!==0" text small @click="show">
-        <v-icon left>mdi-play</v-icon>
-      </v-btn>
+      <v-progress-linear
+        :active="loading"
+        :indeterminate="loading"
+        absolute
+        bottom
+        color="pink"
+      ></v-progress-linear>
+
       <div @click="reset()">
         <Modal
           ref="modal"
@@ -22,23 +29,17 @@
           @reset="reset()"
         />
       </div>
-      <v-btn
-        text
-        :disabled="loading"
-        :color=" !allImageMode ? 'pink' : 'grey' "
-        @click="(allImageMode = false , togglePhotos())"
-      >My Photos</v-btn>|
-      <v-btn
-        text
-        ref="explore"
-        :disabled="loading"
-        @click="(allImageMode = true , togglePhotos())"
-        :color=" allImageMode ? 'pink' : 'grey' "
-      >Explore</v-btn>
-
-      <v-menu left offset-y>
+      <v-menu
+        left
+        offset-y
+      >
         <template v-slot:activator="{ on }">
-          <v-btn icon x-large v-on="on" color="pink">
+          <v-btn
+            icon
+            x-large
+            v-on="on"
+            color="pink"
+          >
             <v-icon>mdi-account-circle</v-icon>
           </v-btn>
         </template>
@@ -55,10 +56,16 @@
         </v-list>
       </v-menu>
     </v-app-bar>
-    <v-container id="body" fluid>
+    <v-container
+      id="body"
+      fluid
+    >
       <v-container class="pa-1">
         <v-row class="justify-center">
-          <v-col cols="12" md="5">
+          <v-col
+            cols="12"
+            md="5"
+          >
             <v-text-field
               placeholder="search image caption , tags , or dates"
               :v-if="!images.length==0"
@@ -71,7 +78,15 @@
           </v-col>
         </v-row>
         <br />
-        <ImageViewer ref="viewer" />
+        <div
+          v-for="(details , i) in images"
+          :key="i"
+        >
+          <Feed :details="details" />
+          <br>
+        </div>
+
+        <!-- <ImageViewer ref="viewer" /> -->
       </v-container>
     </v-container>
     <DeletePrompt ref="prompt" />
@@ -86,7 +101,9 @@ import DeletePrompt from "@/components/DeletePrompt.vue";
 import ImageViewer from "./ImageViewer.vue";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
+import Feed from "@/components/Feed.vue";
 import { isNullOrUndefined } from "util";
+
 export default {
   data() {
     return {
@@ -109,26 +126,23 @@ export default {
     Modal,
     ImageViewer,
     Snackbar,
+    Feed,
     DeletePrompt
   },
   computed: {
     filteredList() {
-      if (!isNullOrUndefined(this.search)) {
-        return this.tempImage.filter(image => {
-          if (!isNullOrUndefined(image.image)) {
-            return (
-              image.caption.toLowerCase().includes(this.search.toLowerCase()) ||
-              image.tag.toLowerCase().includes(this.search.toLowerCase()) ||
-              image.createdAt
-                .toLowerCase()
-                .includes(this.search.toLowerCase()) ||
-              image.updatedAt.toLowerCase().includes(this.search.toLowerCase())
-            );
-          }
-        });
-      } else {
-        return this.images;
-      }
+      return this.images.filter(image => {
+        if (!isNullOrUndefined(image.image)) {
+          return (
+            image.caption.toLowerCase().includes(this.search.toLowerCase()) ||
+            image.tag.toLowerCase().includes(this.search.toLowerCase()) ||
+            image.createdAt
+              .toLowerCase()
+              .includes(this.search.toLowerCase()) ||
+            image.updatedAt.toLowerCase().includes(this.search.toLowerCase())
+          );
+        }
+      });
     },
     account() {
       return !isNullOrUndefined(localStorage.getItem("token"))
@@ -142,6 +156,7 @@ export default {
   methods: {
     logout() {
       localStorage.removeItem("token");
+
       this.$router.push("/login");
     },
     keymonitor(e) {
@@ -165,9 +180,8 @@ export default {
     },
     remove(id) {
       this.removeImage(id);
-
       axios
-        .post("https://pictalk-api.herokuapp.com/crud/delete", { id: id })
+        .post("http://localhost:4000/user/delete", { id: id })
         .then(res => {
           if (res.data.success) {
             if (this.images.length == 0) {
@@ -189,11 +203,10 @@ export default {
       }, 500);
     },
     getImages() {
-      var url = "https://pictalk-api.herokuapp.com/crud/retrieveAll";
+      var url = "http://localhost:4000/user/retrieveAll";
       var query = {
         id: this.account.id
       };
-
       this.sendImageRequest(url, query);
     },
     sendImageRequest(url, query) {
@@ -206,7 +219,6 @@ export default {
           this.uploading = false;
           this.loading = false;
           this.images = res.data.data;
-          this.images = this.sortImages();
           if (this.images.length == 0) {
             this.notify("No images Available!");
           }
@@ -220,78 +232,22 @@ export default {
             this.notify("Failed to load Images!");
             this.loading = false;
             setTimeout(() => {
-              this.getImages();
+              // this.getImages();
             }, 2000);
           }
         });
     },
-    sortImages() {
-     this.images.sort((a, b) => (a.priority > b.priority) ? -1 : 1)
-      return this.images;
-    },
-
-    beforeUpdate(item) {
-      this.$refs.modal.dialog = true;
-      this.$refs.modal.filename = this.$refs.modal.trimString(item.imageName);
-      this.$refs.modal.file = item.image;
-      this.$refs.modal.description = item.caption;
-      this.$refs.modal.tag = item.tag;
-      this.$refs.modal.color = "pink";
-      this.id = item._id;
-      this.isUpdate = true;
-      this.cardTitle = "Update Image";
-      this.buttonTitle = "Update";
-    },
-
-    like(image) {
-      if (!image.priority) {
-        this.notify("Unliked!");
-      } else {
-        this.notify("Liked!");
-      }
-      this.images.map(img => {
-        img.priority = img._id == image._id ? image.priority : img.priority;
-      });
-
-      axios.post("https://pictalk-api.herokuapp.com/crud/like", {
-        id: image._id
-      });
-      this.images.sortImages();
-      this.updateImage();
-      this.togglePhotos();
-    },
     notify(msg) {
       this.$refs.notif.message(msg);
     },
-    trimString(string, length) {
-      return string.length > length
-        ? string.substring(0, length) + "..."
-        : string;
-    },
-    inited(viewer) {
-      this.$viewer = viewer;
-    },
-    show() {
-      this.$viewer.show();
-    },
-    togglePhotos() {
-      if (!this.allImageMode) {
-        this.tempImage = this.images.filter(
-          image => image.userId == this.account.id
-        );
-      } else {
-        this.updateImage();
-      }
-    },
-    updateImage() {
-      this.tempImage = this.images;
-    }
   },
   mounted() {
     if (isNullOrUndefined(this.account)) {
       this.$router.replace("/login");
     } else {
-      this.getImages();
+      console.log(this.$jwt_decode(this.$route.params.token).user);
+
+      // this.getImages();
     }
   }
 };

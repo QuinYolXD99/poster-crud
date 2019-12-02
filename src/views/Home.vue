@@ -157,7 +157,7 @@ export default {
     logout() {
       localStorage.removeItem("token");
 
-this.$router.push("/login");
+      this.$router.push("/login");
     },
     keymonitor(e) {
       this.allImageMode = true;
@@ -245,6 +245,8 @@ this.$router.push("/login");
     if (isNullOrUndefined(this.account)) {
       this.$router.replace("/login");
     } else {
+      console.log(this.$jwt_decode(this.$route.params.token).user);
+
       // this.getImages();
     }
   }

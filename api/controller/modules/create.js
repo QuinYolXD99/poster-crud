@@ -1,12 +1,13 @@
 let models = require("../../model/models");
+const mongoose = require('mongoose');
 module.exports = (reqBody, res) => {
-    reqBody.user = mongooseTypes.ObjectId(reqBody.user);
+    reqBody.user = mongoose.Types.ObjectId(reqBody.user);
     reqBody.createdAt = new Date().toJSON().slice(0, 10).replace(/-/g, '/');
     let post = new models.Post(reqBody);
     console.log(post);
     post.save()
         .then(result => {
-            models.Post.findByIdAndUpdate({ _id: reqBody.user }, { $push: { posts: result._id } },
+            models.User.findByIdAndUpdate({ _id: reqBody.user }, { $push: { posts: result._id } }, { upsert: true },
                 (error, success) => {
                     if (error) {
                         console.log(error);

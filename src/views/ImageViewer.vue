@@ -22,11 +22,12 @@
                 <v-card-text>
                   <v-item>
                     <v-img
+                    id="img"
                       :src="image"
                       @click="$refs.img[i].click()"
                       cover
-                      height="300"
-                      aspect-ratio="1.4"
+                      height="500"
+                      aspect-ratio="1.0"
                       class="text-right pa-2"
                     ></v-img>
                   </v-item>
@@ -53,7 +54,7 @@
                   </div>
                 </v-expand-transition>
                 <v-divider></v-divider>
-                <v-card-actions draggable>
+                <v-card-actions>
                   <v-card-title
                     class="body-2 font-weight-bold text-capitalize"
                   >#{{$parent.filteredList[i].tag}}</v-card-title>
@@ -97,6 +98,12 @@
     <DeletePrompt ref="prompt" />
   </viewer>
 </template>
+<style scoped>
+  #img{
+    max-width: 900px!important;
+  }
+</style>
+
 <script>
 export default {
   data() {

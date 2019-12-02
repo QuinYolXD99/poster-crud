@@ -43,9 +43,9 @@
               <v-col cols="12" md="11">
                 <v-textarea
                   :filled="false"
-                  :rules="[v => !!v || 'add description!']"
+                  :rules="[v => !!v || 'add caption!']"
                   background-color="white"
-                  label="Description"
+                  label="Caption"
                   auto-grow
                   rows="1"
                   prepend-inner-icon="mdi-comment"
@@ -56,14 +56,24 @@
                   @keydown.enter="validate"
                 ></v-textarea>
                 <v-text-field
-                  label="add tag"
+                  label="Category"
                   clearable
-                  :rules="[v => !!v || 'add tag!']"
+                  :rules="[v => !!v || 'add category!']"
                   prepend-inner-icon="mdi-tag"
                   v-model="tag"
                   color="dark"
                   @keydown.enter="validate "
                 ></v-text-field>
+                <v-select
+                    :items="categories"
+                    label="Category"
+                    dense
+                    ></v-select>
+                 <v-select
+                    :items="locations"
+                    label="Location"
+                    dense
+                    ></v-select>
               </v-col>
             </v-row>
             <v-col>
@@ -118,7 +128,56 @@ export default {
             tag: "",
             dialog: false,
             file: { empty: true },
-            this_parent: this.$parent.$options.parent
+            this_parent: this.$parent.$options.parent,
+            locations: [
+                "Adlaon",
+                "Agsungot",
+                "Apas",
+                "Bacayan",
+                "Banilad",
+                "Binaliw",
+                "Budla-an",
+                "Busay",
+                "Zapatera",
+                "Day-as",
+                "Ermita",
+                "  Santa Cruz",
+                "Santo Niño",
+                "Sirao",
+                "  T Padilla",
+                "Talamban",
+                "Taptap",
+                "Tejero",
+                "Tinago",
+                'Carreta',
+                ' Cogon Ramos',
+                ' Day-as',
+                ' Ermita',
+                'Guba',
+                'Hipodromo',
+                'Kalubihan',
+                'Kamagayan',
+                'Kamputhaw (Camputhaw)',
+                'Kasambagan',
+                'Lahug',
+                'Lorega San Miguel',
+                'Lusaran',
+                'Luz',
+                'Mabini',
+                ' Mabolo Proper',
+                'Malubog',
+                'Pahina Central',
+                'Parian',
+                'Paril',
+                'Pit-os',
+                'Pulangbato',
+                'Sambag I',
+                'Sambag II',
+                ' San Antonio',
+                'San Jose',
+                'San Roque'
+            ],
+            categories: ['Waste', 'Crime', 'Traffic', 'Racism'],          
         };
     },
     methods: {

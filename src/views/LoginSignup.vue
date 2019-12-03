@@ -1,24 +1,7 @@
 <template>
-<<<<<<< HEAD
-  <v-container
-    id="body"
-    fluid
-  >
-    <v-row
-      id="content"
-      align="center"
-      justify="center"
-    >
-      <v-col
-        cols="12"
-        sm="8"
-        md="5"
-      >
-=======
   <v-container id="body" fluid>
     <v-row id="content" align="center" justify="center">
-      <v-col >
->>>>>>> 145e3ad8b4a04f48da0ff846d12da585b9051d43
+      <v-col>
         <center>
           <v-card class="mycard mx-10" :disabled="loading" max-width="450">
             <v-toolbar color="pink lighten-1" height="100" class="justify-center" dark flat>
@@ -36,16 +19,9 @@
               ></v-progress-linear>
             </v-toolbar>
 
-<<<<<<< HEAD
-            <v-card-text
-              id="card-body"
-              class="px-10"
-            >
-              <v-stepper
-                v-model="step"
-                vertical
-              >
-                <v-stepper-header v-if="signup">
+            <v-card-text id="card-body" class="px-10">
+              <v-stepper v-model="step" vertical>
+                <v-stepper-header>
                   <v-stepper-step
                     step="1"
                     complete-icon="mdi-check"
@@ -56,6 +32,7 @@
                   <v-divider></v-divider>
                   <v-stepper-step
                     step="2"
+                    v-if="signup"
                     complete-icon="mdi-check"
                     edit-icon="mdi-pencil"
                     color="pink"
@@ -64,32 +41,17 @@
                   <v-divider></v-divider>
                   <v-stepper-step
                     color="pink"
+                    v-if="signup"
                     complete-icon="mdi-check"
                     edit-icon="mdi-pencil"
                     step="3"
                   >More</v-stepper-step>
-=======
-            <v-card-text id="card-body" class="px-10" >
-              <v-form ref="form" lazy-validation >
-                <!-- usernmae input -->
-                <v-text-field
-                  color="pink"
-                  label="Username"
-                  :rules="[rules.required]"
-                  v-model="credentials.username"
-                  name="login"
-                  prepend-icon="mdi-account"
-                  type="text"
-                ></v-text-field>
->>>>>>> 145e3ad8b4a04f48da0ff846d12da585b9051d43
-
                 </v-stepper-header>
-                <v-stepper-items><br><br>
+                <v-stepper-items>
+                  <br />
+                  <br />
                   <v-stepper-content step="1">
-                    <v-form
-                      ref="form1"
-                      lazy-validation
-                    >
+                    <v-form ref="form1" lazy-validation>
                       <!-- for username and password only -->
                       <v-text-field
                         color="pink"
@@ -114,7 +76,6 @@
                         name="password"
                         value
                         prepend-icon="mdi-lock"
-                        @keyup.enter="validate"
                       ></v-text-field>
                       <!-- confirm password -->
                       <v-expand-transition>
@@ -130,26 +91,31 @@
                             label="Confirm Password"
                             name="password"
                             prepend-icon="mdi-lock"
-                            @keyup.enter="validate"
                           ></v-text-field>
                         </div>
                       </v-expand-transition>
                     </v-form>
                     <!-- btn -->
-                    <br>
+                    <br />
                     <v-btn
                       :disabled="!step1_completed"
                       color="pink"
                       outlined
+                      v-if="signup"
                       width="200"
-                      @click.native="signup?step = 2:validate"
-                    >{{signup?'next':'login'}}</v-btn>
+                      @click="step = 2"
+                    >next</v-btn>
+                    <v-btn
+                      :disabled="!step1_completed"
+                      color="pink"
+                      outlined
+                      v-else
+                      width="200"
+                      @click="validate"
+                    >login</v-btn>
                   </v-stepper-content>
-                  <v-stepper-content step="2">
-                    <v-form
-                      ref="form2"
-                      lazy-validation
-                    >
+                  <v-stepper-content v-if="signup" step="2">
+                    <v-form ref="form2" lazy-validation>
                       <v-text-field
                         color="pink"
                         label="Firstname"
@@ -184,35 +150,30 @@
                         type="text"
                       ></v-text-field>
                     </v-form>
-                    <v-btn
-                      @click.native="step = 1"
-                      color="pink"
-                      outlined
-                    >Previous</v-btn>
+                    <br />
+                    <v-btn @click.native="step = 1" width="200" color="pink" outlined>Previous</v-btn>
+                    <br />
+                    <br />
                     <v-btn
                       :disabled="!step2_completed"
                       color="pink"
                       outlined
+                      width="200"
                       @click.native="step = 3"
                     >next</v-btn>
-
                   </v-stepper-content>
-                  <v-stepper-content step="3">
-                    <v-form ref="form3">
-                      test
-                    </v-form>
-                    <v-btn
-                      @click.native="step = 2"
-                      color="pink"
-                      outlined
-                    >Previous</v-btn>
+                  <v-stepper-content v-if="signup" step="3">
+                    <v-form ref="form3"></v-form>
+                    <br />
+                    <v-btn @click.native="step = 2" width="200" color="pink" outlined>Previous</v-btn>
+                    <br />
                     <v-btn
                       :disabled="!step3_completed"
                       color="pink"
                       outlined
-                      @click.native="login"
+                      width="200"
+                      @click="validate"
                     >submit</v-btn>
-
                   </v-stepper-content>
                 </v-stepper-items>
               </v-stepper>
@@ -260,6 +221,13 @@
 .mycard {
   opacity: 0.8 !important;
 }
+.v-stepper--vertical {
+  padding: 0;
+}
+.v-stepper__content {
+  padding-right: 23px !important;
+  padding-left: 23px !important;
+}
 #content {
   position: absolute;
   top: 0;
@@ -268,12 +236,14 @@
   right: 0;
   margin: auto;
 }
-.v-stepper__content{
-  margin-right: 0!important;
-  margin-left: 0!important;
-  border: 0;
+.v-stepper__content {
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+  border-left: 1px solid rgba(0, 0, 0, 0.12);
+  padding-top: 0px;
+  padding-bottom: 0px;
 }
-.v-stepper{
+.v-stepper {
   box-shadow: none;
 }
 </style>
@@ -323,25 +293,27 @@ export default {
   },
   methods: {
     toggleForm() {
-      this.$refs.form.reset();
       switch (this.signup) {
         case true:
           this.title = "Sign up";
+          this.step = 1;
           break;
         case false:
           this.title = "Login";
-          this.step = 1
+          this.step = 1;
           break;
       }
       this.$router.push(`/account/${this.title.replace(" ", "")}`);
       this.$refs.snackbar.message(this.title);
+      setTimeout(() => {
+        this.$refs.form1.reset();
+      }, 500);
     },
     validate() {
-      var url = "http://localhost:4000/user/";
       if (this.signup) {
-        this.sendRequest(url + "register");
+        this.sendRequest(this.$_CONFIG.userRequestURL + "register");
       } else {
-        this.sendRequest(url + "login");
+        this.sendRequest(this.$_CONFIG.userRequestURL + "login");
       }
     },
     sendRequest(url) {
@@ -366,26 +338,22 @@ export default {
             } else {
               this.$refs.snackbar.message("Account not found!");
             }
-            this.$refs.form.reset();
+            this.$refs.form1.reset();
           }
         })
         .catch(err => {
           console.log(err);
-          this.$refs.form.reset();
+          this.$refs.form1.reset();
           this.loading = false;
-          this.$refs.form.reset();
+          this.$refs.form1.reset();
           this.$refs.snackbar.message("Something went wrong!");
         });
     }
-<<<<<<< HEAD
   },
   updated() {
     this.step1_completed = this.$refs.form1.validate();
     this.step2_completed = this.$refs.form2.validate();
     this.step3_completed = this.$refs.form3.validate();
-  },
-=======
   }
->>>>>>> 145e3ad8b4a04f48da0ff846d12da585b9051d43
 };
 </script>

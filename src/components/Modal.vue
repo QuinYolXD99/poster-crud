@@ -1,59 +1,24 @@
 <template>
   <div>
-
-    <v-dialog
-      v-model="dialog"
-      max-width="700"
-    >
-
+    <v-dialog v-model="dialog" max-width="700">
       <template v-slot:activator="{ on }">
-
-        <div
-          class="my-2"
-          dark
-          v-on="on"
-        >
-
-          <v-btn
-            text
-            small
-            :disabled="disabled"
-          >
-
+        <div class="my-2" dark v-on="on">
+          <v-btn text small :disabled="disabled">
             <v-icon left>mdi-pencil</v-icon>Post
-
           </v-btn>
-
         </div>
       </template>
 
-      <v-card
-        id="body "
-        max-width="700px"
-        :loading="uploading_local"
-      >
+      <v-card id="body " max-width="700px" :loading="uploading_local">
         <v-card-title>
           <span class="title text-center">{{cardTitle}}</span>
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text>
-          <v-form
-            ref="form"
-            lazy-validation
-          >
-            <v-row
-              style="padding:10px"
-              class="justify-center"
-            >
-              <v-avatar
-                v-if="!file.empty"
-                size="100"
-                @click="$refs.myFiles.click()"
-              >
-                <img
-                  :src="file"
-                  alt="dp"
-                />
+          <v-form ref="form" lazy-validation>
+            <v-row style="padding:10px" class="justify-center">
+              <v-avatar v-if="!file.empty" size="100" @click="$refs.myFiles.click()">
+                <img :src="file" alt="dp" />
               </v-avatar>
               <v-btn
                 id="cam"
@@ -68,10 +33,7 @@
               >
                 <v-icon x-large>mdi-camera</v-icon>
               </v-btn>
-              <v-col
-                cols="12"
-                md="11"
-              >
+              <v-col cols="12" md="11">
                 <v-textarea
                   :filled="false"
                   :rules="[v => !!v || 'add caption!']"
@@ -95,18 +57,16 @@
                   color="dark"
                   @keydown.enter="validate "
                 ></v-text-field>
-                <v-select
-                  :items="categories"
-                  label="Category"
-                  v-model="category"
-                  dense
-                ></v-select>
-                <v-select
-                  :items="locations"
+                <v-select :items="categories" label="Category" v-model="category" dense></v-select>
+                <vuetify-algolia-places
+                  v-model="place"
+                  type="address"
+                  append-icon="mdi-city"
                   label="Location"
-                  dense
-                  v-model="location"
-                ></v-select>
+                  :countries="['ph']"
+                  clearable
+                  single-line
+                />
               </v-col>
             </v-row>
             <v-col>
@@ -115,13 +75,7 @@
               </center>
             </v-col>
             <center>
-              <v-btn
-                color="pink"
-                outlined
-                width="200"
-                @click="validate "
-                rounded
-              >{{buttonTitle}}</v-btn>
+              <v-btn color="pink" outlined width="200" @click="validate " rounded>{{buttonTitle}}</v-btn>
             </center>
           </v-form>
         </v-card-text>
@@ -146,8 +100,8 @@
 </template>
 <style lang="css">
 #cam {
-    height: 100px;
-    width: 100px;
+  height: 100px;
+  width: 100px;
 }
 </style>
 <script>
@@ -171,55 +125,8 @@ export default {
       dialog: false,
       file: { empty: true },
       this_parent: this.$parent.$options.parent,
-      locations: [
-        "Adlaon",
-        "Agsungot",
-        "Apas",
-        "Bacayan",
-        "Banilad",
-        "Binaliw",
-        "Budla-an",
-        "Busay",
-        "Zapatera",
-        "Day-as",
-        "Ermita",
-        "  Santa Cruz",
-        "Santo Niño",
-        "Sirao",
-        "  T Padilla",
-        "Talamban",
-        "Taptap",
-        "Tejero",
-        "Tinago",
-        'Carreta',
-        ' Cogon Ramos',
-        ' Day-as',
-        ' Ermita',
-        'Guba',
-        'Hipodromo',
-        'Kalubihan',
-        'Kamagayan',
-        'Kamputhaw (Camputhaw)',
-        'Kasambagan',
-        'Lahug',
-        'Lorega San Miguel',
-        'Lusaran',
-        'Luz',
-        'Mabini',
-        ' Mabolo Proper',
-        'Malubog',
-        'Pahina Central',
-        'Parian',
-        'Paril',
-        'Pit-os',
-        'Pulangbato',
-        'Sambag I',
-        'Sambag II',
-        ' San Antonio',
-        'San Jose',
-        'San Roque'
-      ],
-      categories: ['Waste', 'Crime', 'Traffic', 'Racism'],
+
+      categories: ["Waste", "Crime", "Transportation", "Racism"]
     };
   },
   methods: {
@@ -228,9 +135,9 @@ export default {
         this.filename = "Please select file!";
         this.notify("All fields are required", null);
         setTimeout(() => {
-          this.filename = this.file.empty ?
-            "No file selected!" :
-            this.trimString(this.file.name);
+          this.filename = this.file.empty
+            ? "No file selected!"
+            : this.trimString(this.file.name);
         }, 1000);
       } else {
         var post = {
@@ -238,17 +145,17 @@ export default {
           title: "title",
           category: this.category,
           user: this.$jwt_decode(this.$route.params.token).user._id,
-          location: this.location,
+          location: this.location
         };
         var fd = new FormData();
         // for (let i = 0; i < this.file.length; i++) {
         //   fd.append('img', this.file[i])
         // }
-        fd.append('img', this.file)
+        fd.append("img", this.file);
 
-        fd.append('details', JSON.stringify(post))
+        fd.append("details", JSON.stringify(post));
         // fd.getAll()
-        console.log(fd.get('img'))
+        console.log(fd.get("img"));
         if (!this.isUpdate) {
           this.upload(fd);
         } else {
@@ -296,7 +203,9 @@ export default {
             //     image => (image = image._id == updated._id ? updated : image)
             // );
 
-            var index = this.this_parent.images.findIndex(img => img._id == updated._id);
+            var index = this.this_parent.images.findIndex(
+              img => img._id == updated._id
+            );
             this.this_parent.images[index] = updated;
             // this.this_parent.images[
             //   this.this_parent.images.findIndex(

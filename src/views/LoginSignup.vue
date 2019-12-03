@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <v-container
     id="body"
     fluid
@@ -13,18 +14,14 @@
         sm="8"
         md="5"
       >
+=======
+  <v-container id="body" fluid>
+    <v-row id="content" align="center" justify="center">
+      <v-col >
+>>>>>>> 145e3ad8b4a04f48da0ff846d12da585b9051d43
         <center>
-          <v-card
-            class="mycard mx-10 "
-            :disabled="loading"
-          >
-            <v-toolbar
-              color="pink lighten-1"
-              height="70"
-              class="justify-center"
-              dark
-              flat
-            >
+          <v-card class="mycard mx-10" :disabled="loading" max-width="450">
+            <v-toolbar color="pink lighten-1" height="100" class="justify-center" dark flat>
               <v-icon x-large>mdi-camera</v-icon>
               <v-toolbar-title>
                 <span class="display-1">PicTalk</span>
@@ -39,6 +36,7 @@
               ></v-progress-linear>
             </v-toolbar>
 
+<<<<<<< HEAD
             <v-card-text
               id="card-body"
               class="px-10"
@@ -70,6 +68,20 @@
                     edit-icon="mdi-pencil"
                     step="3"
                   >More</v-stepper-step>
+=======
+            <v-card-text id="card-body" class="px-10" >
+              <v-form ref="form" lazy-validation >
+                <!-- usernmae input -->
+                <v-text-field
+                  color="pink"
+                  label="Username"
+                  :rules="[rules.required]"
+                  v-model="credentials.username"
+                  name="login"
+                  prepend-icon="mdi-account"
+                  type="text"
+                ></v-text-field>
+>>>>>>> 145e3ad8b4a04f48da0ff846d12da585b9051d43
 
                 </v-stepper-header>
                 <v-stepper-items><br><br>
@@ -209,22 +221,11 @@
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <span
-                class="caption"
-                v-if="!signup"
-              >
+              <span class="caption" v-if="!signup">
                 New user ?
-                <v-btn
-                  color="pink"
-                  @click="(signup = true), toggleForm()"
-                  small
-                  text
-                >register here</v-btn>
+                <v-btn color="pink" @click="(signup = true), toggleForm()" small text>register here</v-btn>
               </span>
-              <span
-                class="caption"
-                v-else
-              >
+              <span class="caption" v-else>
                 Already have an account ?
                 <v-btn
                   color="pink"
@@ -332,6 +333,7 @@ export default {
           this.step = 1
           break;
       }
+      this.$router.push(`/account/${this.title.replace(" ", "")}`);
       this.$refs.snackbar.message(this.title);
     },
     validate() {
@@ -348,8 +350,7 @@ export default {
         this.credentials = {
           username: this.credentials.username,
           password: this.credentials.password
-        }
-
+        };
       }
       this.$axios
         .post(url, this.credentials)
@@ -376,11 +377,15 @@ export default {
           this.$refs.snackbar.message("Something went wrong!");
         });
     }
+<<<<<<< HEAD
   },
   updated() {
     this.step1_completed = this.$refs.form1.validate();
     this.step2_completed = this.$refs.form2.validate();
     this.step3_completed = this.$refs.form3.validate();
   },
+=======
+  }
+>>>>>>> 145e3ad8b4a04f48da0ff846d12da585b9051d43
 };
 </script>

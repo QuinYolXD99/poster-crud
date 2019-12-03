@@ -25,8 +25,8 @@ const routes = [{
         component: NotFound
     },
     {
-        path: "/login",
-        name: "Login",
+        path: "/account/:page",
+        name: "Account",
         component: Login,
         props: true,
         beforeEnter: (to, from, next) => {

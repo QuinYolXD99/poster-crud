@@ -228,7 +228,7 @@ export default {
   },
   mounted() {
     if (isNullOrUndefined(this.account)) {
-      this.$router.replace("/login");
+      this.$router.replace("/account/login");
     } else {
       this.getImages();
     }

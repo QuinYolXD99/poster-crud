@@ -1,33 +1,35 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const bcrypt = require("bcryptjs")
-var photoSchema = new Schema({
 
-    image: { type: String },
-    imageName: { type: String },
-    caption: { type: String },
-    tag: { type: String },
-    priority: { type: Boolean },
-    createdAt: { type: String },
-    updatedAt: { type: String },
-    userId: { type: String },
-    username: { type: String }
+var postSchema = new Schema({
+    images: { type: [String], required: true, default: [] },
+    description: { type: String, required: true },
+    title: { type: String, required: true },
+    category: { type: String, required: true },
+    createdAt: { type: String, required: true },
+    updatedAt: { type: String, default: null },
+    user: { type: mongoose.Types.ObjectId, ref: 'Users', required: true },
+    location: { type: String, required: true }
 }, { collection: "posts" });
 
-var userSchema = new Schema({
-    username: { type: String },
-    password: { type: String }
-}, {
-        collection: "users"
-    })
+var profileSchema = new Schema({
+    avatar: { type: String, default: null },
+    username: { type: String, required: true },
+    password: { type: String, required: true },
+    firstname: { type: String, required: true },
+    lastname: { type: String, required: true },
+    contact: { type: String, required: true },
+    joined: { type: String, required: true }
+})
 
-userSchema.pre("save", function (next) {
-    if (!this.isModified("password")) {
-        return next();
-    }
-    this.password = bcrypt.hashSync(this.password, 10);
-    next();
+var userSchema = new Schema({
+    profile: profileSchema,
+    posts: { type: [mongoose.Types.ObjectId], ref: 'Posts' }
+}, {
+    collection: "users"
 });
-const Post = mongoose.model("Posts", photoSchema);
+
+const Post = mongoose.model("Posts", postSchema);
 const User = mongoose.model("Users", userSchema);
+
 module.exports = { Post, User };

@@ -27,7 +27,7 @@
                 large
                 size="80"
                 v-if="file.empty"
-                @click="$refs.myFiles.click()"
+                @click="$refs.myFiles.click(preview)"
                 fab
                 color="pink"
               >
@@ -59,7 +59,7 @@
                 ></v-text-field>
                 <v-select :items="categories" label="Category" v-model="category" dense></v-select>
                 <vuetify-algolia-places
-                  v-model="place"
+                  v-model="location"
                   type="address"
                   append-icon="mdi-city"
                   label="Location"

@@ -45,7 +45,7 @@
                     complete-icon="mdi-check"
                     edit-icon="mdi-pencil"
                     step="3"
-                  >More</v-stepper-step>
+                  >Add Avatar</v-stepper-step>
                 </v-stepper-header>
                 <v-stepper-items>
                   <br />
@@ -103,7 +103,7 @@
                       outlined
                       v-if="signup"
                       width="200"
-                      @click="step = 2"
+                      @click="next"
                     >next</v-btn>
                     <v-btn
                       :disabled="!step1_completed"
@@ -141,7 +141,6 @@
                       <v-text-field
                         color="pink"
                         label="Contact Number"
-                        value="+639"
                         :rules="[rules.cont, rules.required]"
                         v-model="credentials.contact"
                         name="contact"
@@ -151,7 +150,7 @@
                       ></v-text-field>
                     </v-form>
                     <br />
-                    <v-btn @click.native="step = 1" width="200" color="pink" outlined>Previous</v-btn>
+                    <v-btn @click.native="prev" width="200" color="pink" outlined>Previous</v-btn>
                     <br />
                     <br />
                     <v-btn
@@ -159,13 +158,38 @@
                       color="pink"
                       outlined
                       width="200"
-                      @click.native="step = 3"
+                      @click.native="next"
                     >next</v-btn>
                   </v-stepper-content>
                   <v-stepper-content v-if="signup" step="3">
-                    <v-form ref="form3"></v-form>
+                    <v-form ref="form3">
+                      <input
+                        accept="image/*"
+                        type="file"
+                        @change="handlePreview"
+                        ref="myFiles"
+                        hidden
+                      />
+                      <v-avatar v-if="avatar" size="100" @click="$refs.myFiles.click()">
+                        <img :src="preview" alt="dp" />
+                      </v-avatar>
+                      <v-btn
+                        id="cam"
+                        class="ma-2"
+                        outlined
+                        large
+                        size="80"
+                        v-else
+                        @click="$refs.myFiles.click()"
+                        fab
+                        color="pink"
+                      >
+                        <v-icon x-large>mdi-image</v-icon>
+                      </v-btn>
+                    </v-form>
                     <br />
-                    <v-btn @click.native="step = 2" width="200" color="pink" outlined>Previous</v-btn>
+                    <v-btn @click="prev" width="200" color="pink" outlined>Previous</v-btn>
+                    <br />
                     <br />
                     <v-btn
                       :disabled="!step3_completed"
@@ -240,8 +264,9 @@
   margin-right: 0 !important;
   margin-left: 0 !important;
   border-left: 1px solid rgba(0, 0, 0, 0.12);
-  padding-top: 0px;
-  padding-bottom: 0px;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  margin-bottom: 10px !important;
 }
 .v-stepper {
   box-shadow: none;
@@ -257,6 +282,8 @@ export default {
       mask: "+639##-###-####",
       signup: false,
       disable: false,
+      avatar: null,
+      preview: "",
       loading: false,
       confirm_password: "",
       show: false,
@@ -292,21 +319,53 @@ export default {
     Snackbar
   },
   methods: {
+    handlePreview() {
+      this.avatar = this.$refs.myFiles.files[0];
+      this.encode(this.avatar).then(res => {
+        this.preview = res;
+      });
+    },
+    encode: async file => {
+      let result_base64 = await new Promise(resolve => {
+        let fileReader = new FileReader();
+        fileReader.onload = e => {
+          console.log(e);
+          resolve(fileReader.result);
+        };
+        fileReader.readAsDataURL(file);
+      });
+      return result_base64;
+    },
     toggleForm() {
       switch (this.signup) {
         case true:
           this.title = "Sign up";
+          this.$router.push(`/account/${this.title.replace(" ", "")}`);
           this.step = 1;
           break;
         case false:
           this.title = "Login";
+          this.$router.push(`/account/${this.title.replace(" ", "")}`);
           this.step = 1;
           break;
       }
-      this.$router.push(`/account/${this.title.replace(" ", "")}`);
       this.$refs.snackbar.message(this.title);
+      this.reset();
+    },
+    next() {
+      this.step += 1;
+      eval(`this.$refs.form${this.step}.reset()`);
+      if (this.step == 2) {
+        this.credentials.contact = "+639";
+      }
+    },
+    prev() {
+      this.step -= 1;
+    },
+    reset() {
       setTimeout(() => {
         this.$refs.form1.reset();
+        this.signup ? this.$refs.form2.reset() : "";
       }, 500);
     },
     validate() {
@@ -317,15 +376,22 @@ export default {
       }
     },
     sendRequest(url) {
+      let reqBody = null;
       this.loading = true;
-      if (!this.signup) {
-        this.credentials = {
+      if (this.signup) {
+        let formData = new FormData();
+        formData.append("avatar", this.avatar);
+        formData.append("credentials", JSON.stringify(this.credentials));
+        reqBody = formData;
+      } else {
+        reqBody = {
           username: this.credentials.username,
           password: this.credentials.password
         };
       }
+
       this.$axios
-        .post(url, this.credentials)
+        .post(url, reqBody)
         .then(res => {
           this.loading = false;
           if (res.data.auth) {
@@ -334,26 +400,29 @@ export default {
             this.$router.push(`/home/${localStorage.getItem("token")}`);
           } else {
             if (this.signup) {
-              this.$refs.snackbar.message("Failed!!");
+              if (res.data.exist) {
+                this.$refs.snackbar.message("Username already Taken!!");
+              }
             } else {
               this.$refs.snackbar.message("Account not found!");
             }
-            this.$refs.form1.reset();
           }
         })
         .catch(err => {
           console.log(err);
-          this.$refs.form1.reset();
           this.loading = false;
-          this.$refs.form1.reset();
           this.$refs.snackbar.message("Something went wrong!");
         });
     }
   },
   updated() {
     this.step1_completed = this.$refs.form1.validate();
-    this.step2_completed = this.$refs.form2.validate();
-    this.step3_completed = this.$refs.form3.validate();
+    this.step2_completed = this.signup ? this.$refs.form2.validate() : false;
+    this.step3_completed = this.avatar;
+  },
+  mounted() {
+    this.signup = this.$route.params.page !== "login";
+    this.reset();
   }
 };
 </script>

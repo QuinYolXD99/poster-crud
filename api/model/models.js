@@ -14,7 +14,7 @@ var postSchema = new Schema({
 
 var profileSchema = new Schema({
     avatar: { type: String, default: null },
-    username: { type: String, required: true },
+    username: { type: String, required: true ,unique:true},
     password: { type: String, required: true },
     firstname: { type: String, required: true },
     lastname: { type: String, required: true },

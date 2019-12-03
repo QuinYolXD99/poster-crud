@@ -2,11 +2,11 @@ let models = require("../../model/models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
-module.exports = function(credentials, res) {
+module.exports = function (credentials, res) {    
     credentials.joined = new Date().toJSON().slice(0, 10).replace(/-/g, '/');
     credentials.password = bcrypt.hashSync(credentials.password, 10);
-
-    models.User.find({ username: credentials.username },
+    console.log(credentials);
+    models.User.find({ 'profile.username':  credentials.username },
         (err, user) => {
             if (!err) {
                 if (user.length) {

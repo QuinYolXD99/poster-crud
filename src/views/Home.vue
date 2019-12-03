@@ -149,7 +149,7 @@ export default {
   methods: {
     logout() {
       localStorage.removeItem("token");
-      this.$router.push("/login");
+      this.$router.push("/account/login");
     },
     reset() {
       this.cardTitle = "Add new Image";
@@ -170,7 +170,7 @@ export default {
     remove(id) {
       this.removeImage(id);
       axios
-        .post("http://localhost:4000/user/delete", { id: id })
+        .post(this.$_CONFIG.userRequestURL+"/delete", { id: id })
         .then(res => {
           if (res.data.success) {
             if (this.images.length == 0) {
@@ -192,7 +192,7 @@ export default {
       }, 500);
     },
     getImages() {
-      var url = "http://localhost:4000/user/retrieveAll";
+      var url = this.$_CONFIG.userRequestURL+"/retrieveAll";
       this.sendImageRequest(url);
     },
     sendImageRequest(url) {

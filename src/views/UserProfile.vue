@@ -1,101 +1,83 @@
 <template>
-  <v-row justify="center">
-    <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
-      <v-card>
-        <sb />
-        <v-list three-line subheader>
-          <v-subheader id="sH">
-            <img
-              id="dp"
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWxkYJv9W_tCQfM49f2mSDGYFLgyL54_dfOapx0qkT-su9VjTTDw&s"
-              alt="John"
-            />
-          </v-subheader>
-          <br />
-          <br />
-          <br />
-          <br />
-          <v-divider></v-divider>
-          <center>
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title>
-                  <h1>{{"Welcome, "+name + " " + lastname}}</h1>
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </center>
-          <v-list-item>
-            <v-list-item-content id="cards">
-              <template>
-                <v-card max-width="400" class="mx-auto">
-                  <v-app-bar dark color="pink">
-                    <v-spacer></v-spacer>
-                    <v-toolbar-title>Personal Information</v-toolbar-title>
-                    <v-spacer></v-spacer>
-                  </v-app-bar>
+  <div>
+    <div>
+      <sb />
+    </div>
+    <br><br><br><br><br><br><br>
+    <div id="theform">
+      <v-container fill-height fluid grid-list-xl>
+        <v-layout justify-center wrap>
+          <v-flex xs10 md7>
+            <v-card color="white">
+              <v-toolbar color="pink" dark >
+                <v-toolbar-title>Update Profile<br>fill in the important information</v-toolbar-title><br>
+                
+                <v-spacer></v-spacer>
+              </v-toolbar>
+              <br>
+              <v-form>
+                <v-container py-0>
+                  <v-layout wrap>
+                    <v-flex xs12 md4>
+                      <v-text-field color="pink" label="UserName" />
+                    </v-flex><br>
+                    <v-flex xs12 md4>
+                      <v-text-field label="Password" color="pink" />
+                    </v-flex><br>
 
-                  <v-container>
-                    <v-row dense>
-                      <v-col cols="12">
-                        <v-card color="#385F73" dark>
-                          <center>
-                            <v-card-subtitle>
-                              <v-icon>mdi-account</v-icon>
-                              Full name: {{name + " " +lastname}}
-                            </v-card-subtitle>
-                            <v-card-subtitle>
-                              <v-icon>mdi-account</v-icon>
-                              Contact Number: {{contactInfo}}
-                            </v-card-subtitle>
-                            <v-card-subtitle>
-                              <v-icon>mdi-account</v-icon>
-                              Email Address: {{email}}
-                            </v-card-subtitle>
-                            <v-card-subtitle>
-                              <v-icon>mdi-account</v-icon>
-                              Username: {{uname}}
-                            </v-card-subtitle>
+                    <v-flex xs12 md6>
+                      <v-text-field label="First Name" color="pink" />
+                    </v-flex><br>
+                    <v-flex xs12 md6>
+                      <v-text-field label="Last Name" color="pink" />
+                    </v-flex><br>
+                    <v-flex xs12 md6>
+                      <v-text-field label="Contact Number" color="pink" />
+                    </v-flex><br>
+                    <v-flex xs12 md6>
+                      <v-text-field label="Email Address" color="pink" />
+                    </v-flex><br>
+                    <v-flex xs12 text-xs-right>
+                      <v-btn class="mx-0 font-weight-light" color="pink" dark>Update Profile</v-btn>
+                    </v-flex>
+                  </v-layout>
+                </v-container>
+              </v-form>
+            </v-card>
+          </v-flex>
+          <v-flex xs12 md4>
+            <v-card class="mx-auto" max-width="400">
+              <v-img
+                class="white--text align-end"
+                height="200px"
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWxkYJv9W_tCQfM49f2mSDGYFLgyL54_dfOapx0qkT-su9VjTTDw&s"
+              >
+                <v-card-title>{{name}}</v-card-title>
+              </v-img>
 
-                            
-                          </center>
-                        </v-card>
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-card>
-              </template>
-            </v-list-item-content>
-            <v-list-item-content id="cards2">
-              <template>
-                <v-card max-width="400" class="mx-auto">
-                  <v-app-bar dark color="pink">
-                    <v-spacer></v-spacer>
-                    <v-toolbar-title>Personal Information</v-toolbar-title>
-                    <v-spacer></v-spacer>
-                  </v-app-bar>
-
-                  <v-container>
-                    <v-row dense>
-                      <v-col cols="12">
-                        <v-card color="#385F73" dark>
-                          <center>
-                            <v-card-subtitle>
-                              {{accountInfo}}
-                            </v-card-subtitle>
-                          </center>
-                        </v-card>
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-card>
-              </template>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-      </v-card>
-    </v-dialog>
-  </v-row>
+              <v-card-text class="text--primary">
+                <div>
+                  <v-text-field label="Firstname" placeholder="Placeholder" outlined disabled></v-text-field>
+                </div>
+                <div>
+                  <v-text-field label="Lastname" placeholder="Placeholder" outlined disabled></v-text-field>
+                </div>
+                <div>
+                  <v-text-field label="Contact Number" placeholder="Placeholder" outlined disabled></v-text-field>
+                </div>
+                <div>
+                  <v-text-field label="Email Address" placeholder="Placeholder" outlined disabled></v-text-field>
+                </div>
+                <div>
+                  <v-text-field label="Username" placeholder="Placeholder" outlined disabled></v-text-field>
+                </div>
+              </v-card-text>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -113,8 +95,9 @@ export default {
       contactInfo: "09090909090",
       email: "dy@gmail.com",
       uname: "HMPD",
-      accountInfo: "Your personal information are just between you and the system admin :)"
-    }
+      accountInfo:
+        "Your personal information are just between you and the system admin :)"
+    };
   }
 };
 </script>
@@ -129,14 +112,14 @@ export default {
 #sH {
   margin-top: 150px;
 }
-#cards {
-  margin-left: 100px;
+#theform {
+  margin-left: 300px;
 }
 #cards2 {
   margin-right: 100px;
 }
 #crud {
-    float: left;
-    height: 780px;
+  float: left;
+  height: 780px;
 }
 </style>

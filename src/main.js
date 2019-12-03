@@ -2,8 +2,9 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import vuetify from "./plugins/vuetify";
-import 'viewerjs/dist/viewer.css'
-import Viewer from 'v-viewer'
+import 'viewerjs/dist/viewer.css';
+import Viewer from 'v-viewer';
+import VueMaterial from 'vue-material'
 var defaultOpts = {
   toolbar: {
     zoomOut: 1,
@@ -21,6 +22,7 @@ var defaultOpts = {
     flipVertical: 0,
   }
 }
+Vue.use(VueMaterial)
 Vue.use(Viewer,{
   defaultOptions:defaultOpts
 })

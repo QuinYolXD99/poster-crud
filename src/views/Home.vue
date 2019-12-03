@@ -151,7 +151,7 @@ export default {
   },
   methods: {
     profile() {
-      this.$router.push("/MyProfile");
+      this.$router.push("/UpdateProfile");
     },
     logout() {
       localStorage.removeItem("token");

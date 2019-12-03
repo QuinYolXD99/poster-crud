@@ -1,12 +1,12 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
-const PORT = 4000;
+const PORT = 4001;
 const cors = require("cors");
 const mongoose = require("mongoose");
 const config = require("./config/DB");
 const routes = require("./router");
-
+const path = require('path');
 mongoose.Promise = global.Promise;
 console.log("connecting....");
 
@@ -29,6 +29,8 @@ app.use(bodyParser.json({ limit: '50mb' }));
 
 app.use("/admin", routes.adminRoutes);
 
-app.listen(PORT, function() {
+app.use('/files', express.static(path.join(__dirname, 'public/uploads')))
+app.use("/user", routes);
+app.listen(PORT,  ()=> {
     console.log("Server is running on Port:", PORT);
-});
+})

@@ -6,7 +6,13 @@
     ref="viewer"
   >
     <template slot-scope="scope">
-      <img v-for="(src , i) in scope.images" :src="src" :key="i+'src'" :ref="'img'" hidden />
+      <img
+        v-for="(src , i) in scope.images"
+        :src="src"
+        :key="i+'src'"
+        :ref="'img'"
+        hidden
+      />
       <v-item-group multiple>
         <v-row>
           <v-img
@@ -16,9 +22,57 @@
             v-if="!$parent.filteredList.length"
             contain
           ></v-img>
-          <v-col v-for="(image , i) in scope.images" :key="i" cols="12" md="4">
+          <v-col
+            v-for="(image , i) in scope.images"
+            :key="i"
+            cols="12"
+            md="12"
+          >
             <v-item v-slot:default="{ active, toggle }">
-              <v-card hover>
+              <v-card
+                max-width="344"
+                class="mx-auto"
+              >
+                <v-list-item>
+                  <v-list-item-avatar color="grey"></v-list-item-avatar>
+                  <v-list-item-content>
+                    <v-list-item-title class="headline">Our Changing Planet</v-list-item-title>
+                    <v-list-item-subtitle>by Kurt Wagner</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+
+                <v-img
+                  src="https://cdn.vuetifyjs.com/images/cards/mountain.jpg"
+                  height="194"
+                ></v-img>
+
+                <v-card-text>
+                  Visit ten places on our planet that are undergoing the biggest changes today.
+                </v-card-text>
+
+                <v-card-actions>
+                  <v-btn
+                    text
+                    color="deep-purple accent-4"
+                  >
+                    Read
+                  </v-btn>
+                  <v-btn
+                    text
+                    color="deep-purple accent-4"
+                  >
+                    Bookmark
+                  </v-btn>
+                  <v-spacer></v-spacer>
+                  <v-btn icon>
+                    <v-icon>mdi-heart</v-icon>
+                  </v-btn>
+                  <v-btn icon>
+                    <v-icon>mdi-share-variant</v-icon>
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+              <!-- <v-card hover>
                 <v-card-text>
                   <v-item>
                     <v-img
@@ -68,13 +122,6 @@
                   <div v-if="!$parent.allImageMode">
                       <v-btn small icon>
                         <v-icon
-                          :disabled="$parent.loading"
-                          :color="$parent.filteredList[i].priority?'pink':'grey'"
-                          v-on:click="($parent.filteredList[i].priority = !$parent.filteredList[i].priority,$parent.like($parent.filteredList[i]))"
-                        >mdi-star</v-icon>
-                      </v-btn>
-                      <v-btn small icon>
-                        <v-icon
                           color="pink"
                           :disabled="$parent.loading"
                           v-on:click="$parent.beforeUpdate($parent.filteredList[i])"
@@ -88,7 +135,7 @@
                 <v-footer dark padless>
                   <v-card class="flex" flat tile></v-card>
                 </v-footer>
-              </v-card>
+              </v-card> -->
             </v-item>
           </v-col>
         </v-row>

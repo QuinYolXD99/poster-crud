@@ -1,15 +1,22 @@
 <template>
   <!-- <v-row justify="center"> -->
   <div>
-    <v-app-bar light app>
+    <v-app-bar
+      light
+      app
+    >
       <v-btn text>
         <v-toolbar-title>PicTalk</v-toolbar-title>
       </v-btn>
       <v-spacer></v-spacer>
-      <v-progress-linear :active="loading" :indeterminate="loading" absolute bottom color="pink"></v-progress-linear>
-      <v-btn v-show="images.length!==0" text small @click="show">
-        <v-icon left>mdi-play</v-icon>
-      </v-btn>
+      <v-progress-linear
+        :active="loading"
+        :indeterminate="loading"
+        absolute
+        bottom
+        color="pink"
+      ></v-progress-linear>
+
       <div @click="reset()">
         <Modal
           ref="modal"
@@ -22,23 +29,17 @@
           @reset="reset()"
         />
       </div>
-      <v-btn
-        text
-        :disabled="loading"
-        :color=" !allImageMode ? 'pink' : 'grey' "
-        @click="(allImageMode = false , togglePhotos())"
-      >My Photos</v-btn>|
-      <v-btn
-        text
-        ref="explore"
-        :disabled="loading"
-        @click="(allImageMode = true , togglePhotos())"
-        :color=" allImageMode ? 'pink' : 'grey' "
-      >Explore</v-btn>
-
-      <v-menu left offset-y>
+      <v-menu
+        left
+        offset-y
+      >
         <template v-slot:activator="{ on }">
-          <v-btn icon x-large v-on="on" color="pink">
+          <v-btn
+            icon
+            x-large
+            v-on="on"
+            color="pink"
+          >
             <v-icon>mdi-account-circle</v-icon>
           </v-btn>
         </template>
@@ -221,6 +222,38 @@
       </template>
     </v-data-iterator>
   </v-container>
+    <v-container
+      id="body"
+      fluid
+    >
+      <v-container class="pa-1">
+        <v-row class="justify-center">
+          <v-col
+            cols="12"
+            md="5"
+          >
+            <v-text-field
+              placeholder="search image caption , tags , or dates"
+              :v-if="!images.length==0"
+              prepend-inner-icon="mdi-magnify"
+              v-model="search"
+              color="dark"
+              clearable
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <br />
+        <div
+          v-for="(details , i) in images"
+          :key="i"
+        >
+          <Feed :details="details" />
+          <br>
+        </div>
+      </v-container>
+    </v-container>
+    <DeletePrompt ref="prompt" />
+    <Snackbar ref="notif" />
   </div>
 </template>
 <script>
@@ -229,10 +262,11 @@ import ApexCharts from 'apexcharts'
 import Modal from "@/components/Modal.vue";
 import Snackbar from "@/components/Snackbar.vue";
 import DeletePrompt from "@/components/DeletePrompt.vue";
-import ImageViewer from "./ImageViewer.vue";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
+import Feed from "@/components/Feed.vue";
 import { isNullOrUndefined } from "util";
+
 export default {
   data() {
     return {
@@ -244,10 +278,10 @@ export default {
       id: "",
       loading: false,
       uploading: false,
-      tempImage: [],
       images: [],
       color: "red",
       menu: false,
+<<<<<<< HEAD
       allImageMode: true,
       search: '',
         headers: [
@@ -266,33 +300,31 @@ export default {
             accident: 24
           }
         ]
+=======
+>>>>>>> master
     };
   },
   components: {
     Modal,
-    ImageViewer,
     Snackbar,
+    Feed,
     DeletePrompt
   },
 
   computed: {
     filteredList() {
-      if (!isNullOrUndefined(this.search)) {
-        return this.tempImage.filter(image => {
-          if (!isNullOrUndefined(image.image)) {
-            return (
-              image.caption.toLowerCase().includes(this.search.toLowerCase()) ||
-              image.tag.toLowerCase().includes(this.search.toLowerCase()) ||
-              image.createdAt
-                .toLowerCase()
-                .includes(this.search.toLowerCase()) ||
-              image.updatedAt.toLowerCase().includes(this.search.toLowerCase())
-            );
-          }
-        });
-      } else {
-        return this.images;
-      }
+      return this.images.filter(image => {
+        if (!isNullOrUndefined(image.image)) {
+          return (
+            image.caption.toLowerCase().includes(this.search.toLowerCase()) ||
+            image.tag.toLowerCase().includes(this.search.toLowerCase()) ||
+            image.createdAt
+              .toLowerCase()
+              .includes(this.search.toLowerCase()) ||
+            image.updatedAt.toLowerCase().includes(this.search.toLowerCase())
+          );
+        }
+      });
     },
     account() {
       return !isNullOrUndefined(localStorage.getItem("token"))
@@ -306,10 +338,7 @@ export default {
   methods: {
     logout() {
       localStorage.removeItem("token");
-      this.$router.push("/login");
-    },
-    keymonitor(e) {
-      this.allImageMode = true;
+      this.$router.push("/account/login");
     },
     reset() {
       this.cardTitle = "Add new Image";
@@ -330,7 +359,11 @@ export default {
     remove(id) {
       this.removeImage(id);
       axios
+<<<<<<< HEAD
         .post("http://localhost:4000/user/delete", { id: id })
+=======
+        .post(this.$_CONFIG.userRequestURL+"/delete", { id: id })
+>>>>>>> master
         .then(res => {
           if (res.data.success) {
             if (this.images.length == 0) {
@@ -352,27 +385,30 @@ export default {
       }, 500);
     },
     getImages() {
+<<<<<<< HEAD
       var url = "http://localhost:4000/user/retrieveAll";
       var query = {
         id: this.account.id
       };
       this.sendImageRequest(url, query);
+=======
+      var url = this.$_CONFIG.userRequestURL+"/retrieveAll";
+      this.sendImageRequest(url);
+>>>>>>> master
     },
-    sendImageRequest(url, query) {
+    sendImageRequest(url) {
       this.images = [];
       this.notify("Please wait while we are retrieving your data...");
       this.loading = true;
       axios
-        .post(url, query)
+        .post(url)
         .then(res => {
           this.uploading = false;
           this.loading = false;
           this.images = res.data.data;
-          this.images = this.sortImages();
           if (this.images.length == 0) {
             this.notify("No images Available!");
           }
-          this.allImageMode = false;
           this.updateImage();
           this.togglePhotos();
           this.$refs.notif.snackbar = false;
@@ -382,11 +418,12 @@ export default {
             this.notify("Failed to load Images!");
             this.loading = false;
             setTimeout(() => {
-              this.getImages();
+              // this.getImages();
             }, 2000);
           }
         });
     },
+<<<<<<< HEAD
     sortImages() {
       this.images.sort((a, b) => (a.priority > b.priority ? -1 : 1));
       return this.images;
@@ -403,36 +440,15 @@ export default {
       this.cardTitle = "Update Image";
       this.buttonTitle = "Update";
     },
+=======
+>>>>>>> master
     notify(msg) {
       this.$refs.notif.message(msg);
     },
-    trimString(string, length) {
-      return string.length > length
-        ? string.substring(0, length) + "..."
-        : string;
-    },
-    inited(viewer) {
-      this.$viewer = viewer;
-    },
-    show() {
-      this.$viewer.show();
-    },
-    togglePhotos() {
-      if (!this.allImageMode) {
-        this.tempImage = this.images.filter(
-          image => image.userId == this.account.id
-        );
-      } else {
-        this.updateImage();
-      }
-    },
-    updateImage() {
-      this.tempImage = this.images;
-    }
   },
   mounted() {
     if (isNullOrUndefined(this.account)) {
-      this.$router.replace("/login");
+      this.$router.replace("/account/login");
     } else {
       this.getImages();
     }

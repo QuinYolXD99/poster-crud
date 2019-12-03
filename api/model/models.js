@@ -1,22 +1,20 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-var uniqueValidator = require('mongoose-unique-validator');
-
-var photoSchema = new Schema({
-    image: { type: String },
-    imageName: { type: String, required: true },
-    caption: { type: String, required: true },
-    priority: { type: Boolean, required: true },
+var postSchema = new Schema({
+    images: { type: [String], required: true, default: [] },
+    description: { type: String, required: true },
+    title: { type: String, required: true },
     category: { type: String, required: true },
-    location: { type: String, required: true },
     createdAt: { type: String, required: true },
-    updatedAt: { type: String, required: true },
-    userId: { type: mongoose.Types.ObjectId, required: true, ref: 'User' }
+    updatedAt: { type: String, default: null },
+    user: { type: mongoose.Types.ObjectId, ref: 'Users', required: true },
+    location: { type: String, required: true }
 }, { collection: "posts" });
 
 var profileSchema = new Schema({
-    username: { type: String, required: true },
+    avatar: { type: String, default: null },
+    username: { type: String, required: true ,unique:true},
     password: { type: String, required: true },
     firstname: { type: String, required: true },
     lastname: { type: String, required: true },

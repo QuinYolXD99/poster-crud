@@ -7,12 +7,12 @@ let retrieve_by_location = (req, res) => {
     {
       $group: {
         _id: {
-            location: "$location"
-          },
-          count: {
-            $sum: 1
-          },
-          $sort: { count: -1 }
+          location: "$Posts.location"
+        },
+        count: {
+          $sum: 1
+        },
+        $sort: { count: -1 }
       }
     }
   ]),

@@ -2,51 +2,7 @@
   <v-row justify="center">
     <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
       <v-card>
-        <v-toolbar dark color="pink">
-          <v-btn icon dark @click="dialog = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-          <v-toolbar-title>Settings</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-toolbar-items>
-            <v-btn dark text @click="dialog = false">Save</v-btn>
-          </v-toolbar-items>
-        </v-toolbar>
-        <template >
-          <v-card max-width="500" class="mx-auto" id="crud">
-              <br><br><br><br><br><br>
-            <v-list>
-              <v-list-item @click="logout()">
-                <v-list-item-icon>
-                  <v-icon>mdi-account-badge-horizontal</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>Personal Information</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-            <v-list dense>
-              <v-list-item @click="profile()">
-                <v-list-item-icon>
-                  <v-icon>mdi-file-lock-outline</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>Terms and Privacy</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-            <v-list dense>
-              <v-list-item @click="profile()">
-                <v-list-item-icon>
-                  <v-icon>mdi-account-question</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>Help</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-          </v-card>
-        </template>
+        <sb />
         <v-list three-line subheader>
           <v-subheader id="sH">
             <img
@@ -143,8 +99,12 @@
 </template>
 
 <script>
-// import axios from "axios";
+import sb from "@/components/Sidebar";
+// import axios from "axios"
 export default {
+  components: {
+    sb
+  },
   data() {
     return {
       dialog: true,
@@ -153,8 +113,8 @@ export default {
       contactInfo: "09090909090",
       email: "dy@gmail.com",
       uname: "HMPD",
-      accountInfo: "Your personal information are just between you and the system admin"
-    };
+      accountInfo: "Your personal information are just between you and the system admin :)"
+    }
   }
 };
 </script>
@@ -164,7 +124,7 @@ export default {
   height: 200px;
   width: 200px;
   border-radius: 50%;
-  margin-left: 550px;
+  margin-left: 380px;
 }
 #sH {
   margin-top: 150px;

@@ -366,6 +366,8 @@ export default {
       setTimeout(() => {
         this.$refs.form1.reset();
         this.signup ? this.$refs.form2.reset() : "";
+        this.avatar = null;
+        this.preview = null;
       }, 500);
     },
     validate() {

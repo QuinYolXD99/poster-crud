@@ -57,16 +57,20 @@
                   color="dark"
                   @keydown.enter="validate "
                 ></v-text-field>
-                <v-select :items="categories" label="Category" v-model="category" dense></v-select>
-                <vuetify-algolia-places
+                <v-select
+                  :items="categories"
+                  label="Category"
+                  :rules="[v=>!!v||'required']"
+                  v-model="category"
+                  dense
+                ></v-select>
+                <v-select
+                  :items="locations"
+                  label="Category"
                   v-model="location"
-                  type="address"
-                  append-icon="mdi-city"
-                  label="Location"
-                  :countries="['ph']"
-                  clearable
-                  single-line
-                />
+                  :rules="[v=>!!v||'required']"
+                  dense
+                ></v-select>
               </v-col>
             </v-row>
             <v-col>
@@ -122,6 +126,54 @@ export default {
       tag: "",
       category: "",
       location: "",
+      locations: [
+        "Adlaon",
+        "Agsungot",
+        "Apas",
+        "Bacayan",
+        "Banilad",
+        "Binaliw",
+        "Budla-an",
+        "Busay",
+        "Zapatera",
+        "Day-as",
+        "Ermita",
+        "  Santa Cruz",
+        "Santo Niño",
+        "Sirao",
+        "  T Padilla",
+        "Talamban",
+        "Taptap",
+        "Tejero",
+        "Tinago",
+        "Carreta",
+        " Cogon Ramos",
+        " Day-as",
+        " Ermita",
+        "Guba",
+        "Hipodromo",
+        "Kalubihan",
+        "Kamagayan",
+        "Kamputhaw (Camputhaw)",
+        "Kasambagan",
+        "Lahug",
+        "Lorega San Miguel",
+        "Lusaran",
+        "Luz",
+        "Mabini",
+        " Mabolo Proper",
+        "Malubog",
+        "Pahina Central",
+        "Parian",
+        "Paril",
+        "Pit-os",
+        "Pulangbato",
+        "Sambag I",
+        "Sambag II",
+        " San Antonio",
+        "San Jose",
+        "San Roque"
+      ],
       dialog: false,
       file: { empty: true },
       this_parent: this.$parent.$options.parent,

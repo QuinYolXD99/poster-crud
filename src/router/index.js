@@ -8,7 +8,7 @@ import loadGoogleCharts from './../lib/google-charts-loader'
 
 
 // Install the components
-export function install (Vue) {
+export function install(Vue) {
   Vue.component('Home', Home)
 }
 
@@ -30,6 +30,13 @@ const routes = [
     name: "404",
     component: NotFound
   },
+
+  {
+    path: "/analytics",
+    name: "analytics",
+    component: ()=>import('../views/Analytics')
+  },
+
   {
     path: "/login",
     name: "Login",

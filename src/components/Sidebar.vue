@@ -28,12 +28,12 @@
         </v-list-item>
       </v-list>
       <v-list dense>
-        <v-list-item @click="profile()" color="pink">
+        <v-list-item @click="terms() " color="pink">
           <v-list-item-icon>
             <v-icon>mdi-file-lock-outline</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title>Terms and Privacy</v-list-item-title>
+            <v-list-item-title>Terms and Conditions</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -59,6 +59,9 @@ export default {
     },
     backHome() {
       this.$router.push("/")
+    },
+    terms() {
+      this.$router.push("/terms")
     }
   }
 };

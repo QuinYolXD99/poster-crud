@@ -4,6 +4,7 @@ import Home from "../views/Home.vue";
 import Login from "../views/LoginSignup.vue";
 import NotFound from "../views/404.vue";
 import userProfile from "../views/UserProfile.vue";
+import terms from "../views/Terms.vue";
 import { isNullOrUndefined } from "util";
 
 Vue.use(VueRouter);
@@ -12,6 +13,10 @@ const routes = [
   {
     path: "/UpdateProfile",
     component: userProfile
+  },
+  {
+    path: "/terms",
+    component: terms
   },
   {
     path: "/",

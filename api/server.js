@@ -30,7 +30,7 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use("/admin", routes.adminRoutes);
 
 app.use('/files', express.static(path.join(__dirname, 'public/uploads')))
-app.use("/user", routes);
-app.listen(PORT,  ()=> {
+    // app.use("/user", routes);
+app.listen(PORT, () => {
     console.log("Server is running on Port:", PORT);
 })

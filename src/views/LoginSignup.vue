@@ -276,12 +276,6 @@
 <script>
 import Snackbar from "@/components/Snackbar.vue";
 import { mask } from "vue-the-mask";
-
-import axios from "axios";
-export default {
-  data() {
-    return {
-      mask: "####-###-####",
 export default {
   data() {
     return {

@@ -258,7 +258,7 @@
 </template>
 <script>
 /* eslint-disable */
-import ApexCharts from 'apexcharts'
+// import ApexCharts from 'apexcharts'
 import Modal from "@/components/Modal.vue";
 import Snackbar from "@/components/Snackbar.vue";
 import DeletePrompt from "@/components/DeletePrompt.vue";
@@ -281,7 +281,6 @@ export default {
       images: [],
       color: "red",
       menu: false,
-<<<<<<< HEAD
       allImageMode: true,
       search: '',
         headers: [
@@ -300,8 +299,6 @@ export default {
             accident: 24
           }
         ]
-=======
->>>>>>> master
     };
   },
   components: {
@@ -359,11 +356,7 @@ export default {
     remove(id) {
       this.removeImage(id);
       axios
-<<<<<<< HEAD
-        .post("http://localhost:4000/user/delete", { id: id })
-=======
         .post(this.$_CONFIG.userRequestURL+"/delete", { id: id })
->>>>>>> master
         .then(res => {
           if (res.data.success) {
             if (this.images.length == 0) {
@@ -385,16 +378,8 @@ export default {
       }, 500);
     },
     getImages() {
-<<<<<<< HEAD
-      var url = "http://localhost:4000/user/retrieveAll";
-      var query = {
-        id: this.account.id
-      };
-      this.sendImageRequest(url, query);
-=======
       var url = this.$_CONFIG.userRequestURL+"/retrieveAll";
       this.sendImageRequest(url);
->>>>>>> master
     },
     sendImageRequest(url) {
       this.images = [];
@@ -423,25 +408,6 @@ export default {
           }
         });
     },
-<<<<<<< HEAD
-    sortImages() {
-      this.images.sort((a, b) => (a.priority > b.priority ? -1 : 1));
-      return this.images;
-    },
-    beforeUpdate(item) {
-      this.$refs.modal.dialog = true;
-      this.$refs.modal.filename = this.$refs.modal.trimString(item.imageName);
-      this.$refs.modal.file = item.image;
-      this.$refs.modal.description = item.caption;
-      this.$refs.modal.tag = item.tag;
-      this.$refs.modal.color = "pink";
-      this.id = item._id;
-      this.isUpdate = true;
-      this.cardTitle = "Update Image";
-      this.buttonTitle = "Update";
-    },
-=======
->>>>>>> master
     notify(msg) {
       this.$refs.notif.message(msg);
     },

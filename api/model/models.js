@@ -14,7 +14,7 @@ var postSchema = new Schema({
 
 var profileSchema = new Schema({
     avatar: { type: String, default: null },
-    username: { type: String, required: true ,unique:true},
+    username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     firstname: { type: String, required: true },
     lastname: { type: String, required: true },
@@ -25,17 +25,15 @@ var profileSchema = new Schema({
 var userSchema = new Schema({
     account: profileSchema,
     posts: { type: [mongoose.Types.ObjectId], ref: 'Post' }
-},
-{
+}, {
     collection: "users"
 });
 
 var adminSchema = new Schema({
     account: profileSchema,
     posts: { type: [mongoose.Types.ObjectId], ref: 'Post' },
-    role : {type: String, required: true}
-},
-{
+    role: { type: String, required: true }
+}, {
     collection: "admin"
 });
 
@@ -43,10 +41,10 @@ var adminSchema = new Schema({
 
 
 
-userSchema.plugin(uniqueValidator, { message: 'User must be unique' });
-adminSchema.plugin(uniqueValidator, { message: 'Admin must be unique' });
+// userSchema.plugin(uniqueValidator, { message: 'User must be unique' });
+// adminSchema.plugin(uniqueValidator, { message: 'Admin must be unique' });
 
-const Post = mongoose.model("Posts", photoSchema);
+const Post = mongoose.model("Posts", postSchema);
 const User = mongoose.model("Users", userSchema);
 const Admin = mongoose.model("Admin", adminSchema);
 

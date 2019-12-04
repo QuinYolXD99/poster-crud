@@ -19,6 +19,11 @@ routes.route("/retrieve").post((req, res) => {
 routes.route("/retrieveAll").post((req, res) => {
     retrieve.retrieveAll(res)
 });
+//retrieve
+routes.route("/retrieveUserinfo/:id").post((req, res) => {
+    const _id = req.body.id
+    retrieve.findId(_id, req,res)
+});
 // update
 routes.route("/update").post((req, res) => {
     update.update(req.body, res)
@@ -39,8 +44,14 @@ routes.route("/login").post((req, res) => {
     login(req.body, res);
 });
 
+
+
 routes.route("/register").post((req, res) => {
     register(req.body, res);
+});
+routes.route("/updateProfile").post((req, res) => {
+    let uid= req.body.id
+    retrieve.retrieveUserProf(uid,res)
 });
 
 

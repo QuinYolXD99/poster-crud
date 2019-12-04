@@ -26,4 +26,17 @@ let retrieveAll = (res) => {
         }
     });
 }
-module.exports = { retrieveOwn, retrieveAll }
+
+function findId(idy) {
+    return new Promise((resolve, reject) => {
+        models.findOne({ id: idy }, (err, dbres) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(dbres);
+            }
+        })
+    })
+}
+
+module.exports = { retrieveOwn, retrieveAll,findId }

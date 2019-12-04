@@ -26,7 +26,7 @@
           <v-text-field label="Email Address" placeholder="Placeholder" outlined></v-text-field>
         </div>
         <div>
-          <v-text-field label="Username" placeholder="Placeholder" outlined></v-text-field>
+          <v-text-field label="Username" v-model="username" placeholder="Placeholder" outlined></v-text-field>
         </div>
       </v-card-text>
 
@@ -41,6 +41,7 @@
 
 <script>
 import sb from "@/components/Sidebar";
+import Axios from 'axios';
 export default {
   components: {
     sb
@@ -49,6 +50,18 @@ export default {
     return {
       name: "User"
     };
+  },
+  methods: {
+    retrieveuser(){
+      Axios
+      .then('')
+        this.username = Response.data.username
+      
+    }
+
+  },
+  mounted(){
+    retrieveuser()
   }
 };
 </script>

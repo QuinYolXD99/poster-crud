@@ -7,7 +7,6 @@
       <br />
       <br />
       <br />
-      <v-list>
         <v-list dense>
           <v-list-item @click="backHome()" color="pink">
             <v-list-item-icon>
@@ -17,7 +16,8 @@
               <v-list-item-title>Home</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-        </v-list>
+        </v-list> 
+        <v-list dense>
         <v-list-item @click="updateProfile()" color="pink">
           <v-list-item-icon>
             <v-icon>mdi-account-badge-horizontal</v-icon>

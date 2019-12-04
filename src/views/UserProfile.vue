@@ -1,17 +1,27 @@
 <template>
   <div>
     <div>
-      <sb />
+      <sb/>
     </div>
-    <br><br><br><br><br><br><br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
     <div id="theform">
       <v-container fill-height fluid grid-list-xl>
         <v-layout justify-center wrap>
           <v-flex xs10 md7>
             <v-card color="white">
-              <v-toolbar color="pink" dark >
-                <v-toolbar-title>Update Profile<br>fill in the important information</v-toolbar-title><br>
-                
+              <v-toolbar color="pink" dark>
+                <v-toolbar-title>
+                  Update Profile
+                  <br>fill in the important information
+                </v-toolbar-title>
+                <br>
+
                 <v-spacer></v-spacer>
               </v-toolbar>
               <br>
@@ -19,24 +29,30 @@
                 <v-container py-0>
                   <v-layout wrap>
                     <v-flex xs12 md4>
-                      <v-text-field color="pink" label="UserName" />
-                    </v-flex><br>
+                      <v-text-field color="pink" label="UserName"/>
+                    </v-flex>
+                    <br>
                     <v-flex xs12 md4>
-                      <v-text-field label="Password" color="pink" />
-                    </v-flex><br>
+                      <v-text-field label="Password" color="pink"/>
+                    </v-flex>
+                    <br>
 
                     <v-flex xs12 md6>
-                      <v-text-field label="First Name" color="pink" />
-                    </v-flex><br>
+                      <v-text-field label="First Name" color="pink"/>
+                    </v-flex>
+                    <br>
                     <v-flex xs12 md6>
-                      <v-text-field label="Last Name" color="pink" />
-                    </v-flex><br>
+                      <v-text-field label="Last Name" color="pink"/>
+                    </v-flex>
+                    <br>
                     <v-flex xs12 md6>
-                      <v-text-field label="Contact Number" color="pink" />
-                    </v-flex><br>
+                      <v-text-field label="Contact Number" color="pink"/>
+                    </v-flex>
+                    <br>
                     <v-flex xs12 md6>
-                      <v-text-field label="Email Address" color="pink" />
-                    </v-flex><br>
+                      <v-text-field label="Email Address" color="pink"/>
+                    </v-flex>
+                    <br>
                     <v-flex xs12 text-xs-right>
                       <v-btn class="mx-0 font-weight-light" color="pink" dark>Update Profile</v-btn>
                     </v-flex>
@@ -69,7 +85,7 @@
                   <v-text-field label="Email Address" placeholder="Placeholder" outlined disabled></v-text-field>
                 </div>
                 <div>
-                  <v-text-field label="Username" placeholder="Placeholder" outlined disabled></v-text-field>
+                  <v-text-field label="Username" placeholder="Placeholder" outlined disabled id="Uname"></v-text-field>
                 </div>
               </v-card-text>
             </v-card>
@@ -82,22 +98,49 @@
 
 <script>
 import sb from "@/components/Sidebar";
-// import axios from "axios"
+import axios from "axios"
 export default {
   components: {
     sb
   },
   data() {
     return {
+      message: "",
       dialog: true,
-      name: "Hannah Mae",
+      uname: "",
+      pword: "",
       lastname: "Pelino Dy",
       contactInfo: "09090909090",
       email: "dy@gmail.com",
-      uname: "HMPD",
+      name: "HMPD",
       accountInfo:
         "Your personal information are just between you and the system admin :)"
     };
+  },
+  methods: {
+    showProfiles() {
+      let id = sessionStorage.getItem("id");
+      var url = `https://localhost:4000/retrieveUserinfo/${id}`;
+      axios
+        .post(url, id)
+        .then(res => {
+          this.uname = res.data.username;
+          this.pword = res.data.password;
+        })
+        .catch(err => {
+          if (err) {
+            this.notify("error!!")
+          }
+        });
+        
+        
+    },
+    notify(msg) {
+      this.$refs.notif.message(msg);
+    }
+  },
+  mounted(){
+    this.showProfiles()
   }
 };
 </script>

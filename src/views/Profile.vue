@@ -144,11 +144,14 @@ export default {
     return {
       editmode: false,
       new_password: "",
-      image: "https://avatars2.githubusercontent.com/u/54056633?s=460&v=4",
       admin: jwt_decode(localStorage.getItem("token")).admin
     };
   },
   methods: {
+   handlePreview() {
+      this.admin.account.avatar = this.$refs.myFiles.files[0];
+    },
+
     logout() {
       localStorage.removeItem("token");
       this.$router.push("/account/Login");
@@ -156,11 +159,13 @@ export default {
     update() {
       this.editmode = false;
       var data = new FormData();
+      data.append("avatar",this.admin.account.avatar);
+      data.append("credentials",this.admin);
       this.$axios
-        .post(this.$_CONFIG.adminRequestURL + "update", this.admin)
+        .post(this.$_CONFIG.adminRequestURL + "update", data)
         .then(res => {
           this.editmode = false;
-          this.user = jwt_decode(res.data.token).user;
+          this.admin = jwt_decode(res.data.token).admin;
           localStorage.setItem("token", res.data.token);
         })
         .catch(err => {

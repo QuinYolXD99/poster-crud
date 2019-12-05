@@ -39,7 +39,6 @@ var userSchema = new Schema({
 
 var adminSchema = new Schema({
     account: profileSchema,
-    posts: { type: [mongoose.Types.ObjectId], ref: 'Post' },
     role: { type: String, required: true }
 }, {
     collection: "admin"

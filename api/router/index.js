@@ -20,9 +20,11 @@ routes.route("/retrieveAll").post((req, res) => {
     retrieve.retrieveAll(res)
 });
 //retrieve
-routes.route("/retrieveUserinfo/:id").post((req, res) => {
+routes.route("/retrieve/Userinfo").post((req, res) => {
+    console.log(req.body)
     const _id = req.body.id
-    retrieve.findId(_id, req,res)
+    console.log(req.body.id)
+    retrieve.findId(_id,res)
 });
 // update
 routes.route("/update").post((req, res) => {

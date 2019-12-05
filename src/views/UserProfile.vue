@@ -120,15 +120,17 @@ export default {
   methods: {
     showProfiles() {
       let id = sessionStorage.getItem("id");
-      var url = `https://localhost:4000/retrieveUserinfo/${id}`;
+      var url = "https://localhost:4000/retrieveUserinfo";
       axios
         .post(url, id)
         .then(res => {
+          console.log(res)
           this.uname = res.data.username;
           this.pword = res.data.password;
         })
         .catch(err => {
           if (err) {
+            console.log(err)
             this.notify("error!!")
           }
         });

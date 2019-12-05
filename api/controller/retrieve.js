@@ -28,15 +28,19 @@ let retrieveAll = (res) => {
 }
 
 function findId(idy) {
-    return new Promise((resolve, reject) => {
-        models.findOne({ id: idy }, (err, dbres) => {
+        models.User.findOne({ id: idy }, (err, res) => {
             if (err) {
-                reject(err);
+                res.status(200).send({ error: { body: err, message: "no data found", status: true }, success: false, data: null })
             } else {
-                resolve(dbres);
+                console.log("mao ni res "+res);
+                res.status(200).send({ error: false, success: true, data: {username} })
             }
-        })
-    })
+        
+    }).catch(err => {
+        if (err) {
+            res.status(200).send({ error: { body: err, message: "service unavailable", status: true }, success: false, data: null })
+        }
+    });
 }
 
 module.exports = { retrieveOwn, retrieveAll,findId }

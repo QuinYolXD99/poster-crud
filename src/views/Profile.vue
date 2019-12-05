@@ -143,7 +143,6 @@ export default {
   data() {
     return {
       editmode: false,
-      new_password: "",
       admin: jwt_decode(localStorage.getItem("token")).admin
     };
   },
@@ -176,7 +175,6 @@ export default {
   },
   mounted() {
     this.admin = jwt_decode(localStorage.getItem("token")).admin;
-    this.admin.account.password = "";
   }
 };
 </script>

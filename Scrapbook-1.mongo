@@ -1,21 +1,16 @@
-let models = require("../../model/models");
-module.exports = (filter, res) => {
-    console.log(filter);
-
-    models.Post.aggregate([{
-            $match: filter
+db.posts.aggregate([{
+            $match: { "createdAt.month": 11 } 
         },
+
         {
             $group: {
                 _id: {
                     location: "$location",
-                    CATEGORY: "$category",
-
+                    CATEGORY: "$category"
                 },
                 count: {
                     "$sum": 1
-                },
-
+                }
             }
         },
 
@@ -26,7 +21,6 @@ module.exports = (filter, res) => {
                     $push: {
                         category: "$_id.CATEGORY",
                         count: "$count",
-                        month: "$_MONTH"
                     }
                 },
                 total: {
@@ -45,12 +39,4 @@ module.exports = (filter, res) => {
         },
         { $sort: { total: -1 } }
 
-    ], (err, data) => {
-        if (err) {
-            return res.send(err)
-        }
-        console.log(data);
-
-        res.send(data)
-    })
-}
+    ])

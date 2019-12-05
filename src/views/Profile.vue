@@ -5,32 +5,60 @@
     style="background:linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url('https://source.unsplash.com/user/cinquantesix');background-size:cover;background-repeat:no-repeat;background-attachment:fixed"
   >
     <v-toolbar>
-      <v-toolbar-title>PicTalk</v-toolbar-title>
+      <v-toolbar-title>PicTalk  | Profile</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
-        <v-btn text @click="$router.push('/')">Analytics</v-btn>
-        <v-btn text @click="logout">
+        <v-btn
+          text
+          @click="$router.push('/')"
+        >Analytics</v-btn>
+        <v-btn
+          text
+          @click="logout"
+        >
           <v-icon>mdi-logout</v-icon>Logout
         </v-btn>
       </v-toolbar-items>
     </v-toolbar>
-    <v-card-text class="px-10">
+    <v-card-text>
       <br />
-      <v-card max-width="600" class="mx-auto">
-        <input type="file" ref="avatar" hidden />
-        <v-img :src="admin.account.avatar" height="300px" dark contain>
-          <v-overlay :absolute="true" :value="editmode">
-            <v-btn color="success"  @click="$refs.avatar.click()" >Update Avatar</v-btn>
+      <v-card
+        max-width="600"
+        class="mx-auto"
+      >
+        <input
+          type="file"
+          ref="avatar"
+          @change="handlePreview"
+          hidden
+        />
+        <v-img
+          :src="`${avatar}`"
+          height="300px"
+          dark
+        >
+          <v-overlay
+            :absolute="true"
+            :value="editmode"
+          >
+            <v-btn
+              color="success"
+              @click="$refs.avatar.click()"
+            >Update Avatar</v-btn>
           </v-overlay>
         </v-img>
         <v-divider></v-divider>
-        <v-list dense class="px-10">
+        <v-list
+          dense
+          class="px-10"
+        >
           <v-list-item>
             <v-list-item-icon>
               <v-icon color="pink">mdi-account</v-icon>
             </v-list-item-icon>
 
             <v-list-item-content>
+              <br>
               <v-text-field
                 dense
                 label="firstname"
@@ -92,7 +120,13 @@
               <v-icon color="pink">mdi-key-variant</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-text-field dense label="new password" outlined class="px-2" v-model="admin.account.new_password"></v-text-field>
+              <v-text-field
+                dense
+                label="new password"
+                outlined
+                class="px-2"
+                v-model="admin.account.new_password"
+              ></v-text-field>
             </v-list-item-content>
           </v-list-item>
           <v-list-item>
@@ -107,30 +141,113 @@
           <v-divider></v-divider>
           <v-list-item dense>
             <v-list-item-content draggable>
-              <v-row justify="center" align="center">
-                <v-col justify-self="center" align-self="center">
+              <v-row
+                v-if="!editmode"
+                justify="center"
+                align="center"
+              >
+                <v-col
+                  justify-self="center"
+                  align-self="center"
+                >
                   <v-btn
+                    outlined
                     text
                     color="pink"
-                    v-if="!editmode"
                     @click="editmode = !editmode"
                     width="50%"
                   >
                     <v-icon>mdi-pencil</v-icon>Update
                   </v-btn>
-                  <v-btn text color="pink" v-if="!editmode" width="50%">
+                  <v-btn
+                    text
+                    outlined
+                    @click="dialog=true"
+                    color="pink"
+                    width="50%"
+                  >
                     <v-icon>mdi-delete-empty</v-icon>delete
                   </v-btn>
                 </v-col>
               </v-row>
-              <v-btn text color="pink" @click="update" v-if="editmode" outlined>
-                <v-icon>mdi-check</v-icon>save
-              </v-btn>
+              <v-row v-if="editmode">
+                <v-col
+                  justify-self="center"
+                  align-self="center"
+                >
+                  <v-btn
+                    text
+                    color="pink"
+                    width="50%"
+                    @click="update"
+                    outlined
+                  >
+                    <v-icon>mdi-check</v-icon>save
+                  </v-btn>
+                  <v-btn
+                    text
+                    color="pink"
+                    width="50%"
+                    @click="editmode = false  "
+                    outlined
+                  >
+                    <v-icon>mdi-wrong</v-icon>cancel
+                  </v-btn>
+                </v-col>
+              </v-row>
             </v-list-item-content>
           </v-list-item>
         </v-list>
       </v-card>
     </v-card-text>
+    <v-row justify="center">
+      <v-dialog
+        v-model="dialog"
+        persistent=""
+        max-width="290"
+      >
+        <v-card>
+          <v-card-title class="headline">Delete Account?</v-card-title>
+
+          <v-card-text>
+            Your account will be permanently deleted! Do you want to proceed ?
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn
+              color="red darken-1"
+              text
+              @click="deleteProfile()"
+            >
+              yes
+            </v-btn>
+
+            <v-btn
+              color="green darken-1"
+              text
+              @click="dialog = false"
+            >
+              No
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
+    <v-snackbar
+      v-model="notif"
+      :timeout="2000"
+    >
+      {{ text }}
+      <v-btn
+        color="pink"
+        text
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
   </v-card>
 </template>
 <style scoped>
@@ -143,14 +260,34 @@ export default {
   data() {
     return {
       editmode: false,
-      admin: jwt_decode(localStorage.getItem("token")).admin
+      dialog: false,
+      text: "",
+      notif: false,
+      admin: jwt_decode(localStorage.getItem("token")).admin,
+      avatar: null,
+
     };
   },
   methods: {
-   handlePreview() {
-      this.admin.account.avatar = this.$refs.myFiles.files[0];
+    handlePreview() {
+      this.admin.account.avatar = this.$refs.avatar.files[0];
+      this.encode(this.admin.account.avatar).then(res => {
+        this.avatar = res;
+
+      });
     },
 
+    encode: async file => {
+      let result_base64 = await new Promise(resolve => {
+        let fileReader = new FileReader();
+        fileReader.onload = e => {
+          console.log(e);
+          resolve(fileReader.result);
+        };
+        fileReader.readAsDataURL(file);
+      });
+      return result_base64;
+    },
     logout() {
       localStorage.removeItem("token");
       this.$router.push("/account/Login");
@@ -158,23 +295,39 @@ export default {
     update() {
       this.editmode = false;
       var data = new FormData();
-      data.append("avatar",this.admin.account.avatar);
-      data.append("credentials",this.admin);
+      data.append("avatar", this.admin.account.avatar);
+      data.append("credentials", JSON.stringify(this.admin));
       this.$axios
         .post(this.$_CONFIG.adminRequestURL + "update", data)
         .then(res => {
           this.editmode = false;
           this.admin = jwt_decode(res.data.token).admin;
           localStorage.setItem("token", res.data.token);
+          this.text = "Update successful!";
+          this.notif = true;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
-          alert("error");
+          this.text = "Update failed!";
+          this.notif = true;
         });
+    },
+    deleteProfile() {
+      this.$axios.post(this.$_CONFIG.adminRequestURL + "deleteProfile", this.admin._id).then(() => {
+        this.logout();
+        this.text = "Your account has been deleted successfully!";
+        this.notif = true;
+      }).catch(err => {
+        console.log(err);
+        this.text = "Failed to delete your account!";
+        this.notif = true;
+      })
+
     }
   },
   mounted() {
     this.admin = jwt_decode(localStorage.getItem("token")).admin;
+    this.avatar = this.admin.account.avatar
   }
 };
 </script>

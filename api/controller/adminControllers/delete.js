@@ -1,6 +1,6 @@
 let models = require("../../model/models");
 module.exports = (reqBody, res) => {
-    models.Post.deleteOne({ _id: reqBody.id }, (err) => {
+    models.Admin.deleteOne({ _id: reqBody._id }, (err) => {
         if (err) {
             res.status(200).send({ error: { body: err, status: true }, success: false })
         } else {
@@ -9,4 +9,3 @@ module.exports = (reqBody, res) => {
     })
 
 }
-

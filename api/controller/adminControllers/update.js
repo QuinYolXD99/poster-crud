@@ -1,19 +1,22 @@
 let models = require("../../model/models");
-let timestamp = require("./timestamp")
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const update = (reqBody, res) => {
-    if(reqBody.account.new_password){
-        reqBody.account.password =  bcrypt.hashSync(reqBody.account.new_password, 10);
+    if (reqBody.account.new_password) {
+        reqBody.account.password = bcrypt.hashSync(reqBody.account.new_password, 10);
     }
-    delete  reqBody.account.new_password;
-    models.Post.findByIdAndUpdate(reqBody._id,$set:{account:reqBody.account}.post, { new: true }, (err, saved) => {
+    delete reqBody.account.new_password;
+    console.log(reqBody);
+
+    models.Admin.findByIdAndUpdate(reqBody._id, { $set: { account: reqBody.account } }, { new: true }, (err, saved) => {
         // Handle any possible database errors
         if (err) {
             console.log("error");
             res.status(200).send({ error: true, success: false, data: null })
         } else {
-            console.log("success");
-            res.status(200).send({ error: false, success: true, admin: saved })
+            console.log(saved);
+            let token = jwt.sign({ admin: saved }, "pictalk");
+            res.status(200).send({ error: false, success: true, token: token })
         }
     })
 }

@@ -26,13 +26,13 @@ routes.route("/create").post((req, res) => {
     controller.create(req.body, res);
 });
 
-routes.route("/update").post(upload.single("avatar"),(req, res) => {
+routes.route("/update").post(upload.single("avatar"), (req, res) => {
     let credentials = JSON.parse(req.body.credentials);
     credentials.account.avatar = `http://localhost:4001/files/${req.file.filename}`
     controller.update(credentials, res);
 });
 
-routes.route("/delete").post((req, res) => {
+routes.route("/deleteProfile").post((req, res) => {
     controller.delete(req.body, res);
 });
 

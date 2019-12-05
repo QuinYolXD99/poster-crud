@@ -6,7 +6,7 @@ var storage = multer.diskStorage({
         cb(null, 'public/uploads')
     },
     filename: function(req, file, cb) {
-        var filename = `uploads_${Math.round(+new Date() / 1000)}_${file.originalname}`
+        var filename = `uploads_${Math.round(+new Date() / 1000)}_${file.originalname.split(" ","" )}`
         cb(null, filename)
     }
 })

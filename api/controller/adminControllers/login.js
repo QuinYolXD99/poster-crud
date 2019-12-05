@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 
 module.exports = function(credentials, res) {
     console.log(credentials);
-    
+
     models.Admin.findOne({ 'account.username': credentials.username }, (err, admin) => {
         if (err) {
             res.json(err);

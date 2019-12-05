@@ -6,8 +6,16 @@ var postSchema = new Schema({
     description: { type: String, required: true },
     title: { type: String, required: true },
     category: { type: String, required: true },
-    createdAt: { type: String, required: true },
-    updatedAt: { type: String, default: null },
+    createdAt: {
+        month: { type: Number, required: true },
+        date: { type: Number, required: true },
+        year: { type: Number, required: true }
+    },
+    updateAt: {
+        month: { type: Number },
+        date: { type: Number },
+        year: { type: Number }
+    },
     user: { type: mongoose.Types.ObjectId, ref: 'Users', required: true },
     location: { type: String, required: true }
 }, { collection: "posts" });

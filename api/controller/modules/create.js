@@ -2,7 +2,11 @@ let models = require("../../model/models");
 const mongoose = require('mongoose');
 module.exports = (reqBody, res) => {
     reqBody.user = mongoose.Types.ObjectId(reqBody.user);
-    reqBody.createdAt = new Date().toJSON().slice(0, 10).replace(/-/g, '/');
+    reqBody.createdAt = {
+        month: new Date().getMonth(),
+        date: new Date().getDate(),
+        year: new Date().getFullYear(),
+    };
     let post = new models.Post(reqBody);
     post.save()
         .then(result => {

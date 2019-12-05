@@ -39,8 +39,8 @@ routes.route("/delete").post((req, res) => {
     controller.delete(req.body, res);
 });
 
-routes.route("/analyze").get((req, res) => {
-    controller.analyze(res);
+routes.route("/analyze").post((req, res) => {
+    controller.analyze(req.body, res);
 });
 
 module.exports = routes;

@@ -1,11 +1,14 @@
 let models = require("../../model/models");
-module.exports = (filter, res) => {
-    console.log(filter);
+module.exports = (month, res) => {
     models.Post.aggregate([{
-            $match: filter
-        },
+            $match: {
+                createdAt: {
+                    '$gte': new Date("2017-11-29").setHours(14, 43, 0, 0),
+                    '$lt': new Date()
+                }
+            }
+        }, {
 
-        {
             $group: {
                 _id: {
                     location: "$location",
@@ -30,8 +33,7 @@ module.exports = (filter, res) => {
                     $sum: { $sum: "$count" }
                 }
             }
-        },
-        {
+        }, {
             $project: {
                 location: "$_id",
                 reports: 1,

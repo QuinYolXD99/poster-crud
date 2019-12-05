@@ -17,23 +17,14 @@
     <v-card-text class="px-10">
       <br />
       <v-card max-width="600" class="mx-auto">
+        <input type="file" ref="avatar" hidden />
         <v-img :src="admin.account.avatar" height="300px" dark contain>
-          <v-row class="fill-height">
-            <v-card-title>
-              <v-btn dark icon>
-                <v-icon id="icons">mdi-chevron-left</v-icon>
-              </v-btn>
-
-              <v-spacer></v-spacer>
-
-              <v-btn dark icon class="mr-4">
-                <v-icon id="icons">mdi-pencil</v-icon>
-              </v-btn>
-            </v-card-title>
-          </v-row>
+          <v-overlay :absolute="true" :value="editmode">
+            <v-btn color="success"  @click="$refs.avatar.click()" >Update Avatar</v-btn>
+          </v-overlay>
         </v-img>
         <v-divider></v-divider>
-        <v-list  dense class="px-10">
+        <v-list dense class="px-10">
           <v-list-item>
             <v-list-item-icon>
               <v-icon color="pink">mdi-account</v-icon>
@@ -96,19 +87,12 @@
               <v-list-item-subtitle v-if="!editmode">Contact</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item  v-if="editmode">
+          <v-list-item v-if="editmode">
             <v-list-item-icon>
               <v-icon color="pink">mdi-key-variant</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-               <v-text-field
-                dense
-                label="new password"
-               
-                outlined
-                class="px-2"
-                v-model="new_password"
-              ></v-text-field>
+              <v-text-field dense label="new password" outlined class="px-2" v-model="new_password"></v-text-field>
             </v-list-item-content>
           </v-list-item>
           <v-list-item>
@@ -159,7 +143,7 @@ export default {
   data() {
     return {
       editmode: false,
-      new_password:"",
+      new_password: "",
       image: "https://avatars2.githubusercontent.com/u/54056633?s=460&v=4",
       admin: jwt_decode(localStorage.getItem("token")).admin
     };
@@ -170,8 +154,8 @@ export default {
       this.$router.push("/account/Login");
     },
     update() {
-          this.editmode = false;
-
+      this.editmode = false;
+      var data = new FormData();
       this.$axios
         .post(this.$_CONFIG.adminRequestURL + "update", this.admin)
         .then(res => {
@@ -181,14 +165,13 @@ export default {
         })
         .catch(err => {
           console.log(err);
-
           alert("error");
         });
     }
   },
   mounted() {
     this.admin = jwt_decode(localStorage.getItem("token")).admin;
-    console.log(this.admin);
+    this.admin.account.password = "";
   }
 };
 </script>

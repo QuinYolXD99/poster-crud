@@ -2,15 +2,13 @@
   <v-card height="100%">
     <v-toolbar>
       <v-toolbar-title>Analytics</v-toolbar-title>
-
       <v-spacer></v-spacer>
-
       <v-toolbar-items>
-        <v-btn
-          text
-          @click="filter = !filter"
-        >Add Filter</v-btn>
-        <v-btn text>View Visuals</v-btn>
+        <v-btn text @click="filter = !filter">Add Filter</v-btn>
+        <v-btn text>Profile</v-btn>
+        <v-btn text @click="logout">
+          <v-icon>mdi-logout</v-icon>Logout
+        </v-btn>
       </v-toolbar-items>
     </v-toolbar>
     <v-container fluid>
@@ -18,94 +16,87 @@
         <v-col justify="center" align="center">
           <v-expand-transition>
             <div v-show="filter">
-              <v-card width="500" flat  color="#CFD8DC" >
+              <v-card class="mx-auto" color="#FFF3E0" max-width="750">
                 <v-card-text>
-                  tet
+                  <p class="display-1 text--primary">•Filter Options•</p>
+                  <v-row align="center" class="px-10">
+                    <!-- filters -->
+                    <v-col class="d-flex" cols="12" sm="6">
+                      <v-select :items="months" v-model="month" label="Month" dense></v-select>
+                    </v-col>
+
+                    <v-col class="d-flex" cols="12" sm="6">
+                      <v-select
+                        :items="['All','Transportation','Crime','Waste Problem' ,'Accidents']"
+                        v-model="category"
+                        label="category"
+                        dense
+                      ></v-select>
+                    </v-col>
+                    <v-col class="d-flex" cols="12">
+                      <v-select :items="locations" v-model="location" label="location" dense></v-select>
+                    </v-col>
+                  </v-row>
                 </v-card-text>
+                <center>
+                  <v-btn outlined @click="addFilter">Filter Results</v-btn>
+                </center>
+                <br />
               </v-card>
             </div>
-
           </v-expand-transition>
         </v-col>
       </v-row>
       <v-row>
-        <v-col
-          cols="12"
-          sm="6"
-          md="4"
-        >
-
-        </v-col>
+        <v-col cols="12" sm="6" md="4"></v-col>
         <v-spacer></v-spacer>
       </v-row>
-      <v-item-group multiple>
-        <v-row>
-          <v-col
-            v-for="(reports, i) in data"
-            :key="i"
-            cols="12"
-            md="4"
-          >
-            <!-- card -->
-            <v-card
-              class="mx-auto"
-              max-width="400"
-              :color="reports.total > 1?'#EF9A9A':'white'"
-            >
-              <v-card-text>
-                <div>
-                  <span
-                    class="display-1 font-weight-black black--text"
-                    v-text="`•${reports.location}`"
-                  ></span>
-
-                </div>
+      <v-expand-transition>
+        <v-item-group multiple v-show="!filter">
+          <v-row justify="center">
+            <p class="title text-center">No Data Available</p>
+            <v-col v-for="(reports, i) in data" :key="i" cols="12" md="4">
+              <!-- card -->
+              <v-card class="mx-auto" max-width="400" :color="reports.total > 1?'#EF9A9A':'white'">
+                <v-card-text>
+                  <div>
+                    <span
+                      class="display-1 font-weight-black black--text"
+                      v-text="`•${reports.location}`"
+                    ></span>
+                  </div>
+                  <v-divider></v-divider>
+                  <v-list color="transparent">
+                    <v-list-item v-for="(items, j) in reports.reports" :key="j" inactive>
+                      <v-list-item-title>
+                        <span
+                          class="title font-weight-medium black--text"
+                          v-text="`•${items.category}   :   `"
+                        ></span>
+                        <strong class="headline font-weight-medium black--text">{{items.count}}</strong>
+                      </v-list-item-title>
+                    </v-list-item>
+                    <v-list-item inactive>
+                      <v-list-item-title>
+                        <span class="title font-weight-bold black--text" v-text="`•Total   :   `"></span>
+                        <strong class="headline font-weight-bold black--text">{{reports.total}}</strong>
+                      </v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-card-text>
                 <v-divider></v-divider>
-                <v-list color="transparent">
-                  <v-list-item
-                    v-for="(items, j) in reports.reports"
-                    :key="j"
-                    inactive
-                  >
-                    <v-list-item-title>
-                      <span
-                        class="title font-weight-medium black--text"
-                        v-text="`•${items.category}   :   `"
-                      ></span>
-                      <strong class="headline font-weight-medium black--text">{{items.count}}</strong>
-                    </v-list-item-title>
-
-                  </v-list-item>
-                  <v-list-item inactive>
-                    <v-list-item-title>
-                      <span
-                        class="title font-weight-bold black--text"
-                        v-text="`•Total   :   `"
-                      ></span>
-                      <strong class="headline font-weight-bold black--text">{{reports.total}}</strong>
-                    </v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-card-text>
-              <v-divider></v-divider>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                  outlined
-                  color="black"
-                >
-                  Details
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-            <!-- /card -->
-          </v-col>
-        </v-row>
-      </v-item-group>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn outlined color="black">Details</v-btn>
+                </v-card-actions>
+              </v-card>
+              <!-- /card -->
+            </v-col>
+          </v-row>
+        </v-item-group>
+      </v-expand-transition>
     </v-container>
-
   </v-card>
-
 </template>
 <script>
 export default {
@@ -116,9 +107,12 @@ export default {
       filter: false,
       query: {},
       menu: false,
-      modal: false,
-      month: "",
+      month: "All",
+      month_number: 0,
+      location: "All",
+      category: "All",
       months: [
+        "All",
         "January",
         "February",
         "March",
@@ -131,20 +125,92 @@ export default {
         "October",
         "November",
         "December"
+      ],
+      locations: [
+        "All",
+        "Adlaon",
+        "Agsungot",
+        "Apas",
+        "Bacayan",
+        "Banilad",
+        "Binaliw",
+        "Budla-an",
+        "Busay",
+        "Zapatera",
+        "Day-as",
+        "Ermita",
+        "Santa Cruz",
+        "Santo Niño",
+        "Sirao",
+        "T Padilla",
+        "Talamban",
+        "Taptap",
+        "Tejero",
+        "Tinago",
+        "Carreta",
+        "Cogon Ramos",
+        "Day-as",
+        "Ermita",
+        "Guba",
+        "Hipodromo",
+        "Kalubihan",
+        "Kamagayan",
+        "Kamputhaw (Camputhaw)",
+        "Kasambagan",
+        "Lahug",
+        "Lorega San Miguel",
+        "Lusaran",
+        "Luz",
+        "Mabini",
+        "Mabolo Proper",
+        "Malubog",
+        "Pahina Central",
+        "Parian",
+        "Paril",
+        "Pit-os",
+        "Pulangbato",
+        "Sambag I",
+        "Sambag II",
+        "San Antonio",
+        "San Jose",
+        "San Roque"
       ]
     };
   },
   methods: {
-    sendQuery() {
-      this.$axios.post(this.$_CONFIG.adminRequestURL + "analyze").then(res => {
-        this.data = res.data;
-      }).catch(err => {
-        console.log(err);
-      })
+    addFilter() {
+      this.filter = false;
+      this.month_number = this.months.indexOf(this.month);
+      if (this.month_number > 0) {
+        this.query.month = this.month_number - 1;
+      }
+      if (this.location !== "All") {
+        this.query.location = this.location;
+      }
+      if (this.category !== "All") {
+        this.query.category = this.category;
+      }
+      this.sendQuery(JSON.stringify(this.query));
+      
+    },
+    logout(){
+      localStorage.removeItem("token")
+      this.$router.push("/account/login")
+    },
+
+    sendQuery(query) {
+      this.$axios
+        .post(this.$_CONFIG.adminRequestURL + "analyze", query)
+        .then(res => {
+          this.data = res.data;
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   },
   mounted() {
-    this.sendQuery();
+    this.sendQuery(this.query);
   }
 };
 </script>

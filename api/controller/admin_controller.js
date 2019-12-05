@@ -5,5 +5,4 @@ module.exports = {
     update: require('./adminControllers/update'),
     delete: require('./adminControllers/delete'),
     analyze: require('./adminControllers/analyze'),
-    analyzeMonthly: require('./adminControllers/analyze_by_month'),
 }

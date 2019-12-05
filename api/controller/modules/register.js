@@ -9,7 +9,7 @@ module.exports = function (credentials, res) {
     models.User.find({ 'profile.username':  credentials.username },
         (err, user) => {
             if (!err) {
-                if (user.length) {
+                if (user) {
                     res.status(200).json({ exist: true });
                 } else {
                     let new_user = new models.User({ profile: credentials, posts: [] });

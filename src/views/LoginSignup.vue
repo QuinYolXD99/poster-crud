@@ -218,8 +218,7 @@
                   text
                   @click="(signup = false), toggleForm()"
                   signup="true"
-                  >Login here</v-btn
-                >
+                >Login here</v-btn>
               </span>
             </v-card-actions>
           </v-card>
@@ -373,12 +372,14 @@ export default {
     },
     validate() {
       if (this.signup) {
-        this.sendRequest(this.$_CONFIG.userRequestURL + "register");
+        this.sendRequest(this.$_CONFIG.adminRequestURL + "register");
       } else {
-        this.sendRequest(this.$_CONFIG.userRequestURL + "login");
+        this.sendRequest(this.$_CONFIG.adminRequestURL + "login");
       }
     },
     sendRequest(url) {
+      console.log(url);
+
       let reqBody = null;
       this.loading = true;
       if (this.signup) {
@@ -424,7 +425,9 @@ export default {
     this.step3_completed = this.avatar;
   },
   mounted() {
-    this.signup = this.$route.params.page !== "login";
+    this.signup = this.$route.params.page !== "Login";
+    console.log(this.signup);
+    this.toggleForm();
     this.reset();
   }
 };

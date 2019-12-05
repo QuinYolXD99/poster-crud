@@ -2,7 +2,6 @@
   <v-app>
     <v-content>
       <router-view />
-      <!-- <Steppers/> -->
     </v-content>
   </v-app>
 </template>

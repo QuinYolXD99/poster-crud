@@ -92,7 +92,7 @@
               <v-icon color="pink">mdi-key-variant</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-text-field dense label="new password" outlined class="px-2" v-model="new_password"></v-text-field>
+              <v-text-field dense label="new password" outlined class="px-2" v-model="admin.account.new_password"></v-text-field>
             </v-list-item-content>
           </v-list-item>
           <v-list-item>

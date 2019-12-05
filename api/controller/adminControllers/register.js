@@ -3,7 +3,7 @@ let models = require("../../model/models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
-module.exports = function (credentials, res) {
+module.exports =  (credentials, res)=> {
     credentials.joined = new Date().toJSON().slice(0, 10).replace(/-/g, '/');
     credentials.password = bcrypt.hashSync(credentials.password, 10);
 
@@ -18,7 +18,7 @@ module.exports = function (credentials, res) {
                     new_admin
                         .save()
                         .then(data => {
-                            let token = jwt.sign({ admin: { id: data._id , username: data.username } }, "pictalk");
+                            let token = jwt.sign({ admin: data }, "pictalk");
                             res.status(201).json({ error: { status: false, message: null }, auth: true, token: token, exist: false });
                         })
                         .catch(err => {

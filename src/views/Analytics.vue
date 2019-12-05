@@ -5,7 +5,7 @@
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <v-btn text @click="filter = !filter">Add Filter</v-btn>
-        <v-btn text>Profile</v-btn>
+        <v-btn text @click="$router.push('/profile')">Profile</v-btn>
         <v-btn text @click="logout">
           <v-icon>mdi-logout</v-icon>Logout
         </v-btn>
@@ -190,7 +190,7 @@ export default {
       if (this.category !== "All") {
         this.query.category = this.category;
       }
-      this.sendQuery(JSON.stringify(this.query));
+      this.sendQuery(this.query);
       
     },
     logout(){

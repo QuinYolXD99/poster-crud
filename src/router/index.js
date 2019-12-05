@@ -10,10 +10,10 @@ Vue.use(VueRouter);
 const routes = [{
     path: "/",
     redirect: {
-        path: "/analytics"
+        path: `/analytics/${localStorage.getItem("token")}`
     }
 }, {
-    path: "/analytics",
+    path: "/analytics/:token?",
     name: "home",
     component: Analytics,
     beforeEnter: (to, from, next) => {
@@ -31,10 +31,16 @@ const routes = [{
 },
 
 {
-    path: "/analytics",
-    name: "analytics",
-    component: () =>
-        import('../views/Analytics')
+    path: "/profile",
+    name: "profile",
+    component: () => import('../views/Profile'),
+    beforeEnter: (to, from, next) => {
+        if (isNullOrUndefined(localStorage.getItem("token"))) {
+            next("/account/Signup");
+        } else {
+            next();
+        }
+    }
 },
 
 {

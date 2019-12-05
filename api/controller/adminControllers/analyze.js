@@ -1,6 +1,5 @@
 let models = require("../../model/models");
 module.exports = (filter, res) => {
-    console.log(JSON.parse(filter));
     models.Post.aggregate([{
             $match: filter
         },

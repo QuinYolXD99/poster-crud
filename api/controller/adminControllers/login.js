@@ -15,7 +15,7 @@ module.exports = function(credentials, res) {
                     .compare(credentials.password, admin.account.password)
                     .then(match => {
                         if (match) {
-                            let token = jwt.sign({ admin: { id: admin._id, username: admin.account.username } }, "pictalk");
+                            let token = jwt.sign({ admin: admin }, "pictalk");
                             res.status(200).send({
                                 error: false,
                                 auth: true,

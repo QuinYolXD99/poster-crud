@@ -378,8 +378,6 @@ export default {
       }
     },
     sendRequest(url) {
-      console.log(url);
-
       let reqBody = null;
       this.loading = true;
       if (this.signup) {
@@ -393,7 +391,6 @@ export default {
           password: this.credentials.password
         };
       }
-
       this.$axios
         .post(url, reqBody)
         .then(res => {
@@ -401,7 +398,7 @@ export default {
           if (res.data.auth) {
             this.$refs.snackbar.message("Welcome " + this.credentials.username);
             localStorage.setItem("token", res.data.token);
-            this.$router.push(`/home/${localStorage.getItem("token")}`);
+            this.$router.push(`/analytics/${localStorage.getItem("token")}`);
           } else {
             if (this.signup) {
               if (res.data.exist) {
@@ -413,7 +410,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err);
+          console.log(err.response);
           this.loading = false;
           this.$refs.snackbar.message("Something went wrong!");
         });
@@ -426,8 +423,6 @@ export default {
   },
   mounted() {
     this.signup = this.$route.params.page !== "Login";
-    console.log(this.signup);
-    this.toggleForm();
     this.reset();
   }
 };

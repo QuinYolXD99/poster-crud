@@ -8,16 +8,16 @@
       <v-toolbar-title>PicTalk</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
-        <v-btn text v-if="admin.account.admin" @click="$router.push('/')">Analytics</v-btn>
+        <v-btn text @click="$router.push('/')">Analytics</v-btn>
         <v-btn text @click="logout">
           <v-icon>mdi-logout</v-icon>Logout
         </v-btn>
       </v-toolbar-items>
     </v-toolbar>
-    <v-card-text>
+    <v-card-text class="px-10">
       <br />
       <v-card max-width="600" class="mx-auto">
-        <v-img :src="user.account.avatar" height="300px" dark contain>
+        <v-img :src="admin.account.avatar" height="300px" dark contain>
           <v-row class="fill-height">
             <v-card-title>
               <v-btn dark icon>
@@ -33,7 +33,7 @@
           </v-row>
         </v-img>
         <v-divider></v-divider>
-        <v-list two-line dense>
+        <v-list  dense class="px-10">
           <v-list-item>
             <v-list-item-icon>
               <v-icon color="pink">mdi-account</v-icon>
@@ -46,19 +46,19 @@
                 v-if="editmode"
                 outlined
                 class="px-2"
-                v-model="user.account.firstname"
+                v-model="admin.account.firstname"
               ></v-text-field>&nbsp;
               <v-text-field
                 label="lastname"
                 dense
                 outlined
                 v-if="editmode"
-                v-model="user.account.lastname"
+                v-model="admin.account.lastname"
               ></v-text-field>
               <v-list-item-title
                 v-if="!editmode"
                 class="text-capitalize"
-              >{{`${user.account.firstname} ${user.account.lastname}`}}</v-list-item-title>
+              >{{`${admin.account.firstname} ${admin.account.lastname}`}}</v-list-item-title>
               <v-list-item-subtitle v-if="!editmode">Name</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -73,9 +73,9 @@
                 v-if="editmode"
                 outlined
                 class="px-2"
-                v-model="user.account.username"
+                v-model="admin.account.username"
               ></v-text-field>
-              <v-list-item-title v-if="!editmode">{{user.account.username}}</v-list-item-title>
+              <v-list-item-title v-if="!editmode">{{admin.account.username}}</v-list-item-title>
               <v-list-item-subtitle v-if="!editmode">Username</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -90,19 +90,33 @@
                 v-if="editmode"
                 outlined
                 class="px-2"
-                v-model="user.account.contact"
+                v-model="admin.account.contact"
               ></v-text-field>
-              <v-list-item-title v-if="!editmode">{{user.account.contact}}</v-list-item-title>
+              <v-list-item-title v-if="!editmode">{{admin.account.contact}}</v-list-item-title>
               <v-list-item-subtitle v-if="!editmode">Contact</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item  v-if="editmode">
+            <v-list-item-icon>
+              <v-icon color="pink">mdi-key-variant</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+               <v-text-field
+                dense
+                label="new password"
+               
+                outlined
+                class="px-2"
+                v-model="new_password"
+              ></v-text-field>
             </v-list-item-content>
           </v-list-item>
           <v-list-item>
             <v-list-item-icon>
               <v-icon color="pink">mdi-calendar</v-icon>
             </v-list-item-icon>
-
             <v-list-item-content>
-              <v-list-item-title>{{user.account.joined}}</v-list-item-title>
+              <v-list-item-title>{{admin.account.joined}}</v-list-item-title>
               <v-list-item-subtitle>joined</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -125,7 +139,7 @@
                   </v-btn>
                 </v-col>
               </v-row>
-              <v-btn text color="pink" @click="editmode = false" v-if="editmode" outlined>
+              <v-btn text color="pink" @click="update" v-if="editmode" outlined>
                 <v-icon>mdi-check</v-icon>save
               </v-btn>
             </v-list-item-content>
@@ -145,7 +159,9 @@ export default {
   data() {
     return {
       editmode: false,
-      user: jwt_decode(localStorage.getItem("token")).user
+      new_password:"",
+      image: "https://avatars2.githubusercontent.com/u/54056633?s=460&v=4",
+      admin: jwt_decode(localStorage.getItem("token")).admin
     };
   },
   methods: {
@@ -154,20 +170,25 @@ export default {
       this.$router.push("/account/Login");
     },
     update() {
-      this.$axios
-        .post(this.$_CONFIG.adminRequestURL + "update", user)
-        .then(res => {
-          this.user = jwt_decode(res.data.token).user;
-          localStorage.setItem("token" ,  res.data.token)
+          this.editmode = false;
 
+      this.$axios
+        .post(this.$_CONFIG.adminRequestURL + "update", this.admin)
+        .then(res => {
+          this.editmode = false;
+          this.user = jwt_decode(res.data.token).user;
+          localStorage.setItem("token", res.data.token);
         })
         .catch(err => {
+          console.log(err);
+
           alert("error");
         });
     }
   },
   mounted() {
-    this.user = jwt_decode(localStorage.getItem("token")).user;
+    this.admin = jwt_decode(localStorage.getItem("token")).admin;
+    console.log(this.admin);
   }
 };
 </script>

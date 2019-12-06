@@ -304,8 +304,8 @@ export default {
         nameRules: v => /^[A-Z a-z]+$/.test(v) || "Name must be valid",
         min: v => (!!v && v.length >= 8) || "Min 8 characters",
         cont: () =>
-          this.credentials.contact ===
-          /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im,
+         ( this.credentials.contact ===
+          /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im && this.credentials.contact.length >11),
         matchPassword: () =>
           this.credentials.password === this.confirm_password ||
           "Passwords don't match !"

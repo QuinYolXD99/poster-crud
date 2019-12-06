@@ -12,7 +12,7 @@ Vue.use(VueRouter);
 const routes = [{
     path: "/",
     redirect: {
-        path: `/analytics`
+        path: isNullOrUndefined(localStorage.getItem("token"))?'/analytics/':"/user/account/Signup"
     }
 }, {
     path: "/analytics/:token?",

@@ -5,19 +5,6 @@
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <v-btn text>
-          <Modal
-            ref="modal"
-            v-if="!loading"
-            :cardTitle="cardTitle"
-            :buttonTitle="buttonTitle"
-            :isUpdate="isUpdate"
-            labelx="Post"
-            colorx="black"
-            :uploading="uploading"
-            @click="reset"
-            @message="notify"
-            @reset="reset"
-          />
         </v-btn>
         <v-btn text @click="$router.push('/analytics/')" v-if="account.account.role== 'admin'">Analytics</v-btn>
         <v-btn text @click="$router.push('/profile')">Profile</v-btn>

@@ -2,7 +2,7 @@
   <v-card
     height="100%"
     color="transparent"
-    style="background:linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url('https://source.unsplash.com/user/davidkovalenkoo');background-size:cover;background-repeat:no-repeat;background-attachment:fixed"
+   
   >
     <v-toolbar>
       <v-toolbar-title @click="$router.push('/user')">PicTalk | Profile</v-toolbar-title>
@@ -18,7 +18,12 @@
       <br />
       <v-card max-width="600" class="mx-auto">
         <input type="file" ref="avatar" @change="handlePreview" hidden />
-        <v-img :src="`${avatar}`" cover height="400px" dark>
+        <v-img :src="`https://source.unsplash.com/user/davidkovalenkoo`"    lazy-src="@/assets/bg.jpg" cover height="400px" dark>
+          <v-row align="center" justify="center">
+            <v-avatar size="200" style="margin-top : 19%">
+              <img :src="`${avatar}`" alt="dp" />
+            </v-avatar>
+          </v-row>
           <v-overlay :absolute="true" :value="editmode">
             <v-btn color="pink" @click="$refs.avatar.click()">Update Avatar</v-btn>
           </v-overlay>
@@ -224,10 +229,9 @@ export default {
     },
     deleteProfile() {
       // var url = this.$_CONFIG.adminRequestURL;
-     
-      
+
       this.$axios
-        .get('http://localhost:4001/admin/deleteProfile/'+this.admin._id)
+        .get("http://localhost:4001/admin/deleteProfile/" + this.admin._id)
         .then(() => {
           this.logout();
           this.text = "Your account has been deleted successfully!";

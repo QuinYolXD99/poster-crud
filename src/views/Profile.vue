@@ -5,7 +5,7 @@
     style="background:linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url('https://source.unsplash.com/user/cinquantesix');background-size:cover;background-repeat:no-repeat;background-attachment:fixed"
   >
     <v-toolbar>
-      <v-toolbar-title>PicTalk  | Profile</v-toolbar-title>
+      <v-toolbar-title @click="$router.push('/user')">PicTalk | Profile</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <v-btn
@@ -254,7 +254,6 @@
 </style>
 
 <script>
-import jwt_decode from "jwt-decode";
 export default {
   name: "container",
   data() {
@@ -263,7 +262,7 @@ export default {
       dialog: false,
       text: "",
       notif: false,
-      admin: jwt_decode(localStorage.getItem("token")).admin,
+      admin: this.$jwt_decode(localStorage.getItem("token")).admin,
       avatar: null,
 
     };
@@ -301,7 +300,7 @@ export default {
         .post(this.$_CONFIG.adminRequestURL + "update", data)
         .then(res => {
           this.editmode = false;
-          this.admin = jwt_decode(res.data.token).admin;
+          this.admin = this.$jwt_decode(res.data.token).admin;
           localStorage.setItem("token", res.data.token);
           this.text = "Update successful!";
           this.notif = true;
@@ -326,7 +325,7 @@ export default {
     }
   },
   mounted() {
-    this.admin = jwt_decode(localStorage.getItem("token")).admin;
+    this.admin = this.$jwt_decode(localStorage.getItem("token")).admin;
     this.avatar = this.admin.account.avatar
   }
 };

@@ -12,8 +12,7 @@ const update = (reqBody, res) => {
             res.status(200).send({ error: true, success: false, data: null })
         } else {
             console.log(saved);
-            let token = jwt.sign({ admin: saved }, "pictalk");
-            res.status(200).send({ error: false, success: true, token: token })
+            res.status(200).send({ error: false, success: true, token: saved })
         }
     })
 }

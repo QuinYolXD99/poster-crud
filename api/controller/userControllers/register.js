@@ -1,6 +1,5 @@
 /* eslint-disable  */
 let models = require("../../model/models");
-const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 module.exports = (credentials, res) => {
     credentials.joined = new Date().toJSON().slice(0, 10).replace(/-/g, '/');
@@ -16,8 +15,7 @@ module.exports = (credentials, res) => {
                     new_admin
                         .save()
                         .then(data => {
-                            let token = jwt.sign({ admin: data }, "pictalk");
-                            res.status(201).json({ error: { status: false, message: null }, auth: true, token: token, exist: false });
+                            res.status(201).json({ error: { status: false, message: null }, auth: true, token: data, exist: false });
                         })
                         .catch(err => {
                             console.log("error : " + err);

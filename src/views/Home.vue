@@ -11,13 +11,15 @@
             :cardTitle="cardTitle"
             :buttonTitle="buttonTitle"
             :isUpdate="isUpdate"
+            labelx="Post"
+            colorx="black"
             :uploading="uploading"
             @click="reset"
             @message="notify"
             @reset="reset"
           />
         </v-btn>
-        <v-btn text v-if="account.role== 'admin'">Analytics</v-btn>
+        <v-btn text @click="$router.push('/analytics/')" v-if="account.account.role== 'admin'">Analytics</v-btn>
         <v-btn text @click="$router.push('/profile')">Profile</v-btn>
         <v-btn text @click="logout">
           <v-icon>mdi-logout</v-icon>Logout
@@ -26,21 +28,9 @@
     </v-toolbar>
     <v-container id="body" fluid>
       <v-container class="pa-1">
-        <v-row class="justify-center">
-          <v-col cols="12" md="5">
-            <v-text-field
-              placeholder="Search User Post"
-              :v-if="!images.length==0"
-              prepend-inner-icon="mdi-magnify"
-              v-model="search"
-              color="dark"
-              clearable
-            ></v-text-field>
-          </v-col>
-        </v-row>
         <br />
         <div v-for="(details , i) in images" :key="i">
-          <Feed :details="details" />
+          <Feed :details="details" @reload="getImages"/>
           <br />
         </div>
       </v-container>
@@ -73,6 +63,7 @@ export default {
       images: [],
       color: "red",
       menu: false,
+      account: JSON.parse(localStorage.getItem("token"))
     };
   },
   components: {
@@ -81,11 +72,7 @@ export default {
     Feed,
     DeletePrompt
   },
-  computed: {
-    account() {
-      return  this.$jwt_decode(localStorage.getItem("token")).admin
-    }
-  },
+
   methods: {
     logout() {
       localStorage.removeItem("token");
@@ -125,6 +112,7 @@ export default {
         });
     },
     getImages() {
+      this.images = [];
       var url = this.$_CONFIG.userRequestURL + "retrieveAll";
       this.sendImageRequest(url);
     },
@@ -150,6 +138,14 @@ export default {
           }
         });
     },
+    searchUser() {
+      this.$axios
+        .get(this.$_CONFIG.userRequestURL + "search/" + this.search)
+        .then(res => {
+          query
+        })
+        .catch(err => {});
+    },
     notify(msg) {
       this.$refs.notif.message(msg);
     }
@@ -158,7 +154,8 @@ export default {
     if (isNullOrUndefined(localStorage.getItem("token"))) {
       this.$router.replace("/user/account/login");
     } else {
-      console.log(this.$_CONFIG.userRequestURL + "retrieveAll");
+      this.account = JSON.parse(localStorage.getItem("token"));
+      console.log(this.account);
       this.getImages();
     }
   }

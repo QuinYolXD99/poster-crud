@@ -1,4 +1,3 @@
-const jwt = require("jsonwebtoken");
 let models = require("../../model/models");
 const bcrypt = require("bcryptjs");
 
@@ -12,11 +11,10 @@ module.exports = function(credentials, res) {
                     .compare(credentials.password, admin.account.password)
                     .then(match => {
                         if (match) {
-                            let token = jwt.sign({ admin: admin }, "pictalk");
                             res.status(200).send({
                                 error: false,
                                 auth: true,
-                                token: token,
+                                token: admin,
                             });
                         } else {
                             return res

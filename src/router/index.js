@@ -4,7 +4,6 @@ import Analytics from "../views/Analytics.vue";
 import Home from "../views/Home.vue";
 import UserSignUp from "../views/UserSignUp.vue";
 import Login from "../views/LoginSignup.vue";
-import jwt_decode from "jwt-decode";
 import NotFound from "../views/404.vue";
 import { isNullOrUndefined } from "util";
 
@@ -13,7 +12,7 @@ Vue.use(VueRouter);
 const routes = [{
     path: "/",
     redirect: {
-        path: `/analytics/${localStorage.getItem("token")}`
+        path: `/analytics`
     }
 }, {
     path: "/analytics/:token?",
@@ -23,7 +22,7 @@ const routes = [{
         if (isNullOrUndefined(localStorage.getItem("token"))) {
             next("/user/account/Signup");
         } else {
-            if (jwt_decode(localStorage.getItem("token")).admin.role == "admin") {
+            if (JSON.parse(localStorage.getItem("token")).account.role == "admin") {
                 next();
             } else {
                 next("/user");

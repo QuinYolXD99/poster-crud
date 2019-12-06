@@ -3,15 +3,15 @@
     <v-dialog v-model="dialog" max-width="700">
       <template v-slot:activator="{ on }">
         <div class="my-2" dark>
-          <v-btn text :color="colorx" v-on="on">
-            <v-icon left>mdi-pencil</v-icon>{{labelx}}
+          <v-btn text color="pink" v-on="on">
+            <v-icon left>mdi-pencil</v-icon>Update
           </v-btn>
         </div>
       </template>
 
       <v-card id="body " max-width="700px" :loading="uploading_local">
         <v-card-title>
-          <span class="title text-center">{{cardTitle}}</span>
+          <span class="title text-center">Update</span>
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text>
@@ -71,7 +71,7 @@
               </center>
             </v-col>
             <center>
-              <v-btn color="pink" outlined width="200" @click="validate " rounded>{{buttonTitle}}</v-btn>
+              <v-btn color="pink" outlined width="200" @click="validate " rounded>Update</v-btn>
             </center>
           </v-form>
         </v-card-text>
@@ -104,23 +104,17 @@
 import axios from "axios";
 export default {
   props: {
-    cardTitle: String,
-    buttonTitle: String,
-    isUpdate: Boolean,
-    disabled: Boolean,
-    colorx:String,
-    labelx:String,
-    uploading: Boolean
+    post: Object
   },
   data() {
     return {
       uploading_local: false,
-      filename: "No file selected!",
-      description: "",
-      title: "",
-      preview: "",
-      category: "",
-      location: "",
+      filename: this.post.avatar,
+      description: this.post.description,
+      preview: this.post.avatar,
+      category: this.post.category,
+      location: this.post.location,
+      title: this.post.title,
       locations: [
         "Adlaon",
         "Agsungot",
@@ -171,14 +165,12 @@ export default {
       ],
       dialog: false,
       file: { empty: true },
-      this_parent: this.$parent.$options.parent,
       categories: ["Transportation", "Crime", "Waste", "Accidents"]
     };
   },
   methods: {
     validate() {
-      if (!this.$refs.form.validate() || this.file.empty) {
-        this.filename = "Please select file!";
+      if (!this.$refs.form.validate()) {
         this.notify("All fields are required", null);
         setTimeout(() => {
           this.filename = this.file.empty
@@ -196,11 +188,7 @@ export default {
         var fd = new FormData();
         fd.append("img", this.file);
         fd.append("details", JSON.stringify(post));
-        if (!this.isUpdate) {
-          this.upload(fd);
-        } else {
-          this.update(fd);
-        }
+        this.update(fd);
       }
     },
     handleFileUpload() {
@@ -230,14 +218,11 @@ export default {
       this.notify("Updating....");
       this.this_parent.timeout = 100000;
       axios
-        .post(this.$_CONFIG.requestuserRequestURL + "update", {
+        .post(this.$_CONFIG.userRequestURL + "update", {
           id: this.this_parent.id,
           post: post
         })
         .then(res => {
-          this.this_parent.snackbar = false;
-          this.this_parent.timeout = 2000;
-          this.this_parent.loading = false;
           if (!res.data.error) {
             this.notify("Updated Sucessfully!");
             this.this_parent.$parent.getImages();
@@ -249,23 +234,6 @@ export default {
         .catch(err => {
           this.this_parent.loading = false;
           this.notify("Update failed!", null);
-          console.error(err); // eslint-disable-line no-console
-        });
-    },
-    upload(post) {
-      this.this_parent.loading = true;
-      this.notify("Upload in progress......", null, false);
-      axios
-        .post(this.$_CONFIG.userRequestURL + "upload", post)
-        .then(res => {
-          if (!res.data.error) {
-            this.this_parent.$parent.getImages();
-            this.notify("File uploaded Sucessfully!");
-            this.closeDialog();
-          }
-        })
-        .catch(err => {
-          this.notify("Upload failed!", null);
           console.error(err); // eslint-disable-line no-console
         });
     },
@@ -281,13 +249,7 @@ export default {
       });
     }
   },
-  update() {
-    this.uploading_local = this.this_parent.loading;
-  },
-  mounted() {
-    if (!this.isUpdate) {
-      this.$emit("reset");
-    }
-  }
+  update() {},
+  mounted() {}
 };
 </script>

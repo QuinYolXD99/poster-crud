@@ -11,7 +11,7 @@ var postSchema = new Schema({
         date: { type: Number, required: true },
         year: { type: Number, required: true }
     },
-    updateAt: {
+    updatedAt: {
         month: { type: Number },
         date: { type: Number },
         year: { type: Number }

@@ -397,7 +397,7 @@ export default {
           this.loading = false;
           if (res.data.auth) {
             this.$refs.snackbar.message("Welcome " + this.credentials.username);
-            localStorage.setItem("token", res.data.token);
+            localStorage.setItem("token", JSON.stringify(res.data.token));
             this.$router.push("/");
           } else {
             if (this.signup) {

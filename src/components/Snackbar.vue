@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     message(msg) {
-      this.text = typeof msg !== "string" ? msg.message : msg;
+      this.text = msg;
       this.snackbar = true;
     }
   }

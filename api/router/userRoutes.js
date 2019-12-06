@@ -30,9 +30,9 @@ routes.route("/update_post").post(upload.single("avatar"), (req, res) => {
     main_contoller.create_post(details, res);
 });
 // delete
-routes.route("/delete").post((req, res) => {
-    // console.log(req.body);
-    main_contoller.remove_post(req.body, res);
+routes.route("/deletePost/:id").get((req, res) => {
+    console.log(req.params.id);
+    main_contoller.remove_post(req.params.id, res);
 });
 
 routes.route("/deleteProfile").post((req, res) => {

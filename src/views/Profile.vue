@@ -149,7 +149,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
 
-            <v-btn color="red darken-1" text @click="deleteProfile()">yes</v-btn>
+            <v-btn color="red darken-1" text @click="deleteProfile">yes</v-btn>
 
             <v-btn color="green darken-1" text @click="dialog = false">No</v-btn>
           </v-card-actions>
@@ -174,7 +174,7 @@ export default {
       dialog: false,
       text: "",
       notif: false,
-      admin: this.$jwt_decode(localStorage.getItem("token")).admin,
+      admin: JSON.parse(localStorage.getItem("token")),
       avatar: null
     };
   },
@@ -203,9 +203,6 @@ export default {
     },
     update() {
       var url = this.$_CONFIG.adminRequestURL;
-      if (this.admin.account.role == "user") {
-        url = this.$_CONFIG.userRequestURL;
-      }
       this.editmode = false;
       var data = new FormData();
       data.append("avatar", this.admin.account.avatar);
@@ -214,8 +211,8 @@ export default {
         .post(url + "update", data)
         .then(res => {
           this.editmode = false;
-          this.admin = this.$jwt_decode(res.data.token).admin;
-          localStorage.setItem("token", res.data.token);
+          this.admin = res.data.token;
+          localStorage.setItem("token", JSON.stringify(res.data.token));
           this.text = "Update successful!";
           this.notif = true;
         })
@@ -226,13 +223,11 @@ export default {
         });
     },
     deleteProfile() {
-      var url = this.$_CONFIG.adminRequestURL;
-      if (this.admin.account.role == "user") {
-        url = this.$_CONFIG.userRequestURL;
-      }
-      console.log(this.admin._id);
+      // var url = this.$_CONFIG.adminRequestURL;
+     
+      
       this.$axios
-        .post(url + "deleteProfile", this.admin._id)
+        .get('http://localhost:4001/admin/deleteProfile/'+this.admin._id)
         .then(() => {
           this.logout();
           this.text = "Your account has been deleted successfully!";
@@ -246,7 +241,7 @@ export default {
     }
   },
   mounted() {
-    this.admin = this.$jwt_decode(localStorage.getItem("token")).admin;
+    this.admin = JSON.parse(localStorage.getItem("token"));
     this.avatar = this.admin.account.avatar;
   }
 };

@@ -18,8 +18,7 @@ module.exports =  (credentials, res)=> {
                     new_admin
                         .save()
                         .then(data => {
-                            let token = jwt.sign({ admin: data }, "pictalk");
-                            res.status(201).json({ error: { status: false, message: null }, auth: true, token: token, exist: false });
+                            res.status(201).json({ error: { status: false, message: null }, auth: true, token: data, exist: false });
                         })
                         .catch(err => {
                             console.log("error : " + err);

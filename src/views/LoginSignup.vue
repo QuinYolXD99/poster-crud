@@ -398,7 +398,7 @@ export default {
           if (res.data.auth) {
             this.$refs.snackbar.message("Welcome " + this.credentials.username);
             localStorage.setItem("token", res.data.token);
-            this.$router.push(`/analytics/${localStorage.getItem("token")}`);
+            this.$router.push(`/analytics/`);
           } else {
             if (this.signup) {
               if (res.data.exist) {

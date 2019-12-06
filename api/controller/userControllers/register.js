@@ -1,26 +1,27 @@
+/* eslint-disable  */
 let models = require("../../model/models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-
-module.exports = function (credentials, res) {    
+module.exports = (credentials, res) => {
     credentials.joined = new Date().toJSON().slice(0, 10).replace(/-/g, '/');
     credentials.password = bcrypt.hashSync(credentials.password, 10);
-    console.log(credentials);
-    models.User.find({ 'profile.username':  credentials.username },
-        (err, user) => {
+    credentials.role = "user";
+    models.User.find({ username: credentials.username },
+        (err, admin) => {
             if (!err) {
-                if (user) {
+                if (admin.length) {
                     res.status(200).json({ exist: true });
                 } else {
-                    let new_user = new models.User({ profile: credentials, posts: [] });
-                    new_user
+                    let new_admin = new models.User({ account: credentials, posts: [] });
+                    new_admin
                         .save()
-                        .then(saved => {
-                            let token = jwt.sign({ user: { id: saved._id, username: saved.profile.username } }, "pictalk");
+                        .then(data => {
+                            let token = jwt.sign({ admin: data }, "pictalk");
                             res.status(201).json({ error: { status: false, message: null }, auth: true, token: token, exist: false });
                         })
                         .catch(err => {
-                            res.status(503).json({ error: err, auth: false, token: null });
+                            console.log("error : " + err);
+                            res.status(200).json({ error: { status: false, message: null }, auth: false, token: null, exist: true });
                         });
                 }
             }
@@ -33,3 +34,4 @@ module.exports = function (credentials, res) {
         }
     })
 }
+

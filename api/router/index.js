@@ -1,3 +1,5 @@
 module.exports ={
-    adminRoutes : require('./adminRoutes')
+    adminRoutes : require('./adminRoutes'),
+    userRoutes :require('./userRoutes')
+
 }

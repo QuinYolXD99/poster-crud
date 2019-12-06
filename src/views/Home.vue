@@ -4,7 +4,7 @@
       <v-toolbar-title>PicTalk | Home</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
-        <div @click="reset()">
+        <v-btn text>
           <Modal
             ref="modal"
             v-if="!loading && isLoggedin"
@@ -12,19 +12,16 @@
             :buttonTitle="buttonTitle"
             :isUpdate="isUpdate"
             :uploading="uploading"
-            
+            @click="reset()"
             @message="notify"
             @reset="reset()"
           />
-        </div>
-        <v-btn text>Analytics</v-btn>
-        <v-btn
-          text
-          @click="logout"
-        >
+        </v-btn>
+        <v-btn text v-if="account.account.role == 'admin'">Analytics</v-btn>
+        <v-btn text @click="$router.push('/profile')">Profile</v-btn>
+        <v-btn text @click="logout">
           <v-icon>mdi-logout</v-icon>Logout
         </v-btn>
-
       </v-toolbar-items>
     </v-toolbar>
     <!-- <v-app-bar
@@ -89,17 +86,11 @@
           </v-list-item>
         </v-list>
       </v-menu>
-    </v-app-bar> -->
-    <v-container
-      id="body"
-      fluid
-    >
+    </v-app-bar>-->
+    <v-container id="body" fluid>
       <v-container class="pa-1">
         <v-row class="justify-center">
-          <v-col
-            cols="12"
-            md="5"
-          >
+          <v-col cols="12" md="5">
             <v-text-field
               placeholder="search image caption , tags , or dates"
               :v-if="!images.length==0"
@@ -111,12 +102,9 @@
           </v-col>
         </v-row>
         <br />
-        <div
-          v-for="(details , i) in images"
-          :key="i"
-        >
+        <div v-for="(details , i) in images" :key="i">
           <Feed :details="details" />
-          <br>
+          <br />
         </div>
       </v-container>
     </v-container>
@@ -147,7 +135,7 @@ export default {
       uploading: false,
       images: [],
       color: "red",
-      menu: false,
+      menu: false
     };
   },
   components: {
@@ -236,14 +224,13 @@ export default {
           if (err) {
             this.notify("Failed to load Images!");
             this.loading = false;
-            setTimeout(() => {
-            }, 2000);
+            setTimeout(() => {}, 2000);
           }
         });
     },
     notify(msg) {
       this.$refs.notif.message(msg);
-    },
+    }
   },
   mounted() {
     if (isNullOrUndefined(localStorage.getItem("token"))) {

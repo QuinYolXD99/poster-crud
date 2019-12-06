@@ -288,7 +288,7 @@ export default {
       confirm_password: "",
       show: false,
       show1: false,
-      title: "Login",
+      title: this.$route.params.page,
       step1_completed: false,
       step2_completed: false,
       step3_completed: false,
@@ -340,12 +340,12 @@ export default {
       switch (this.signup) {
         case true:
           this.title = "Sign up";
-          this.$router.push(`/account/${this.title.replace(" ", "")}`);
+          this.$router.push(`/admin/account/${this.title.replace(" ", "")}`);
           this.step = 1;
           break;
         case false:
           this.title = "Login";
-          this.$router.push(`/account/${this.title.replace(" ", "")}`);
+          this.$router.push(`/admin/account/${this.title.replace(" ", "")}`);
           this.step = 1;
           break;
       }

@@ -28,6 +28,7 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.use(bodyParser.json({ limit: '50mb' }));
 
 app.use("/admin", routes.adminRoutes);
+app.use("/user", routes.userRoutes);
 
 app.use('/files', express.static(path.join(__dirname, 'public/uploads')))
     // app.use("/user", routes);

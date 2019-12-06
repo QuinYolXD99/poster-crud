@@ -1,20 +1,19 @@
 const jwt = require("jsonwebtoken");
 let models = require("../../model/models");
 const bcrypt = require("bcryptjs");
-let models = require("../../model/models");
 
-module.exports = (credentials, res) => {
-    models.User.findOne({ 'profile.username': credentials.username }, (err, user) => {
+module.exports = function (credentials, res) {
+    models.User.findOne({ 'account.username': credentials.username }, (err, admin) => {
         if (err) {
             res.json(err);
         } else {
-            console.log(user);
-            if (user !== null) {
+
+            if (admin !== null) {
                 bcrypt
-                    .compare(credentials.password, user.profile.password)
+                    .compare(credentials.password, admin.account.password)
                     .then(match => {
                         if (match) {
-                            let token = jwt.sign({ user: user }, "pictalk");
+                            let token = jwt.sign({ admin: admin }, "pictalk");
                             res.status(200).send({
                                 error: false,
                                 auth: true,

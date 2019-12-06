@@ -27,7 +27,8 @@ var profileSchema = new Schema({
     firstname: { type: String, required: true },
     lastname: { type: String, required: true },
     contact: { type: String, required: true },
-    joined: { type: String, required: true }
+    joined: { type: String, required: true },
+    role: { type: String, required: true },
 })
 
 var userSchema = new Schema({
@@ -37,22 +38,6 @@ var userSchema = new Schema({
     collection: "users"
 });
 
-var adminSchema = new Schema({
-    account: profileSchema,
-    role: { type: String, required: true }
-}, {
-    collection: "admin"
-});
-
-
-
-
-
-// userSchema.plugin(uniqueValidator, { message: 'User must be unique' });
-// adminSchema.plugin(uniqueValidator, { message: 'Admin must be unique' });
-
 const Post = mongoose.model("Posts", postSchema);
-const User = mongoose.model("Users", userSchema);
-const Admin = mongoose.model("Admin", adminSchema);
-
-module.exports = { Post, User, Admin };
+const User = mongoose.model("Users", userSchema,"users");
+module.exports = { Post, User };

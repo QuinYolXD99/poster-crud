@@ -8,7 +8,7 @@ const update = (reqBody, res) => {
     delete reqBody.account.new_password;
     console.log(reqBody);
 
-    models.Admin.findByIdAndUpdate(reqBody._id, { $set: { account: reqBody.account } }, { new: true }, (err, saved) => {
+    models.User.findByIdAndUpdate(reqBody._id, { $set: { account: reqBody.account } }, { new: true }, (err, saved) => {
         // Handle any possible database errors
         if (err) {
             console.log("error");

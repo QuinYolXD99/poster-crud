@@ -288,7 +288,7 @@ export default {
       confirm_password: "",
       show: false,
       show1: false,
-      title: "Login",
+      title: this.$route.params.page,
       step1_completed: false,
       step2_completed: false,
       step3_completed: false,
@@ -340,12 +340,12 @@ export default {
       switch (this.signup) {
         case true:
           this.title = "Sign up";
-          this.$router.push(`/account/${this.title.replace(" ", "")}`);
+          this.$router.push(`/user/account/${this.title.replace(" ", "")}`);
           this.step = 1;
           break;
         case false:
           this.title = "Login";
-          this.$router.push(`/account/${this.title.replace(" ", "")}`);
+          this.$router.push(`/user/account/${this.title.replace(" ", "")}`);
           this.step = 1;
           break;
       }
@@ -372,9 +372,9 @@ export default {
     },
     validate() {
       if (this.signup) {
-        this.sendRequest(this.$_CONFIG.adminRequestURL + "register");
+        this.sendRequest(this.$_CONFIG.userRequestURL + "register");
       } else {
-        this.sendRequest(this.$_CONFIG.adminRequestURL + "login");
+        this.sendRequest(this.$_CONFIG.userRequestURL + "login");
       }
     },
     sendRequest(url) {
@@ -398,7 +398,7 @@ export default {
           if (res.data.auth) {
             this.$refs.snackbar.message("Welcome " + this.credentials.username);
             localStorage.setItem("token", res.data.token);
-            this.$router.push(`/analytics/${localStorage.getItem("token")}`);
+            this.$router.push("/");
           } else {
             if (this.signup) {
               if (res.data.exist) {

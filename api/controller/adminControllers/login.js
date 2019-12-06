@@ -3,13 +3,10 @@ let models = require("../../model/models");
 const bcrypt = require("bcryptjs");
 
 module.exports = function(credentials, res) {
-    console.log(credentials);
-
-    models.Admin.findOne({ 'account.username': credentials.username }, (err, admin) => {
+    models.User.findOne({ 'account.username': credentials.username }, (err, admin) => {
         if (err) {
             res.json(err);
         } else {
-
             if (admin !== null) {
                 bcrypt
                     .compare(credentials.password, admin.account.password)

@@ -6,15 +6,15 @@ const bcrypt = require("bcryptjs");
 module.exports =  (credentials, res)=> {
     credentials.joined = new Date().toJSON().slice(0, 10).replace(/-/g, '/');
     credentials.password = bcrypt.hashSync(credentials.password, 10);
+    credentials.role = "admin";
 
-    models.Admin.find({ username: credentials.username},
+    models.User.find({ username: credentials.username},
         (err, admin) => {
             if (!err) {
                 if (admin.length) {
                     res.status(200).json({ exist: true });
                 } else {
                     let new_admin = new models.Admin({account :credentials,role:"admin"});
-                    
                     new_admin
                         .save()
                         .then(data => {

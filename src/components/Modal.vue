@@ -2,8 +2,8 @@
   <div>
     <v-dialog v-model="dialog" max-width="700">
       <template v-slot:activator="{ on }">
-        <div class="my-2" dark v-on="on">
-          <v-btn text small :disabled="disabled">
+        <div class="my-2" dark>
+          <v-btn text v-on="on">
             <v-icon left>mdi-pencil</v-icon>Post
           </v-btn>
         </div>
@@ -20,45 +20,31 @@
               <v-avatar v-if="!file.empty" size="100" @click="$refs.myFiles.click()">
                 <img :src="file" alt="dp" />
               </v-avatar>
-              <v-btn
-                id="cam"
-                class="ma-2"
-                outlined
-                large
-                size="80"
+              <v-img
+                src="https://getstamped.co.uk/wp-content/uploads/WebsiteAssets/Placeholder.jpg"
                 v-if="file.empty"
+                
+                 height="300"
                 @click="$refs.myFiles.click(preview)"
-                fab
-                color="pink"
-              >
-                <v-icon x-large>mdi-camera</v-icon>
-              </v-btn>
+              ></v-img>
               <v-col cols="12" md="11">
-                <v-textarea
-                  :filled="false"
-                  :rules="[v => !!v || 'add caption!']"
-                  background-color="white"
-                  label="Caption"
-                  auto-grow
-                  rows="1"
-                  prepend-inner-icon="mdi-comment"
-                  clearable
-                  clear-icon="mdi-delete"
-                  color="dark"
-                  v-model="description"
-                  @keydown.enter="validate"
-                ></v-textarea>
                 <v-text-field
-                  label="Category"
-                  clearable
-                  :rules="[v => !!v || 'add category!']"
-                  prepend-inner-icon="mdi-tag"
-                  v-model="tag"
-                  color="dark"
-                  @keydown.enter="validate "
-                ></v-text-field>
+                  v-model="title"
+                  outlined
+                  label="Title"
+                  :rules="[v=>!!v||'required']"
+                  dense
+                />
+                <v-text-field
+                  v-model="description"
+                  outlined
+                  label="Description"
+                  :rules="[v=>!!v||'required']"
+                  dense
+                />
                 <v-select
                   :items="categories"
+                  outlined
                   label="Category"
                   :rules="[v=>!!v||'required']"
                   v-model="category"
@@ -66,7 +52,8 @@
                 ></v-select>
                 <v-select
                   :items="locations"
-                  label="Category"
+                  label="Location"
+                  outlined
                   v-model="location"
                   :rules="[v=>!!v||'required']"
                   dense
@@ -123,10 +110,11 @@ export default {
       uploading_local: false,
       filename: "No file selected!",
       description: "",
-      tag: "",
+      title: "",
       category: "",
       location: "",
       locations: [
+        "All",
         "Adlaon",
         "Agsungot",
         "Apas",
@@ -138,18 +126,18 @@ export default {
         "Zapatera",
         "Day-as",
         "Ermita",
-        "  Santa Cruz",
+        "Santa Cruz",
         "Santo Niño",
         "Sirao",
-        "  T Padilla",
+        "T Padilla",
         "Talamban",
         "Taptap",
         "Tejero",
         "Tinago",
         "Carreta",
-        " Cogon Ramos",
-        " Day-as",
-        " Ermita",
+        "Cogon Ramos",
+        "Day-as",
+        "Ermita",
         "Guba",
         "Hipodromo",
         "Kalubihan",
@@ -161,7 +149,7 @@ export default {
         "Lusaran",
         "Luz",
         "Mabini",
-        " Mabolo Proper",
+        "Mabolo Proper",
         "Malubog",
         "Pahina Central",
         "Parian",
@@ -170,15 +158,14 @@ export default {
         "Pulangbato",
         "Sambag I",
         "Sambag II",
-        " San Antonio",
+        "San Antonio",
         "San Jose",
         "San Roque"
       ],
       dialog: false,
       file: { empty: true },
       this_parent: this.$parent.$options.parent,
-
-      categories: ["Waste", "Crime", "Transportation", "Racism"]
+      categories: ["Transportation", "Crime", "Waste", "Accidents"]
     };
   },
   methods: {
@@ -194,20 +181,14 @@ export default {
       } else {
         var post = {
           description: this.description,
-          title: "title",
+          title: this.title,
           category: this.category,
-          user: this.$jwt_decode(this.$route.params.token).user._id,
+          user: this.$jwt_decode(localStorage.getItem("token")).admin._id,
           location: this.location
         };
         var fd = new FormData();
-        // for (let i = 0; i < this.file.length; i++) {
-        //   fd.append('img', this.file[i])
-        // }
         fd.append("img", this.file);
-
         fd.append("details", JSON.stringify(post));
-        // fd.getAll()
-        console.log(fd.get("img"));
         if (!this.isUpdate) {
           this.upload(fd);
         } else {
@@ -250,20 +231,10 @@ export default {
           if (!res.data.error) {
             this.notify("Updated Sucessfully!", res.data.data, true);
             this.this_parent.allImageMode = false;
-            // this.this_parent.togglePhotos();
-            // this.this_parent.images = this.this_parent.images.map(
-            //     image => (image = image._id == updated._id ? updated : image)
-            // );
-
             var index = this.this_parent.images.findIndex(
               img => img._id == updated._id
             );
             this.this_parent.images[index] = updated;
-            // this.this_parent.images[
-            //   this.this_parent.images.findIndex(
-            //     image => image._id === updated._id
-            //   )
-            // ] = updated;
             this.closeDialog();
           } else {
             this.notify("Update failed!", null);
@@ -299,7 +270,6 @@ export default {
       this.filename = "No file selected!";
       this.file = { empty: true };
     },
-
     notify(msg, data, update) {
       this.$emit("message", {
         message: msg,

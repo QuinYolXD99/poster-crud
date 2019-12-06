@@ -1,8 +1,8 @@
 module.exports = {
-    create_post: require("./modules/create"),
-    retrieve_posts: require("./modules/retrieve"),
-    update_post: require("./modules/update"),
-    remove_post: require("./modules/delete"),
-    login: require("./modules/login"),
-    register: require("./modules/register")
+    create_post: require("./userControllers/create"),
+    retrieve_posts: require("./userControllers/retrieve"),
+    update_post: require("./userControllers/update"),
+    remove_post: require("./userControllers/delete_Post"),
+    login: require("./userControllers/login"),
+    register: require("./userControllers/register")
 }

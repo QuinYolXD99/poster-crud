@@ -1,247 +1,137 @@
 <template>
-  <v-card
+  <v-card color="blue lighten-5"
     height="100%"
-    color="transparent"
-   
+    flat
+    
   >
-    <v-toolbar>
-      <v-toolbar-title @click="$router.push('/user')">PicTalk | Profile</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-toolbar-items>
-        <v-btn text v-if="admin.account.role == 'admin'" @click="$router.push('/')">Analytics</v-btn>
-        <v-btn text @click="logout">
-          <v-icon>mdi-logout</v-icon>Logout
-        </v-btn>
-      </v-toolbar-items>
-    </v-toolbar>
     <v-card-text>
-      <br />
-      <v-card max-width="600" class="mx-auto">
-        <input type="file" ref="avatar" @change="handlePreview" hidden />
-        <v-img :src="`https://source.unsplash.com/user/davidkovalenkoo`"    lazy-src="@/assets/bg.jpg" cover height="400px" dark>
-          <v-row align="center" justify="center">
-            <v-avatar size="200" style="margin-top : 19%">
-              <img :src="`${avatar}`" alt="dp" />
-            </v-avatar>
-          </v-row>
-          <v-overlay :absolute="true" :value="editmode">
-            <v-btn color="pink" @click="$refs.avatar.click()">Update Avatar</v-btn>
-          </v-overlay>
-        </v-img>
-        <v-divider></v-divider>
-        <v-list dense class="px-10">
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon color="pink">mdi-account</v-icon>
-            </v-list-item-icon>
+      <v-row
+        justify="start"
+        align="start"
+      >
+        <v-col
+          cols="12"
+          md="5"
+          sm="5"
+          lg="5"
+          justify-self="center"
+          align-self="center"
+        >
+          <ProfileCard :admin="admin" />
+        </v-col>
+        <v-col
+          md="7"
+          sm="7"
+          lg="7"
+        >
+          <v-card>
+          </v-card>
 
-            <v-list-item-content>
-              <br />
-              <v-text-field
-                dense
-                label="firstname"
-                v-if="editmode"
-                outlined
-                class="px-2"
-                v-model="admin.account.firstname"
-              ></v-text-field>&nbsp;
-              <v-text-field
-                label="lastname"
-                dense
-                outlined
-                v-if="editmode"
-                v-model="admin.account.lastname"
-              ></v-text-field>
-              <v-list-item-title
-                v-if="!editmode"
-                class="text-capitalize"
-              >{{`${admin.account.firstname} ${admin.account.lastname}`}}</v-list-item-title>
-              <v-list-item-subtitle v-if="!editmode">Name</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon color="pink">mdi-account-circle</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-text-field
-                dense
-                label="username"
-                v-if="editmode"
-                outlined
-                class="px-2"
-                v-model="admin.account.username"
-              ></v-text-field>
-              <v-list-item-title v-if="!editmode">{{admin.account.username}}</v-list-item-title>
-              <v-list-item-subtitle v-if="!editmode">Username</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon color="pink">mdi-phone</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-text-field
-                dense
-                label="contact"
-                v-if="editmode"
-                outlined
-                class="px-2"
-                v-model="admin.account.contact"
-              ></v-text-field>
-              <v-list-item-title v-if="!editmode">{{admin.account.contact}}</v-list-item-title>
-              <v-list-item-subtitle v-if="!editmode">Contact</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item v-if="editmode">
-            <v-list-item-icon>
-              <v-icon color="pink">mdi-key-variant</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-text-field
-                dense
-                label="new password"
-                outlined
-                class="px-2"
-                v-model="admin.account.new_password"
-              ></v-text-field>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon color="pink">mdi-calendar</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>{{admin.account.joined}}</v-list-item-title>
-              <v-list-item-subtitle>joined</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-divider></v-divider>
-          <v-list-item dense>
-            <v-list-item-content draggable>
-              <v-row v-if="!editmode" justify="center" align="center">
-                <v-col justify-self="center" align-self="center">
-                  <v-btn outlined text color="pink" @click="editmode = !editmode" width="50%">
-                    <v-icon>mdi-pencil</v-icon>Update
-                  </v-btn>
-                  <v-btn text outlined @click="dialog=true" color="pink" width="50%">
-                    <v-icon>mdi-delete-empty</v-icon>delete
-                  </v-btn>
-                </v-col>
-              </v-row>
-              <v-row v-if="editmode">
-                <v-col justify-self="center" align-self="center">
-                  <v-btn text color="pink" width="50%" @click="update" outlined>
-                    <v-icon>mdi-check</v-icon>save
-                  </v-btn>
-                  <v-btn text color="pink" width="50%" @click="editmode = false  " outlined>
-                    <v-icon>mdi-wrong</v-icon>cancel
-                  </v-btn>
-                </v-col>
-              </v-row>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-      </v-card>
+          <v-card class="overflow-hidden">
+            <v-toolbar
+              flat
+              elevation="1"
+            >
+              <v-toolbar-title>Activities</v-toolbar-title>
+
+              <v-spacer></v-spacer>
+
+              <v-toolbar-items v-if="!$vuetify.breakpoint.smAndUp">
+                <v-btn
+                  large
+                  icon
+                >
+                  <v-icon>mdi-graph</v-icon>
+                </v-btn>
+                <v-btn
+                  large
+                  icon
+                >
+                  <v-icon>mdi-plus-circle</v-icon>
+                </v-btn>
+              </v-toolbar-items>
+
+              <template v-if="$vuetify.breakpoint.smAndUp">
+                <v-btn
+                  large
+                  icon
+                  color="pink"
+                >
+                  <v-icon>mdi-graph</v-icon>
+                </v-btn>
+                <!-- <v-btn
+                  large
+                  icon
+                  color="pink"
+                >
+                  <v-icon>mdi-plus-circle</v-icon>
+                </v-btn> -->
+                <Modal />
+              </template>
+            </v-toolbar>
+            <v-sheet
+              id="scrolling-techniques"
+              class="overflow-y-auto"
+              max-height="540"
+            >
+              <v-container style="height: 1000px;"></v-container>
+            </v-sheet>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-card-text>
-    <v-row justify="center">
-      <v-dialog v-model="dialog" persistent max-width="290">
-        <v-card>
-          <v-card-title class="headline">Delete Account?</v-card-title>
-
-          <v-card-text>Your account will be permanently deleted! Do you want to proceed ?</v-card-text>
-
-          <v-card-actions>
-            <v-spacer></v-spacer>
-
-            <v-btn color="red darken-1" text @click="deleteProfile">yes</v-btn>
-
-            <v-btn color="green darken-1" text @click="dialog = false">No</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-row>
-    <v-snackbar v-model="notif" :timeout="2000">
+    <v-snackbar
+      v-model="notif"
+      :timeout="2000"
+    >
       {{ text }}
-      <v-btn color="pink" text @click="snackbar = false">Close</v-btn>
+      <v-btn
+        color="pink"
+        text
+        @click="snackbar = false"
+      >Close</v-btn>
     </v-snackbar>
   </v-card>
 </template>
 <style scoped>
+#body {
+  position: relative;
+  height: 100% !important;
+  width: 100% !important;
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    url("https://source.unsplash.com/user/andyjh07");
+  background-size: cover !important  ;
+  background-position: top center !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+  overflow: auto;
+}
 </style>
 
 <script>
 export default {
   name: "container",
+
   data() {
     return {
-      editmode: false,
       dialog: false,
       text: "",
       notif: false,
-      admin: JSON.parse(localStorage.getItem("token")),
-      avatar: null
+      admin: JSON.parse(localStorage.getItem('token')),
+      menu: [
+        { icon: 'home', title: 'Link A' },
+        { icon: 'info', title: 'Link B' },
+        { icon: 'warning', title: 'Link C' }
+      ]
     };
   },
+  components: {
+    ProfileCard: () => import('../components/ProfileCard'),
+    Modal: () => import("../components/Modal"),
+  },
   methods: {
-    handlePreview() {
-      this.admin.account.avatar = this.$refs.avatar.files[0];
-      this.encode(this.admin.account.avatar).then(res => {
-        this.avatar = res;
-      });
-    },
-
-    encode: async file => {
-      let result_base64 = await new Promise(resolve => {
-        let fileReader = new FileReader();
-        fileReader.onload = e => {
-          console.log(e);
-          resolve(fileReader.result);
-        };
-        fileReader.readAsDataURL(file);
-      });
-      return result_base64;
-    },
-    logout() {
-      this.$router.push("/user/account/login");
-      localStorage.removeItem("token");
-    },
-    update() {
-      var url = this.$_CONFIG.adminRequestURL;
-      this.editmode = false;
-      var data = new FormData();
-      data.append("avatar", this.admin.account.avatar);
-      data.append("credentials", JSON.stringify(this.admin));
-      this.$axios
-        .post(url + "update", data)
-        .then(res => {
-          this.editmode = false;
-          this.admin = res.data.token;
-          localStorage.setItem("token", JSON.stringify(res.data.token));
-          this.text = "Update successful!";
-          this.notif = true;
-        })
-        .catch(err => {
-          console.log(err);
-          this.text = "Update failed!";
-          this.notif = true;
-        });
-    },
-    deleteProfile() {
-      // var url = this.$_CONFIG.adminRequestURL;
-
-      this.$axios
-        .get("http://localhost:4001/admin/deleteProfile/" + this.admin._id)
-        .then(() => {
-          this.logout();
-          this.text = "Your account has been deleted successfully!";
-          this.notif = true;
-        })
-        .catch(err => {
-          console.log(err.response);
-          this.text = "Failed to delete your account!";
-          this.notif = true;
-        });
+    menuItems() {
+      return this.menu
     }
   },
   mounted() {

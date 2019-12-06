@@ -1,38 +1,60 @@
 <template>
   <div>
-    <v-dialog v-model="dialog" max-width="700">
+    <v-dialog
+      v-model="dialog"
+      max-width="600"
+    >
       <template v-slot:activator="{ on }">
-        <div class="my-2" dark>
-          <v-btn text :color="colorx" v-on="on">
-            <v-icon left>mdi-pencil</v-icon>{{labelx}}
-          </v-btn>
-        </div>
+        <v-btn
+          large
+          icon
+          color="pink"
+          v-on="on"
+        >
+          <v-icon>mdi-plus-circle</v-icon>
+        </v-btn>
+
       </template>
 
-      <v-card id="body " max-width="700px" :loading="uploading_local">
+      <v-card
+        id="body "
+        max-width="700px"
+      >
         <v-card-title>
-          <span class="title text-center">{{cardTitle}}</span>
+          <span class="title text-center">{{item?'Update ':'Create '}}Post</span>
         </v-card-title>
         <v-divider></v-divider>
-        <v-card-text>
-          <v-form ref="form" lazy-validation>
-            <v-row style="padding:10px" class="justify-center">
+        <v-card-text class="px-12">
+          <v-form
+            ref="form"
+            lazy-validation
+          >
+            <v-row
+              
+              class="justify-center px-md-10"
+            >
+            <br>
               <img
                 :src="preview"
-                v-if="!file.empty"
+                v-if="file"
                 alt="dp"
-                height="300"
+                class="ma-5"
+                height="200"
                 cover
                 @click="$refs.myFiles.click()"
               />
               <v-img
-                src="https://getstamped.co.uk/wp-content/uploads/WebsiteAssets/Placeholder.jpg"
-                v-if="file.empty"
-                height="300"
-                cover
+                src="@/assets/placeholder.png"
+                v-else
+                height="200"
+                class="ma-5"
+                contain
                 @click="$refs.myFiles.click()"
               ></v-img>
-              <v-col cols="12" md="11">
+              <v-col
+                cols="12"
+                md="11"
+              >
                 <v-text-field
                   v-model="title"
                   outlined
@@ -67,12 +89,16 @@
             </v-row>
             <v-col>
               <center>
-                <pre class="body-1 text-uppercase">{{filename}}</pre>
+                <v-btn
+                  color="pink"
+                  outlined
+                  large
+                  width="200"
+                  @click="validate "
+                  rounded
+                >{{item?'Update':'Upload'}}</v-btn>
               </center>
             </v-col>
-            <center>
-              <v-btn color="pink" outlined width="200" @click="validate " rounded>{{buttonTitle}}</v-btn>
-            </center>
           </v-form>
         </v-card-text>
         <input
@@ -104,17 +130,10 @@
 import axios from "axios";
 export default {
   props: {
-    cardTitle: String,
-    buttonTitle: String,
-    isUpdate: Boolean,
-    disabled: Boolean,
-    colorx:String,
-    labelx:String,
-    uploading: Boolean
+    item: Object
   },
   data() {
     return {
-      uploading_local: false,
       filename: "No file selected!",
       description: "",
       title: "",
@@ -170,18 +189,17 @@ export default {
         "San Roque"
       ],
       dialog: false,
-      file: { empty: true },
-      this_parent: this.$parent.$options.parent,
+      file: null,
+      upload_indicator: false,
       categories: ["Transportation", "Crime", "Waste", "Accidents"]
     };
   },
   methods: {
     validate() {
-      if (!this.$refs.form.validate() || this.file.empty) {
-        this.filename = "Please select file!";
+      if (!this.$refs.form.validate()) {
         this.notify("All fields are required", null);
         setTimeout(() => {
-          this.filename = this.file.empty
+          this.filename = !this.file
             ? "No file selected!"
             : this.trimString(this.file.name);
         }, 1000);
@@ -208,7 +226,6 @@ export default {
       this.encode(this.file).then(res => {
         this.preview = res;
       });
-
       this.filename = this.trimString(this.file.name);
     },
     trimString(string) {
@@ -226,40 +243,35 @@ export default {
       return result_base64;
     },
     update(post) {
-      this.this_parent.loading = true;
+      this.upload_indicator = true;
       this.notify("Updating....");
-      this.this_parent.timeout = 100000;
       axios
         .post(this.$_CONFIG.requestuserRequestURL + "update", {
-          id: this.this_parent.id,
+          id: this.item._id,
           post: post
         })
         .then(res => {
-          this.this_parent.snackbar = false;
-          this.this_parent.timeout = 2000;
-          this.this_parent.loading = false;
+          this.upload_indicator = false;
           if (!res.data.error) {
             this.notify("Updated Sucessfully!");
-            this.this_parent.$parent.getImages();
             this.closeDialog();
           } else {
             this.notify("Update failed!", null);
           }
         })
         .catch(err => {
-          this.this_parent.loading = false;
+          this.upload_indicator = false;
           this.notify("Update failed!", null);
           console.error(err); // eslint-disable-line no-console
         });
     },
     upload(post) {
-      this.this_parent.loading = true;
+      this.upload_indicator = true;
       this.notify("Upload in progress......", null, false);
       axios
         .post(this.$_CONFIG.userRequestURL + "upload", post)
         .then(res => {
           if (!res.data.error) {
-            this.this_parent.$parent.getImages();
             this.notify("File uploaded Sucessfully!");
             this.closeDialog();
           }
@@ -273,16 +285,13 @@ export default {
       this.dialog = false;
       this.description = "";
       this.filename = "No file selected!";
-      this.file = { empty: true };
+      this.file = null;
     },
     notify(msg) {
       this.$emit("message", {
         msg
       });
     }
-  },
-  update() {
-    this.uploading_local = this.this_parent.loading;
   },
   mounted() {
     if (!this.isUpdate) {

@@ -1,0 +1,44 @@
+<template>
+  <v-app-bar fixed>
+    <v-toolbar-title @click="$router.push('/user')">PicTalk | Profile</v-toolbar-title>
+    <v-spacer></v-spacer>
+    <v-toolbar-items>
+      <v-btn
+        v-if="$route.path!=='/profile'"
+        text
+        @click="$router.push('/profile')"
+      >Profile</v-btn>
+      <v-btn
+        text
+        v-if=" admin.account.role == 'admin'"
+        @click="$router.push('/')"
+      >Analytics</v-btn>
+      <v-btn
+        text
+        @click="logout"
+      >
+        <v-icon>mdi-logout</v-icon>Logout
+      </v-btn>
+    </v-toolbar-items>
+  </v-app-bar>
+</template>
+<script>
+import { isNull } from 'util';
+export default {
+  name: 'Header',
+  components:{
+  },
+  data() {
+    return {
+      admin: !isNull(localStorage.getItem('token')) ? JSON.parse(localStorage.getItem('token')) : "",
+    }
+  },
+  methods: {
+    logout() {
+      localStorage.removeItem("token");
+      this.$router.push("/user/account/login");
+    },
+  }
+}
+</script>
+

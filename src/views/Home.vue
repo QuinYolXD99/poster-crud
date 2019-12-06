@@ -1,30 +1,37 @@
 <template>
-  <div>
-    <v-toolbar>
-      <v-toolbar-title>PicTalk | Home</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-toolbar-items>
-        <v-btn text>
-        </v-btn>
-        <v-btn text @click="$router.push('/analytics/')" v-if="account.account.role== 'admin'">Analytics</v-btn>
-        <v-btn text @click="$router.push('/profile')">Profile</v-btn>
-        <v-btn text @click="logout">
-          <v-icon>mdi-logout</v-icon>Logout
-        </v-btn>
-      </v-toolbar-items>
-    </v-toolbar>
-    <v-container id="body" fluid>
-      <v-container class="pa-1">
+  <v-card
+    height="100%"
+    flat
+  >
+    <v-container
+      id="body"
+      class="pa-1"
+      fluid
+    >
+      <br>
+      <v-img
+        src="https://www.dailydot.com/wp-content/uploads/e52/31/87610fa1a0ae891d.png"
+        height="350"
+        contain
+        v-if="images.length == 0"
+      ></v-img>
+      <br />
+      <div
+        v-for="(details , i) in images"
+        :key="i"
+      >
+        <Feed
+          :details="details"
+          :user="account"
+          @reload="getImages"
+        />
         <br />
-        <div v-for="(details , i) in images" :key="i">
-          <Feed :details="details" @reload="getImages"/>
-          <br />
-        </div>
-      </v-container>
+        <Modal/>
+      </div>
+
     </v-container>
-    <DeletePrompt ref="prompt" />
     <Snackbar ref="notif" />
-  </div>
+  </v-card>
 </template>
 <script>
 /* eslint-disable */
@@ -50,21 +57,17 @@ export default {
       images: [],
       color: "red",
       menu: false,
-      account: JSON.parse(localStorage.getItem("token"))
+      account: {}
     };
   },
   components: {
     Modal,
     Snackbar,
     Feed,
-    DeletePrompt
   },
 
   methods: {
-    logout() {
-      localStorage.removeItem("token");
-      this.$router.push("/user/account/login");
-    },
+
     reset() {
       this.cardTitle = "Add new Image";
       this.buttonTitle = "Upload";
@@ -79,7 +82,6 @@ export default {
     },
     prompt(id) {
       this.$refs.prompt.dialog = true;
-      this.$refs.prompt.id = id;
     },
     remove(id) {
       this.$axios
@@ -131,7 +133,7 @@ export default {
         .then(res => {
           query
         })
-        .catch(err => {});
+        .catch(err => { });
     },
     notify(msg) {
       this.$refs.notif.message(msg);
@@ -142,7 +144,6 @@ export default {
       this.$router.replace("/user/account/login");
     } else {
       this.account = JSON.parse(localStorage.getItem("token"));
-      console.log(this.account);
       this.getImages();
     }
   }

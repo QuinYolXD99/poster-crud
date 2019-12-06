@@ -7,92 +7,29 @@
         <v-btn text>
           <Modal
             ref="modal"
-            v-if="!loading && isLoggedin"
+            v-if="!loading"
             :cardTitle="cardTitle"
             :buttonTitle="buttonTitle"
             :isUpdate="isUpdate"
             :uploading="uploading"
-            @click="reset()"
+            @click="reset"
             @message="notify"
-            @reset="reset()"
+            @reset="reset"
           />
         </v-btn>
-        <v-btn text v-if="account.account.role == 'admin'">Analytics</v-btn>
+        <v-btn text v-if="account.role== 'admin'">Analytics</v-btn>
         <v-btn text @click="$router.push('/profile')">Profile</v-btn>
         <v-btn text @click="logout">
           <v-icon>mdi-logout</v-icon>Logout
         </v-btn>
       </v-toolbar-items>
     </v-toolbar>
-    <!-- <v-app-bar
-      light
-      app
-    >
-      <v-btn text>
-        <v-toolbar-title>PicTalk | Home <strong>2019</strong></v-toolbar-title>
-      </v-btn>
-      <v-spacer></v-spacer>
-      <v-progress-linear
-        :active="loading"
-        :indeterminate="loading"
-        absolute
-        bottom
-        color="pink"
-      ></v-progress-linear>
-
-      <div @click="reset()">
-        <Modal
-          ref="modal"
-          v-if="!loading && isLoggedin"
-          :cardTitle="cardTitle"
-          :buttonTitle="buttonTitle"
-          :isUpdate="isUpdate"
-          :uploading="uploading"
-          @message="notify"
-          @reset="reset()"
-        />
-      </div>
-      <v-menu
-        left
-        offset-y
-      >
-        <template v-slot:activator="{ on }">
-          <v-btn
-            icon
-            x-large
-            v-on="on"
-            color="pink"
-          >
-            <v-icon>mdi-account-circle</v-icon>
-          </v-btn>
-        </template>
-
-        <v-list dense>
-          <v-list-item @click="$router.push('/profile')">
-            <v-list-item-icon>
-              <v-icon>mdi-account-circle</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>profile</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item @click="logout()">
-            <v-list-item-icon>
-              <v-icon>mdi-logout</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>logout</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-    </v-app-bar>-->
     <v-container id="body" fluid>
       <v-container class="pa-1">
         <v-row class="justify-center">
           <v-col cols="12" md="5">
             <v-text-field
-              placeholder="search image caption , tags , or dates"
+              placeholder="Search User Post"
               :v-if="!images.length==0"
               prepend-inner-icon="mdi-magnify"
               v-model="search"
@@ -121,7 +58,6 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 import Feed from "@/components/Feed.vue";
 import { isNullOrUndefined } from "util";
-
 export default {
   data() {
     return {
@@ -131,11 +67,12 @@ export default {
       cardTitle: "Add new Image",
       buttonTitle: "Upload",
       id: "",
+      query: {},
       loading: false,
       uploading: false,
       images: [],
       color: "red",
-      menu: false
+      menu: false,
     };
   },
   components: {
@@ -146,18 +83,13 @@ export default {
   },
   computed: {
     account() {
-      return !isNullOrUndefined(localStorage.getItem("token"))
-        ? jwt_decode(localStorage.getItem("token")).admin
-        : null;
-    },
-    isLoggedin() {
-      return !isNullOrUndefined(this.account);
+      return  this.$jwt_decode(localStorage.getItem("token")).admin
     }
   },
   methods: {
     logout() {
       localStorage.removeItem("token");
-      this.$router.push("/account/login");
+      this.$router.push("/user/account/login");
     },
     reset() {
       this.cardTitle = "Add new Image";
@@ -176,8 +108,7 @@ export default {
       this.$refs.prompt.id = id;
     },
     remove(id) {
-      this.removeImage(id);
-      axios
+      this.$axios
         .post(this.$_CONFIG.userRequestURL + "/delete", { id: id })
         .then(res => {
           if (res.data.success) {
@@ -193,12 +124,6 @@ export default {
           this.notify("Something went wrong!");
         });
     },
-    removeImage(id) {
-      setTimeout(() => {
-        this.images = this.images.filter(image => image._id !== id);
-        this.togglePhotos();
-      }, 500);
-    },
     getImages() {
       var url = this.$_CONFIG.userRequestURL + "retrieveAll";
       this.sendImageRequest(url);
@@ -207,8 +132,8 @@ export default {
       this.images = [];
       this.notify("Please wait while we are retrieving your data...");
       this.loading = true;
-      axios
-        .post(url)
+      this.$axios
+        .post(url, { query: this.query })
         .then(res => {
           this.uploading = false;
           this.loading = false;
@@ -216,15 +141,12 @@ export default {
           if (this.images.length == 0) {
             this.notify("No images Available!");
           }
-          this.updateImage();
-          this.togglePhotos();
           this.$refs.notif.snackbar = false;
         })
         .catch(err => {
           if (err) {
             this.notify("Failed to load Images!");
             this.loading = false;
-            setTimeout(() => {}, 2000);
           }
         });
     },
@@ -236,6 +158,7 @@ export default {
     if (isNullOrUndefined(localStorage.getItem("token"))) {
       this.$router.replace("/user/account/login");
     } else {
+      console.log(this.$_CONFIG.userRequestURL + "retrieveAll");
       this.getImages();
     }
   }

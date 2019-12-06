@@ -4,5 +4,7 @@ module.exports = {
     update_post: require("./userControllers/update"),
     remove_post: require("./userControllers/delete_Post"),
     login: require("./userControllers/login"),
-    register: require("./userControllers/register")
+    register: require("./userControllers/register"),
+    update_Profile: require("./userControllers/updateProfile"),
+    deleteProfile: require("./userControllers/delete_account")
 }

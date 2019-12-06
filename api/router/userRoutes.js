@@ -15,11 +15,19 @@ routes.route("/retrieve").post((req, res) => {
 });
 //retrieveAll
 routes.route("/retrieveAll").post((req, res) => {
-    main_contoller.retrieve_posts.retrieveAll(res)
+    main_contoller.retrieve_posts.retrieveAll(req.body.query, res)
 });
 // update
-routes.route("/update").post((req, res) => {
-    main_contoller.update_post(req.body, res)
+routes.route("/update").post(upload.single("avatar"), (req, res) => {
+    let credentials = JSON.parse(req.body.credentials);
+    credentials.account.avatar = `http://localhost:4001/files/${req.file.filename}`
+    main_contoller.update_Profile(credentials, res);
+});
+
+routes.route("/update_post").post(upload.single("avatar"), (req, res) => {
+    let details = JSON.parse(req.body.details)
+    details.images = [`http://localhost:4001/files/${req.file.filename}`];
+    main_contoller.create_post(details, res);
 });
 // delete
 routes.route("/delete").post((req, res) => {
@@ -27,6 +35,9 @@ routes.route("/delete").post((req, res) => {
     main_contoller.remove_post(req.body, res);
 });
 
+routes.route("/deleteProfile").post((req, res) => {
+    main_contoller.deleteProfile(req.body, res);
+});
 // login
 routes.route("/login").post((req, res) => {
     main_contoller.login(req.body, res);
@@ -34,7 +45,7 @@ routes.route("/login").post((req, res) => {
 
 routes.route("/register").post(upload.single('avatar'), (req, res) => {
     let credentials = JSON.parse(req.body.credentials)
-    credentials.avatar = `http://localhost:4001/files/${req.file.filename}`;    
+    credentials.avatar = `http://localhost:4001/files/${req.file.filename}`;
     main_contoller.register(credentials, res);
 });
 

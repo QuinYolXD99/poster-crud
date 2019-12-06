@@ -12,9 +12,9 @@ let retrieveOwn = (id, res) => {
             }
         })
 }
-let retrieveAll = (res) => {
+let retrieveAll = (query, res) => {
     models.Post
-        .find({}, { __v: false })
+        .find(query, { __v: false })
         .populate('user', '-posts -profile.password -profile._id -__v')
         .exec((err, images) => {
             if (err) {

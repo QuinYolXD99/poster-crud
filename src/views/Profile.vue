@@ -2,7 +2,7 @@
   <v-card
     height="100%"
     color="transparent"
-    style="background:linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url('https://source.unsplash.com/user/cinquantesix');background-size:cover;background-repeat:no-repeat;background-attachment:fixed"
+    style="background:linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url('https://source.unsplash.com/user/davidkovalenkoo');background-size:cover;background-repeat:no-repeat;background-attachment:fixed"
   >
     <v-toolbar>
       <v-toolbar-title @click="$router.push('/user')">PicTalk | Profile</v-toolbar-title>
@@ -18,9 +18,9 @@
       <br />
       <v-card max-width="600" class="mx-auto">
         <input type="file" ref="avatar" @change="handlePreview" hidden />
-        <v-img :src="`${avatar}`"  cover height="400px" dark>
+        <v-img :src="`${avatar}`" cover height="400px" dark>
           <v-overlay :absolute="true" :value="editmode">
-            <v-btn color="success" @click="$refs.avatar.click()">Update Avatar</v-btn>
+            <v-btn color="pink" @click="$refs.avatar.click()">Update Avatar</v-btn>
           </v-overlay>
         </v-img>
         <v-divider></v-divider>
@@ -198,8 +198,8 @@ export default {
       return result_base64;
     },
     logout() {
+      this.$router.push("/user/account/login");
       localStorage.removeItem("token");
-      this.$router.push("/account/Login");
     },
     update() {
       var url = this.$_CONFIG.adminRequestURL;
@@ -230,6 +230,7 @@ export default {
       if (this.admin.account.role == "user") {
         url = this.$_CONFIG.userRequestURL;
       }
+      console.log(this.admin._id);
       this.$axios
         .post(url + "deleteProfile", this.admin._id)
         .then(() => {
@@ -238,7 +239,7 @@ export default {
           this.notif = true;
         })
         .catch(err => {
-          console.log(err);
+          console.log(err.response);
           this.text = "Failed to delete your account!";
           this.notif = true;
         });

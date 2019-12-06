@@ -23,7 +23,7 @@ const routes = [{
         if (isNullOrUndefined(localStorage.getItem("token"))) {
             next("/user/account/Signup");
         } else {
-            if (jwt_decode(localStorage.getItem("token")).role == "admin") {
+            if (jwt_decode(localStorage.getItem("token")).admin.role == "admin") {
                 next();
             } else {
                 next("/user");

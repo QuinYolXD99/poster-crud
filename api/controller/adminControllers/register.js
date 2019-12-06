@@ -14,7 +14,7 @@ module.exports =  (credentials, res)=> {
                 if (admin.length) {
                     res.status(200).json({ exist: true });
                 } else {
-                    let new_admin = new models.Admin({account :credentials,role:"admin"});
+                    let new_admin = new models.User({account :credentials,role:"admin"});
                     new_admin
                         .save()
                         .then(data => {

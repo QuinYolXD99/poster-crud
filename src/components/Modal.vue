@@ -18,14 +18,13 @@
           <v-form ref="form" lazy-validation>
             <v-row style="padding:10px" class="justify-center">
               <v-avatar v-if="!file.empty" size="100" @click="$refs.myFiles.click()">
-                <img :src="file" alt="dp" />
+                <img :src="preview" alt="dp" />
               </v-avatar>
               <v-img
                 src="https://getstamped.co.uk/wp-content/uploads/WebsiteAssets/Placeholder.jpg"
                 v-if="file.empty"
-                
-                 height="300"
-                @click="$refs.myFiles.click(preview)"
+                height="300"
+                @click="$refs.myFiles.click()"
               ></v-img>
               <v-col cols="12" md="11">
                 <v-text-field
@@ -111,10 +110,10 @@ export default {
       filename: "No file selected!",
       description: "",
       title: "",
+      preview: "",
       category: "",
       location: "",
       locations: [
-        "All",
         "Adlaon",
         "Agsungot",
         "Apas",
@@ -192,12 +191,16 @@ export default {
         if (!this.isUpdate) {
           this.upload(fd);
         } else {
-          this.update(post);
+          this.update(fd);
         }
       }
     },
     handleFileUpload() {
       this.file = this.$refs.myFiles.files[0];
+      this.encode(this.file).then(res => {
+        this.preview = res;
+      });
+
       this.filename = this.trimString(this.file.name);
     },
     trimString(string) {
@@ -253,6 +256,8 @@ export default {
         .post(this.$_CONFIG.userRequestURL + "upload", post)
         .then(res => {
           if (!res.data.error) {
+            console.log(this.this_parent.images);
+
             this.this_parent.images.push(res.data.data);
             this.this_parent.loading = false;
             this.notify("File uploaded Sucessfully!", res.data.data, false);

@@ -9,14 +9,26 @@
     :search="search"
     :items-per-page="10"
     class="elevation-1"
-  ></v-data-table>
+  >
+    <template v-slot:item.action="{ item }">
+      <StatsInfo
+        :location="item.location"
+        :datasets="[item.Waste ,item.Crime , item.Accidents]"
+      />
+    </template>
+
+  </v-data-table>
 </template>
 <script>
+import StatsInfo from "./StatsInfo";
 export default {
   props: {
     headers: Array,
     data: Array,
-    search:String
+    search: String
+  }
+  , components: {
+    StatsInfo
   }
 }
 </script>

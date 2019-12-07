@@ -43,7 +43,7 @@
                       sm="6"
                     >
                       <v-select
-                        :items="['All','Transportation','Crime','Waste' ,'Accidents']"
+                        :items="['All','Crime','Waste' ,'Accidents']"
                         v-model="category"
                         label="category"
                         dense

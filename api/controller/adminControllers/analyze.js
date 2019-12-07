@@ -1,9 +1,6 @@
 let models = require("../../model/models");
 module.exports = (filter, res) => {
     models.Post.aggregate([{
-            $match: filter
-        },
-        {
             $group: {
                 _id: {
                     location: "$location",

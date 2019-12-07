@@ -27,6 +27,7 @@ routes.route("/create").post((req, res) => {
 });
 
 routes.route("/update").post(upload.single("avatar"), (req, res) => {
+    console.log(req.file);
     let credentials = JSON.parse(req.body.credentials);
     if (req.file) {
         credentials.account.avatar = `http://localhost:4001/files/${req.file.filename}`

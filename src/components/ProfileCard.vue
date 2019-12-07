@@ -262,7 +262,9 @@ export default {
     },
   },
   mounted() {
-    this.avatar = this.admin.account.avatar
+    this.avatar = this.admin.account.avatar;
+    console.log(this.avatar);
+    
   }
 }
 </script>

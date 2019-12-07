@@ -26,7 +26,6 @@
           @reload="getImages"
         />
         <br />
-        <Modal/>
       </div>
 
     </v-container>
@@ -35,7 +34,6 @@
 </template>
 <script>
 /* eslint-disable */
-import Modal from "@/components/Modal.vue";
 import Snackbar from "@/components/Snackbar.vue";
 import DeletePrompt from "@/components/DeletePrompt.vue";
 import axios from "axios";
@@ -61,25 +59,12 @@ export default {
     };
   },
   components: {
-    Modal,
     Snackbar,
     Feed,
   },
 
   methods: {
 
-    reset() {
-      this.cardTitle = "Add new Image";
-      this.buttonTitle = "Upload";
-      this.isUpdate = false;
-      this.uploading = false;
-      var modal = this.$refs.modal;
-      modal.filename = "No file selected!";
-      modal.file = { empty: true };
-      modal.tag = "";
-      modal.description = "";
-      modal.color = "red";
-    },
     prompt(id) {
       this.$refs.prompt.dialog = true;
     },

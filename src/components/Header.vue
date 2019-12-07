@@ -1,6 +1,6 @@
 <template>
   <v-app-bar fixed>
-    <v-toolbar-title @click="$router.push('/user')">PicTalk | Profile</v-toolbar-title>
+    <v-toolbar-title @click="$router.push('/user')">PicTalk | {{$route.name}}</v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items>
       <v-btn
@@ -11,8 +11,8 @@
       <v-btn
         text
         v-if=" admin.account.role == 'admin'"
-        @click="$router.push('/')"
-      >Analytics</v-btn>
+        @click="$route.name!=='Dashboard'?$router.push('/analytics'):''"
+      >Dashboard</v-btn>
       <v-btn
         text
         @click="logout"

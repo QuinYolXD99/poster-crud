@@ -1,21 +1,6 @@
 <template>
   <v-card height="100%">
-    <v-toolbar>
-      <v-toolbar-title @click="$router.push('/user')">PicTalk | Analytics <strong>2019</strong></v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-toolbar-items>
-        <v-btn
-          text
-          @click="$router.push('/profile')"
-        >Profile</v-btn>
-        <v-btn
-          text
-          @click="logout"
-        >
-          <v-icon>mdi-logout</v-icon>Logout
-        </v-btn>
-      </v-toolbar-items>
-    </v-toolbar>
+
     <v-container fluid>
       <v-row
         justify="center"

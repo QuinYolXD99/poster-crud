@@ -29,11 +29,8 @@
             ref="form"
             lazy-validation
           >
-            <v-row
-              
-              class="justify-center px-md-10"
-            >
-            <br>
+            <v-row class="justify-center px-md-10">
+              <br>
               <img
                 :src="preview"
                 v-if="file"

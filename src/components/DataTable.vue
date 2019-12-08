@@ -7,13 +7,18 @@
     no-data-text="No records Yet"
     no-results-text="No results"
     :search="search"
-    :items-per-page="10"
+    :sort-by="['item.total']"
+    :sort-desc="[true]"
+    :items-per-page="page==0?10:12"
     class="elevation-1"
   >
     <template v-slot:item.action="{ item }">
       <StatsInfo
-        :location="item.location"
-        :datasets="[item.Waste ,item.Crime , item.Accidents]"
+        v-if="item.total !== 0"
+        :location="item.location?item.location:''"
+        :category="item.category?item.category:''"
+        :month="item.month?item.month:''"
+        :datasets="mode=='Location'?[item.Waste ,item.Crime , item.Accidents]:[item.reports.Waste,item.reports.Crime,item.reports.Accidents]"
       />
     </template>
 
@@ -23,12 +28,14 @@
 import StatsInfo from "./StatsInfo";
 export default {
   props: {
+    mode:String,
     headers: Array,
     data: Array,
-    search: String
+    search: String,
+    page: Number
   }
   , components: {
     StatsInfo
-  }
+  },
 }
 </script>

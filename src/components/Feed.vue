@@ -34,19 +34,6 @@
       <v-list-item-subtitle>Date Posted : {{`${details.createdAt.month}/${details.createdAt.date}/${details.createdAt.year}`}}</v-list-item-subtitle>
       <v-list-item-subtitle v-if="details.updatedAt">Last Updated : {{`${details.updatedAt.month}/${details.updatedAt.date}/${details.updatedAt.year}`}}</v-list-item-subtitle>
     </v-card-text>
-    <v-divider></v-divider>
-    <v-card-actions v-if="details.user.account._id == this.user.account._id">
-      <v-spacer></v-spacer>
-      <!-- <UpdateModal :post="details"/> -->
-
-      <v-btn
-        small
-        icon
-        @click="deletePost(details._id)"
-      >
-        <v-icon color="pink">mdi-delete</v-icon>
-      </v-btn>
-    </v-card-actions>
   </v-card>
 </template>
 <script>

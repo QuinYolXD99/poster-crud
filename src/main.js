@@ -5,6 +5,7 @@ import vuetify from "./plugins/vuetify";
 import Axios from "axios";
 import jwt_decode from 'jwt-decode';
 import { configs } from './config/config';
+
 Vue.config.productionTip = false;
 Vue.prototype.$axios = Axios;
 Vue.prototype.$jwt_decode = jwt_decode;

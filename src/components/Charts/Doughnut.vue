@@ -9,9 +9,9 @@ export default {
       labels: ['Waste', 'Crime', 'Accidents'],
       datasets: [{
         backgroundColor: [
-          '#41B883',
+          '#57AD48',
           '#E46651',
-          '#00D8FF'
+          'orange',
         ],
         data: this.datasets
       }]
@@ -25,7 +25,7 @@ export default {
         animation: {
           animateRotate: false
         }
-      })
+      })      
   }
 };
 </script>

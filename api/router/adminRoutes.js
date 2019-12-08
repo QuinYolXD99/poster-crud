@@ -40,8 +40,15 @@ routes.route("/deleteProfile/:id").get((req, res) => {
     controller.delete(req.params.id, res);
 });
 
-routes.route("/analyze").post((req, res) => {
-    controller.analyze(req.body, res);
+routes.route("/analyzeByLocation").get((req, res) => {
+    controller.analyzeByLocation(res);
 });
 
+routes.route("/analyzeByCategory").get((req, res) => {
+    controller.analyzeByCategory(res);
+});
+
+routes.route("/analyzeByMonth").get((req, res) => {
+    controller.analyzeByMonth(res);
+});
 module.exports = routes;

@@ -266,7 +266,7 @@ export default {
     },
     logout() {
       localStorage.removeItem("token")
-      this.$router.push("/admin/account/login")
+      this.$router.push("/account/account/login")
     },
 
     sendQuery(query) {

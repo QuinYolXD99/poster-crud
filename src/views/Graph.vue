@@ -7,9 +7,10 @@
       <template v-slot:activator="{ on }">
         <v-icon
           small
+          color="pink"
           v-on="on"
         >
-          mdi-information
+          mdi-chart-bar
         </v-icon>
       </template>
       <v-card>
@@ -23,9 +24,7 @@
             :datasets="datasets"
           />
         </v-card-text>
-
         <v-divider></v-divider>
-
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn

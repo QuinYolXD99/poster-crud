@@ -23,7 +23,6 @@
         <Feed
           :details="details"
           :user="account"
-          @reload="getImages"
         />
         <br />
       </div>
@@ -126,7 +125,7 @@ export default {
   },
   mounted() {
     if (isNullOrUndefined(localStorage.getItem("token"))) {
-      this.$router.replace("/user/account/login");
+      this.$router.replace("/account/user/Login");
     } else {
       this.account = JSON.parse(localStorage.getItem("token"));
       this.getImages();

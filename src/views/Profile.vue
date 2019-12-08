@@ -1,8 +1,8 @@
 <template>
-  <v-card color="blue lighten-5"
+  <v-card
+    color="blue lighten-5"
     height="100%"
     flat
-    
   >
     <v-card-text>
       <v-row
@@ -11,15 +11,16 @@
       >
         <v-col
           cols="12"
-          md="5"
-          sm="5"
-          lg="5"
+          :md="admin.account.role=='user'?5:12"
+          :sm="admin.account.role=='user'?5:12"
+          :lg="admin.account.role=='user'?5:12"
           justify-self="center"
           align-self="center"
         >
           <ProfileCard :admin="admin" />
         </v-col>
         <v-col
+          v-if="admin.account.role == 'user'"
           md="7"
           sm="7"
           lg="7"
@@ -35,38 +36,11 @@
               <v-toolbar-title>Activities</v-toolbar-title>
 
               <v-spacer></v-spacer>
-
-              <v-toolbar-items v-if="!$vuetify.breakpoint.smAndUp">
-                <v-btn
-                  large
-                  icon
-                >
-                  <v-icon>mdi-graph</v-icon>
-                </v-btn>
-                <v-btn
-                  large
-                  icon
-                >
-                  <v-icon>mdi-plus-circle</v-icon>
-                </v-btn>
-              </v-toolbar-items>
-
               <template v-if="$vuetify.breakpoint.smAndUp">
-                <v-btn
-                  large
-                  icon
-                  color="pink"
-                >
-                  <v-icon>mdi-graph</v-icon>
-                </v-btn>
-                <!-- <v-btn
-                  large
-                  icon
-                  color="pink"
-                >
-                  <v-icon>mdi-plus-circle</v-icon>
-                </v-btn> -->
-                <Modal />
+                <Modal
+                  @notify="addNotif"
+                  @addLogs="updateLogs"
+                />
               </template>
             </v-toolbar>
             <v-sheet
@@ -118,11 +92,8 @@ export default {
       text: "",
       notif: false,
       admin: JSON.parse(localStorage.getItem('token')),
-      menu: [
-        { icon: 'home', title: 'Link A' },
-        { icon: 'info', title: 'Link B' },
-        { icon: 'warning', title: 'Link C' }
-      ]
+
+      logs: []
     };
   },
   components: {
@@ -130,8 +101,12 @@ export default {
     Modal: () => import("../components/Modal"),
   },
   methods: {
-    menuItems() {
-      return this.menu
+    updateLogs(log) {
+      this.logs.push(log)
+    },
+    addNotif(message) {
+      this.text = message;
+      this.notif = true;
     }
   },
   mounted() {

@@ -2,7 +2,6 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Dashboard from "../views/Dashboard.vue";
 import Home from "../views/Home.vue";
-import UserSignUp from "../views/UserSignUp.vue";
 import Login from "../views/LoginSignup.vue";
 import NotFound from "../views/404.vue";
 import { isNullOrUndefined } from "util";
@@ -10,14 +9,9 @@ import { isNullOrUndefined } from "util";
 Vue.use(VueRouter);
 
 const routes = [{
-        path: "/test",
-        component: () =>
-            import ("../views/Analytics")
-    },
-    {
         path: "/",
         redirect: {
-            path: isNullOrUndefined(localStorage.getItem("token")) ? '/analytics/' : "/user/account/Signup"
+            path: isNullOrUndefined(localStorage.getItem("token")) ? '/analytics/' : "/account/user/Login"
         }
     }, {
         path: "/analytics",
@@ -25,14 +19,20 @@ const routes = [{
         component: Dashboard,
         beforeEnter: (to, from, next) => {
             if (isNullOrUndefined(localStorage.getItem("token"))) {
-                next("/user/account/Signup");
+                next("/account/user/Signup");
             } else {
                 if (JSON.parse(localStorage.getItem("token")).account.role == "admin") {
                     next();
                 } else {
-                    next("/user");
+                    next("/404");
                 }
             }
+        }
+    },
+    {
+        path: "/404",
+        redirect: {
+            path: "*"
         }
     },
     {
@@ -47,37 +47,30 @@ const routes = [{
             import ('../views/Profile'),
         beforeEnter: (to, from, next) => {
             if (isNullOrUndefined(localStorage.getItem("token"))) {
-                next("/user/account/Signup");
+                next("/account/user/Login");
             } else {
                 next();
             }
         }
     },
     {
-        path: "/user/account/:page?",
-        component: UserSignUp,
-        beforeEnter: (to, from, next) => {
-            if (!isNullOrUndefined(localStorage.getItem("token"))) {
-                next("/user/");
-            } else {
-                next();
-            }
-        }
-    },
-    {
-        path: "/user",
+        path: "/feeds",
         name: "Home",
         component: Home,
         beforeEnter: (to, from, next) => {
             if (isNullOrUndefined(localStorage.getItem("token"))) {
-                next("/user/account/Signup");
+                next("/account/user/Signup");
             } else {
-                next();
+                if (JSON.parse(localStorage.getItem("token")).account.role == "admin") {
+                    next();
+                } else {
+                    next("/404");
+                }
             }
         }
     },
     {
-        path: "/admin/account/:page?",
+        path: "/account/:user/:page?",
         component: Login,
         props: true,
         beforeEnter: (to, from, next) => {

@@ -188,7 +188,7 @@ export default {
       dialog: false,
       file: null,
       upload_indicator: false,
-      categories: ["Transportation", "Crime", "Waste", "Accidents"]
+      categories: [ "Crime", "Waste", "Accidents"]
     };
   },
   methods: {
@@ -250,15 +250,15 @@ export default {
         .then(res => {
           this.upload_indicator = false;
           if (!res.data.error) {
-            this.notify("Updated Sucessfully!");
+            this.$emit('reload')
             this.closeDialog();
           } else {
-            this.notify("Update failed!", null);
+            this.$emit('notify',"Update failed!");
           }
         })
         .catch(err => {
           this.upload_indicator = false;
-          this.notify("Update failed!", null);
+          this.$emit('notify',"Update failed!");
           console.error(err); // eslint-disable-line no-console
         });
     },
@@ -269,12 +269,13 @@ export default {
         .post(this.$_CONFIG.userRequestURL + "upload", post)
         .then(res => {
           if (!res.data.error) {
-            this.notify("File uploaded Sucessfully!");
+            this.$emit('addLogs', res.data.data)
+            this.$emit('notify,', "File uploaded Sucessfully!");
             this.closeDialog();
           }
         })
         .catch(err => {
-          this.notify("Upload failed!", null);
+          this.$emit('notify,', "Upload Failed");
           console.error(err); // eslint-disable-line no-console
         });
     },
@@ -284,11 +285,7 @@ export default {
       this.filename = "No file selected!";
       this.file = null;
     },
-    notify(msg) {
-      this.$emit("message", {
-        msg
-      });
-    }
+
   },
   mounted() {
     if (!this.isUpdate) {

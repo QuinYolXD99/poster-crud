@@ -3,5 +3,7 @@ module.exports = {
     login: require('./adminControllers/login'),
     update: require('./adminControllers/update'),
     delete: require('./adminControllers/delete_account'),
-    analyze: require('./adminControllers/analyze'),
+    analyzeByLocation: require('./adminControllers/analyzeByLocation'),
+    analyzeByCategory: require('./adminControllers/analyzeByCategory'),
+    analyzeByMonth: require('./adminControllers/analyzeByMonth'),
 }

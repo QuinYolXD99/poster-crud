@@ -4,6 +4,11 @@
     <v-spacer></v-spacer>
     <v-toolbar-items>
       <v-btn
+        v-if="$route.path!=='/feeds'"
+        text
+        @click="$router.push('/feeds')"
+      >Reports</v-btn>
+      <v-btn
         v-if="$route.path!=='/profile'"
         text
         @click="$router.push('/profile')"
@@ -26,7 +31,7 @@
 import { isNull } from 'util';
 export default {
   name: 'Header',
-  components:{
+  components: {
   },
   data() {
     return {
@@ -35,8 +40,8 @@ export default {
   },
   methods: {
     logout() {
+      this.$router.push(`/account/${this.admin.role}/login`);
       localStorage.removeItem("token");
-      this.$router.push("/user/account/login");
     },
   }
 }

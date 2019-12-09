@@ -57,6 +57,13 @@ export default {
   data() {
     return {
       dialog: false,
+        items: [
+         { text: 'Category', icon: 'mdi-filter' },
+        { text: 'Description', icon: ' mdi-message' },
+        { text: 'Location', icon: ' mdi-map-marker' },
+        { text: 'Date Posted', icon: 'mdi-clock' }
+       
+      ],
     }
   },
 }

@@ -24,6 +24,7 @@ const routes = [{
                 if (JSON.parse(localStorage.getItem("token")).account.role == "admin") {
                     next();
                 } else {
+                    console.log("here")
                     next("/404");
                 }
             }
@@ -75,7 +76,7 @@ const routes = [{
         props: true,
         beforeEnter: (to, from, next) => {
             if (!isNullOrUndefined(localStorage.getItem("token"))) {
-                next("/");
+                next("/profile");
             } else {
                 next();
             }

@@ -1,11 +1,14 @@
 let models = require("../../model/models");
 module.exports = (reqBody, res) => {
-    models.User.remove({ _id: reqBody._id }, (err) => {
+    models.User.findById({ _id: reqBody._id }, { $set: { disabled: true } }, { new: true }, (err, saved) => {
         if (err) {
             res.status(200).send({ error: { body: err, status: true }, success: false })
         } else {
-            console.log("test");
-            res.status(200).send({ error: false, success: true })
+            if (saved) {
+                res.status(200).send({ error: false, success: true })
+            } else {
+                res.status(200).send({ error: { body: err, status: true }, success: false })
+            }
         }
     })
 

@@ -1,10 +1,10 @@
 <template>
   <v-app-bar fixed>
-    <v-toolbar-title @click="$router.push('/user')">PicTalk | {{$route.name}}</v-toolbar-title>
+    <v-toolbar-title @click="admin.account.role !== 'user'?$router.push('/feeds'):''">PicTalk | {{$route.name}}</v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items>
       <v-btn
-        v-if="$route.path!=='/feeds'"
+        v-if="$route.path!=='/feeds' && admin.account.role !== 'user'"
         text
         @click="$router.push('/feeds')"
       >Reports</v-btn>
@@ -15,7 +15,7 @@
       >Profile</v-btn>
       <v-btn
         text
-        v-if=" admin.account.role == 'admin'"
+        v-if=" admin.account.role !== 'user'"
         @click="$route.name!=='Dashboard'?$router.push('/analytics'):''"
       >Dashboard</v-btn>
       <v-btn
@@ -43,7 +43,8 @@ export default {
       this.$router.push(`/account/${this.admin.role}/login`);
       localStorage.removeItem("token");
     },
-  }
+  },
+
 }
 </script>
 

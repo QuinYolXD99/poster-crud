@@ -1,8 +1,8 @@
 let models = require("../../model/models");
 const bcrypt = require("bcryptjs");
 
-module.exports = function (credentials, res) {
-    models.User.findOne({ 'account.username': credentials.username }, (err, admin) => {
+module.exports = function(credentials, res) {
+    models.User.findOne({ 'account.username': credentials.username, 'account.disabled': false }, (err, admin) => {
         if (err) {
             res.json(err);
         } else {

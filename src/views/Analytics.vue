@@ -153,10 +153,11 @@
         justify="end"
         align="center"
       >
-        <v-col justify="center"
-        align="center">
+        <v-col
+          justify="center"
+          align="center"
+        >
           <v-btn
-            
             width="200"
             large
             color="black"
@@ -182,7 +183,6 @@ export default {
       location: "All",
       category: "All",
       months: [
-        "All",
         "January",
         "February",
         "March",

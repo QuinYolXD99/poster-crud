@@ -169,7 +169,7 @@
                 color="pink"
                 width="49%"
               >
-                <v-icon>mdi-delete-empty</v-icon>delete
+                <v-icon>mdi-delete-empty</v-icon>Delete
               </v-btn>
             </v-col>
           </v-row>

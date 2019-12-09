@@ -48,7 +48,9 @@
               class="overflow-y-auto"
               max-height="540"
             >
-              <v-container style="height: 1000px;"></v-container>
+              <v-container style="height: 1000px;">
+                <ListView />
+              </v-container>
             </v-sheet>
           </v-card>
         </v-col>
@@ -85,19 +87,18 @@
 <script>
 export default {
   name: "container",
-
   data() {
     return {
       dialog: false,
       text: "",
       notif: false,
       admin: JSON.parse(localStorage.getItem('token')),
-
       logs: []
     };
   },
   components: {
     ProfileCard: () => import('../components/ProfileCard'),
+    ListView: () => import("../components/ListView"),
     Modal: () => import("../components/Modal"),
   },
   methods: {

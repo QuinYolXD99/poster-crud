@@ -125,7 +125,7 @@ export default {
   },
   mounted() {
     if (isNullOrUndefined(localStorage.getItem("token"))) {
-      this.$router.replace("/account/user/Login");
+      this.$router.replace("/account/user/Login");      
     } else {
       this.account = JSON.parse(localStorage.getItem("token"));
       this.getImages();

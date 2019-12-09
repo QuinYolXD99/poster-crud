@@ -32,6 +32,7 @@ var profileSchema = new Schema({
 })
 
 var userSchema = new Schema({
+    disabled: { type: Boolean, required: true, default: false },
     account: profileSchema,
     posts: { type: [mongoose.Types.ObjectId], ref: 'Post' }
 }, {
@@ -39,5 +40,5 @@ var userSchema = new Schema({
 });
 
 const Post = mongoose.model("Posts", postSchema);
-const User = mongoose.model("Users", userSchema,"users");
+const User = mongoose.model("Users", userSchema, "users");
 module.exports = { Post, User };

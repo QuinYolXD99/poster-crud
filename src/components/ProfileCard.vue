@@ -64,7 +64,6 @@
               <v-text-field
                 dense
                 label="firstname"
-                v-if="editmode"
                 color="pink"
                 prepend-icon="mdi-account"
                 v-model="user.account.firstname"
@@ -75,7 +74,6 @@
                 label="lastname"
                 dense
                 color="pink"
-                v-if="editmode"
                 v-model="user.account.lastname"
               ></v-text-field>
             </v-col>
@@ -97,6 +95,7 @@
             dense
             label="username"
             v-if="editmode"
+            prepend-icon="mdi-account-circle"
             class="px-2"
             v-model="user.account.username"
           ></v-text-field>
@@ -113,6 +112,7 @@
             dense
             label="contact"
             v-if="editmode"
+            prepend-icon="mdi-phone"
             v-mask="mask"
             class="px-2"
             v-model="user.account.contact"
@@ -128,6 +128,7 @@
         <v-list-item-content>
           <v-text-field
             dense
+            prepend-icon="mdi-key-variant"
             label="new password"
             type="password"
             class="px-2"

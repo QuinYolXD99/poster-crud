@@ -85,7 +85,7 @@ export default {
         });
     },
     getImages() {
-      this.images = [];
+      this.logs = [];
       var url = this.$_CONFIG.userRequestURL + "retrieveAll";
       this.sendImageRequest(url);
     },

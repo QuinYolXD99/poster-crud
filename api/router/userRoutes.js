@@ -6,7 +6,9 @@ const main_contoller = require('../controller/main_contoller');
 //create
 routes.route("/upload").post(upload.single('img'), (req, res) => {
     let details = JSON.parse(req.body.details)
-    details.images = [`http://localhost:4001/files/${req.file.filename}`];
+    if (req.file) {
+        details.images = [`http://localhost:4001/files/${req.file.filename}`];
+    }
     main_contoller.create_post(details, res);
 });
 //retrieve
@@ -20,7 +22,9 @@ routes.route("/retrieveAll").post((req, res) => {
 // update
 routes.route("/update").post(upload.single("avatar"), (req, res) => {
     let credentials = JSON.parse(req.body.credentials);
-    credentials.account.avatar = `http://localhost:4001/files/${req.file.filename}`
+    if (req.file) {
+        credentials.account.avatar = `http://localhost:4001/files/${req.file.filename}`
+    }
     main_contoller.update_Profile(credentials, res);
 });
 

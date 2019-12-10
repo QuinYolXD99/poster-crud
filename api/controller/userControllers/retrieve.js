@@ -1,10 +1,9 @@
 let models = require("../../model/models");
+let mongoose = require('mongoose')
 let retrieveOwn = (id, res) => {
     models.Post
-        .find({ userId: id })
-        .populate('user')
+        .find({ user: mongoose.Types.ObjectId(id), removed: false })
         .exec((err, images) => {
-            console.log(images);
             if (err) {
                 res.status(200).send({ error: { body: err, message: "no images", status: true }, success: false, data: null })
             } else {

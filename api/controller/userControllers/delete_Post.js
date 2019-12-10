@@ -1,12 +1,10 @@
 let models = require("../../model/models");
 module.exports = (reqBody, res) => {
-    models.Post.remove({ _id: reqBody}, (err) => {
+    models.Post.findByIdAndUpdate({ _id: reqBody }, { $set: { removed: true } }, (err) => {
         if (err) {
-            res.status(200).send({ error: { body: err, status: true }, success: false })
+            res.status(500).send({ error: { body: err, status: true }, success: false })
         } else {
             res.status(200).send({ error: false, success: true })
         }
     })
-
 }
-

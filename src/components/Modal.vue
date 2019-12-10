@@ -188,7 +188,7 @@ export default {
       dialog: false,
       file: null,
       upload_indicator: false,
-      categories: [ "Crime", "Waste", "Accidents"]
+      categories: ["Crime", "Waste", "Accidents"]
     };
   },
   methods: {
@@ -253,12 +253,12 @@ export default {
             this.$emit('reload')
             this.closeDialog();
           } else {
-            this.$emit('notify',"Update failed!");
+            this.$emit('notify', "Update failed!");
           }
         })
         .catch(err => {
           this.upload_indicator = false;
-          this.$emit('notify',"Update failed!");
+          this.$emit('notify', "Update failed!");
           console.error(err); // eslint-disable-line no-console
         });
     },
@@ -269,6 +269,7 @@ export default {
         .post(this.$_CONFIG.userRequestURL + "upload", post)
         .then(res => {
           if (!res.data.error) {
+            console.log(res.data);
             this.$emit('addLogs', res.data.data)
             this.$emit('notify,', "File uploaded Sucessfully!");
             this.closeDialog();
@@ -279,10 +280,12 @@ export default {
           console.error(err); // eslint-disable-line no-console
         });
     },
+    notify(message) {
+      this.$emit("notify", message)
+    },
     closeDialog() {
+      this.$refs.form.reset();
       this.dialog = false;
-      this.description = "";
-      this.filename = "No file selected!";
       this.file = null;
     },
 

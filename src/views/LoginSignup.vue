@@ -400,20 +400,23 @@ export default {
       return result_base64;
     },
     toggleForm() {
-      switch (this.signup) {
-        case true:
-          this.title = "Sign up";
-          this.$router.push(`/account/user/${this.title.replace(" ", "")}`);
-          this.step = 1;
-          break;
-        case false:
-          this.title = "Login";
-          this.$router.push(`/account/user/${this.title.replace(" ", "")}`);
-          this.step = 1;
-          break;
+      if (this.$route.params.user == 'user') {
+        switch (this.signup) {
+          case true:
+            this.title = "Sign up";
+            this.$router.push(`/account/user/${this.title.replace(" ", "")}`);
+            this.step = 1;
+            break;
+          case false:
+            this.title = "Login";
+            this.$router.push(`/account/user/${this.title.replace(" ", "")}`);
+            this.step = 1;
+            break;
+        }
+        this.$refs.snackbar.message(this.title);
+        this.reset();
       }
-      this.$refs.snackbar.message(this.title);
-      this.reset();
+
     },
     next() {
       this.step += 1;
@@ -491,8 +494,9 @@ export default {
     }
   },
   mounted() {
-    this.signup = this.$route.params.page !== "Login";
+    this.signup = this.$route.params.page.toLowerCase() !== "login";
     this.reset();
+    this.toggleForm();
   }
 };
 </script>

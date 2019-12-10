@@ -1,13 +1,13 @@
 <template>
   <v-card
-    color="blue lighten-5"
+    id="body"
     height="100%"
-    flat
+    elevation="1"
   >
     <v-card-text>
       <v-row
-        justify="start"
-        align="start"
+        justify="center"
+        align="center"
       >
         <v-col
           cols="12"
@@ -17,7 +17,10 @@
           justify-self="center"
           align-self="center"
         >
-          <ProfileCard :admin="admin" />
+          <ProfileCard
+            :admin="admin"
+            @notify="addNotif"
+          />
         </v-col>
         <v-col
           v-if="admin.account.role == 'user'"
@@ -49,7 +52,11 @@
               max-height="540"
             >
               <v-container style="height: 1000px;">
-                <ListView />
+                <ListView
+                  v-if="logs.length"
+                  :logs="logs"
+                  @removed="removeHandler"
+                />
               </v-container>
             </v-sheet>
           </v-card>
@@ -74,7 +81,7 @@
   position: relative;
   height: 100% !important;
   width: 100% !important;
-  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+  background: linear-gradient( rgba(255,255,255, 0.2), rgba(255,255,255, 0.2)),
     url("https://source.unsplash.com/user/andyjh07");
   background-size: cover !important  ;
   background-position: top center !important;
@@ -103,16 +110,49 @@ export default {
   },
   methods: {
     updateLogs(log) {
-      this.logs.push(log)
+      this.logs.push(log);
     },
     addNotif(message) {
       this.text = message;
       this.notif = true;
+    },
+    getImages() {
+      this.logs = [];
+      var url = this.$_CONFIG.userRequestURL + "retrieve";
+      this.sendImageRequest(url);
+    },
+    sendImageRequest(url) {
+      this.logs = [];
+      this.addNotif("Please wait while we are retrieving your data...");
+      this.loading = true;
+      this.$axios
+        .post(url, { id: this.admin._id })
+        .then(res => {
+          this.logs = res.data.data;
+          if (this.logs.length == 0) {
+            this.addNotif("No activities Available!");
+          }
+        })
+        .catch(err => {
+          if (err) {
+            this.addNotif("Failed to load activities!");
+          }
+        });
+    },
+    removeHandler(val,id) {
+      if (val) {
+        this.addNotif("Delted!");
+        this.getImages();
+      } else {
+        this.addNotif("Delete Failed!");
+
+      }
     }
   },
   mounted() {
     this.admin = JSON.parse(localStorage.getItem("token"));
     this.avatar = this.admin.account.avatar;
+    this.getImages()
   }
 };
 </script>

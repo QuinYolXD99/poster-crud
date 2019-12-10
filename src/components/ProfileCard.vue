@@ -62,7 +62,7 @@
             v-if="editmode"
             outlined
             class="px-2"
-            v-model="admin.account.firstname"
+            v-model="user.account.firstname"
           ></v-text-field>&nbsp;
           <v-text-field
             label="lastname"
@@ -70,12 +70,12 @@
             class="px-2"
             outlined
             v-if="editmode"
-            v-model="admin.account.lastname"
+            v-model="user.account.lastname"
           ></v-text-field>
           <v-list-item-title
             v-if="!editmode"
             class="text-capitalize"
-          >{{`${admin.account.firstname} ${admin.account.lastname}`}}</v-list-item-title>
+          >{{`${user.account.firstname} ${user.account.lastname}`}}</v-list-item-title>
           <v-list-item-subtitle v-if="!editmode">Name</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -90,9 +90,9 @@
             v-if="editmode"
             outlined
             class="px-2"
-            v-model="admin.account.username"
+            v-model="user.account.username"
           ></v-text-field>
-          <v-list-item-title v-if="!editmode">{{admin.account.username}}</v-list-item-title>
+          <v-list-item-title v-if="!editmode">{{user.account.username}}</v-list-item-title>
           <v-list-item-subtitle v-if="!editmode">Username</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -107,9 +107,9 @@
             v-if="editmode"
             outlined
             class="px-2"
-            v-model="admin.account.contact"
+            v-model="user.account.contact"
           ></v-text-field>
-          <v-list-item-title v-if="!editmode">{{admin.account.contact}}</v-list-item-title>
+          <v-list-item-title v-if="!editmode">{{user.account.contact}}</v-list-item-title>
           <v-list-item-subtitle v-if="!editmode">Contact</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -122,8 +122,9 @@
             dense
             label="new password"
             outlined
+            type="password"
             class="px-2"
-            v-model="admin.account.new_password"
+            v-model="user.account.new_password"
           ></v-text-field>
         </v-list-item-content>
       </v-list-item>
@@ -132,14 +133,14 @@
           <v-icon color="pink">mdi-calendar</v-icon>
         </v-list-item-icon>
         <v-list-item-content>
-          <v-list-item-title>{{admin.account.joined}}</v-list-item-title>
+          <v-list-item-title>{{user.account.joined}}</v-list-item-title>
           <v-list-item-subtitle>joined</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
       <v-divider></v-divider>
       <Delete
         ref="prompt"
-        :id="admin._id"
+        :id="user._id"
       />
       <v-list-item dense>
         <v-list-item-content draggable>
@@ -163,7 +164,7 @@
               </v-btn>&nbsp;
               <v-btn
                 text
-                v-if="admin.account.role=='user'"
+                v-if="user.account.role=='user'"
                 outlined
                 @click="$refs.prompt.dialog = true"
                 color="pink"
@@ -212,7 +213,8 @@ export default {
   data() {
     return {
       editmode: false,
-      avatar: null
+      avatar: null,
+      user:this.admin
     }
   },
   components: {
@@ -241,30 +243,35 @@ export default {
       this.$router.push("/user/account/login");
       localStorage.removeItem("token");
     },
-    update() {
-      var url = this.$_CONFIG.adminRequestURL;
-      this.editmode = false;
-      var data = new FormData();
-      data.append("avatar", this.admin.account.avatar);
-      data.append("credentials", JSON.stringify(this.admin));
-      this.$axios
-        .post(url + "update", data)
-        .then(res => {
+    update() {      
+      if (this.user.account.new_password) {
+        if (this.user.account.new_password.length < 8) {
+          this.$emit('notify', "Password too weak")
+        } else {
+          var url = this.$_CONFIG.adminRequestURL;
           this.editmode = false;
-          this.admin = res.data.token;
-          localStorage.setItem("token", JSON.stringify(res.data.token));
-          this.$emit('notify', "Update successful!")
-        })
-        .catch(err => {
-          console.log(err);
-          this.$emit('notify', "Update Failed!")
-        });
+          var data = new FormData();
+          data.append("avatar", this.admin.account.avatar);
+          data.append("credentials", JSON.stringify(this.admin));
+          this.$axios
+            .post(url + "update", data)
+            .then(res => {
+              this.editmode = false;
+              this.user = res.data.token;
+              localStorage.setItem("token", JSON.stringify(res.data.token));
+              this.$emit('notify', "Update successful!")
+            })
+            .catch(err => {
+              console.log(err);
+              this.$emit('notify', "Update Failed!")
+            });
+        }
+      }
+
     },
   },
   mounted() {
     this.avatar = this.admin.account.avatar;
-    console.log(this.avatar);
-    
   }
 }
 </script>

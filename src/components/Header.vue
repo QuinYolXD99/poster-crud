@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     logout() {
-      this.$router.push(`/account/${this.admin.role}/login`);
+      this.$router.replace(`/account/user/login`);
       localStorage.removeItem("token");
     },
   },

@@ -6,6 +6,7 @@ var postSchema = new Schema({
     description: { type: String, required: true },
     title: { type: String, required: true },
     category: { type: String, required: true },
+    removed: { type: Boolean, required: true, default: false },
     createdAt: {
         month: { type: Number, required: true },
         date: { type: Number, required: true },
@@ -34,7 +35,7 @@ var profileSchema = new Schema({
 var userSchema = new Schema({
     disabled: { type: Boolean, required: true, default: false },
     account: profileSchema,
-    posts: { type: [mongoose.Types.ObjectId], ref: 'Post' }
+    posts: { type: [mongoose.Types.ObjectId], ref: 'Posts' }
 }, {
     collection: "users"
 });

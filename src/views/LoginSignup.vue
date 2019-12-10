@@ -1,27 +1,10 @@
 <template>
-  <v-container
-    id="body"
-    fluid
-  >
-    <v-row
-      id="content"
-      align="center"
-      justify="center"
-    >
+  <v-container id="body" fluid>
+    <v-row id="content" align="center" justify="center">
       <v-col>
         <center>
-          <v-card
-            class="mycard mx-10"
-            :disabled="loading"
-            max-width="450"
-          >
-            <v-toolbar
-              color="pink lighten-1"
-              height="100"
-              class="justify-center"
-              dark
-              flat
-            >
+          <v-card class="mycard mx-10" :disabled="loading" max-width="450">
+            <v-toolbar color="pink lighten-1" height="100" class="justify-center" dark flat>
               <v-icon x-large>mdi-camera</v-icon>
               <v-toolbar-title>
                 <span class="display-1">PicTalk</span>
@@ -36,14 +19,8 @@
               ></v-progress-linear>
             </v-toolbar>
 
-            <v-card-text
-              id="card-body"
-              class="px-10"
-            >
-              <v-stepper
-                v-model="step"
-                vertical
-              >
+            <v-card-text id="card-body" class="px-10">
+              <v-stepper v-model="step" vertical>
                 <v-stepper-header>
                   <v-stepper-step
                     step="1"
@@ -74,10 +51,7 @@
                   <br />
                   <br />
                   <v-stepper-content step="1">
-                    <v-form
-                      ref="form1"
-                      lazy-validation
-                    >
+                    <v-form ref="form1" lazy-validation>
                       <!-- for username and password only -->
                       <v-text-field
                         color="pink"
@@ -140,14 +114,8 @@
                       @click="validate"
                     >login</v-btn>
                   </v-stepper-content>
-                  <v-stepper-content
-                    v-if="signup"
-                    step="2"
-                  >
-                    <v-form
-                      ref="form2"
-                      lazy-validation
-                    >
+                  <v-stepper-content v-if="signup" step="2">
+                    <v-form ref="form2" lazy-validation>
                       <v-text-field
                         color="pink"
                         label="Firstname"
@@ -182,12 +150,7 @@
                       ></v-text-field>
                     </v-form>
                     <br />
-                    <v-btn
-                      @click.native="prev"
-                      width="200"
-                      color="pink"
-                      outlined
-                    >Previous</v-btn>
+                    <v-btn @click.native="prev" width="200" color="pink" outlined>Previous</v-btn>
                     <br />
                     <br />
                     <v-btn
@@ -198,10 +161,7 @@
                       @click.native="next"
                     >next</v-btn>
                   </v-stepper-content>
-                  <v-stepper-content
-                    v-if="signup"
-                    step="3"
-                  >
+                  <v-stepper-content v-if="signup" step="3">
                     <v-form ref="form3">
                       <input
                         accept="image/*"
@@ -210,15 +170,8 @@
                         ref="myFiles"
                         hidden
                       />
-                      <v-avatar
-                        v-if="avatar"
-                        size="100"
-                        @click="$refs.myFiles.click()"
-                      >
-                        <img
-                          :src="preview"
-                          alt="dp"
-                        />
+                      <v-avatar v-if="avatar" size="100" @click="$refs.myFiles.click()">
+                        <img :src="preview" alt="dp" />
                       </v-avatar>
                       <v-btn
                         id="cam"
@@ -235,12 +188,7 @@
                       </v-btn>
                     </v-form>
                     <br />
-                    <v-btn
-                      @click="prev"
-                      width="200"
-                      color="pink"
-                      outlined
-                    >Previous</v-btn>
+                    <v-btn @click="prev" width="200" color="pink" outlined>Previous</v-btn>
                     <br />
                     <br />
                     <v-btn
@@ -258,22 +206,11 @@
 
             <v-card-actions v-if="$route.params.user =='user'">
               <v-spacer></v-spacer>
-              <span
-                class="caption"
-                v-if="!signup"
-              >
+              <span class="caption" v-if="!signup">
                 New user ?
-                <v-btn
-                  color="pink"
-                  @click="(signup = true), toggleForm()"
-                  small
-                  text
-                >register here</v-btn>
+                <v-btn color="pink" @click="(signup = true), toggleForm()" small text>register here</v-btn>
               </span>
-              <span
-                class="caption"
-                v-else
-              >
+              <span class="caption" v-else>
                 Already have an account ?
                 <v-btn
                   color="pink"
@@ -367,8 +304,8 @@ export default {
         nameRules: v => /^[A-Z a-z]+$/.test(v) || "Name must be valid",
         min: v => (!!v && v.length >= 8) || "Min 8 characters",
         cont: () =>
-          (this.credentials.contact ===
-            /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{15}$/i),
+          this.credentials.contact ===
+          /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{15}$/i,
         matchPassword: () =>
           this.credentials.password === this.confirm_password ||
           "Passwords don't match !"
@@ -400,7 +337,7 @@ export default {
       return result_base64;
     },
     toggleForm() {
-      if (this.$route.params.user == 'user') {
+      if (this.$route.params.user == "user") {
         switch (this.signup) {
           case true:
             this.title = "Sign up";
@@ -416,7 +353,6 @@ export default {
         this.$refs.snackbar.message(this.title);
         this.reset();
       }
-
     },
     next() {
       this.step += 1;
@@ -437,7 +373,10 @@ export default {
       }, 500);
     },
     validate() {
-      var url = this.$route.params.user == 'admin' ? this.$_CONFIG.adminRequestURL : this.$_CONFIG.userRequestURL;
+      var url =
+        this.$route.params.user == "admin"
+          ? this.$_CONFIG.adminRequestURL
+          : this.$_CONFIG.userRequestURL;
       if (this.signup) {
         this.sendRequest(url + "register");
       } else {
@@ -488,15 +427,18 @@ export default {
     this.step2_completed = this.signup ? this.$refs.form2.validate() : false;
     this.step3_completed = this.avatar;
   },
-  beforeMount() {
-    if (!['user', 'admin'].includes(this.$route.params.user)) {
-      this.$router.push('/404');
-    }
-  },
+
   mounted() {
-    this.signup = this.$route.params.page.toLowerCase() !== "login";
-    this.reset();
-    this.toggleForm();
+    if (
+      !["user", "admin"].includes(this.$route.params.user) ||
+      !this.$route.params.page
+    ) {
+      this.$router.push("/");
+    } else {
+      this.signup = this.$route.params.page.toLowerCase() !== "login";
+      this.reset();
+      this.toggleForm();
+    }
   }
 };
 </script>

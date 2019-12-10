@@ -10,7 +10,7 @@
           <v-spacer></v-spacer>
           <v-divider></v-divider>
         </v-list-item-content>
-        <Info :post="log" />
+        <Info :post="log" @removed="removedHandler" />
       </v-list-item>
     </v-list>
   </v-card>
@@ -24,7 +24,13 @@ export default {
 
   }),
   components: {
-    Info: () => import("./PostInfo")
+    Info: () => import("./PostInfo"),
+
+  },
+  methods:{
+    removedHandler(val){
+      this.$emit("removed",val)
+    }
   }
 }
 </script>

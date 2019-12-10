@@ -1,8 +1,7 @@
 <template>
-  <v-card
-    height="100%"
-    color=""
-  >
+  <v-card height="100%">
+    <br><br>
+    <br>
     <v-tabs
       v-model="tab"
       background-color="transparent"

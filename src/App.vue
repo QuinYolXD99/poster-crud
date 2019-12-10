@@ -2,9 +2,6 @@
   <v-app>
     <div v-if="!$route.path.includes('account')">
       <Header />
-      <br>
-      <br>
-      <br>
     </div>
     <v-content>
       <router-view />

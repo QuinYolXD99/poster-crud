@@ -90,7 +90,7 @@
           <v-spacer></v-spacer>
           <DeletePrompt
             :id="post._id"
-            @removed="removed"
+            @removed="removedHandler"
           />
           <v-btn
             color="secondary"
@@ -120,7 +120,7 @@ export default {
     }
   },
   methods: {
-    removed(id) {
+    removedHandler(id) {
       if (id) {
         this.$emit('removed', true)
       } else {

@@ -1,7 +1,10 @@
 <template>
+
   <v-card
     max-width="400"
+    raised
     class="mx-auto"
+    :elevation="elevation"
   >
     <input
       type="file"
@@ -11,7 +14,7 @@
     />
     <v-img
       :src="`https://source.unsplash.com/user/davidkovalenkoo`"
-      lazy-src="@/assets/bg.jpg"
+      :lazy-src="require('@/assets/bg.jpg')"
       cover
       height="300px"
       dark
@@ -143,7 +146,10 @@
         :id="user._id"
       />
       <v-list-item dense>
-        <v-list-item-content draggable>
+        <v-list-item-content
+          draggable
+          v-if="$route.path!=='/feeds'"
+        >
           <v-row
             v-if="!editmode"
             justify="center"
@@ -189,7 +195,6 @@
                 <v-icon>mdi-check</v-icon>save
               </v-btn>
               <v-btn
-                text
                 color="pink"
                 width="50%"
                 @click="editmode = false  "
@@ -208,13 +213,14 @@
 <script>
 export default {
   props: {
-    admin: Object
+    admin: Object,
+    elevation: Number
   },
   data() {
     return {
       editmode: false,
       avatar: null,
-      user:this.admin
+      user: this.admin
     }
   },
   components: {
@@ -243,32 +249,37 @@ export default {
       this.$router.push("/user/account/login");
       localStorage.removeItem("token");
     },
-    update() {      
+    update() {
       if (this.user.account.new_password) {
         if (this.user.account.new_password.length < 8) {
           this.$emit('notify', "Password too weak")
         } else {
-          var url = this.$_CONFIG.adminRequestURL;
-          this.editmode = false;
-          var data = new FormData();
-          data.append("avatar", this.admin.account.avatar);
-          data.append("credentials", JSON.stringify(this.admin));
-          this.$axios
-            .post(url + "update", data)
-            .then(res => {
-              this.editmode = false;
-              this.user = res.data.token;
-              localStorage.setItem("token", JSON.stringify(res.data.token));
-              this.$emit('notify', "Update successful!")
-            })
-            .catch(err => {
-              console.log(err);
-              this.$emit('notify', "Update Failed!")
-            });
+          this.sendRequest();
         }
+      }else{
+          this.sendRequest();
       }
 
     },
+    sendRequest() {
+      var url = this.$_CONFIG.adminRequestURL;
+      this.editmode = false;
+      var data = new FormData();
+      data.append("avatar", this.admin.account.avatar);
+      data.append("credentials", JSON.stringify(this.admin));
+      this.$axios
+        .post(url + "update", data)
+        .then(res => {
+          this.editmode = false;
+          this.user = res.data.token;
+          localStorage.setItem("token", JSON.stringify(res.data.token));
+          this.$emit('notify', "Update successful!")
+        })
+        .catch(err => {
+          console.log(err);
+          this.$emit('notify', "Update Failed!")
+        });
+    }
   },
   mounted() {
     this.avatar = this.admin.account.avatar;

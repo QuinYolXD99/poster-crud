@@ -1,9 +1,11 @@
 <template>
+
   <v-card
-    id="body"
     height="100%"
     elevation="1"
+    id="body"
   >
+    <br><br><br>
     <v-card-text>
       <v-row
         justify="center"
@@ -20,6 +22,8 @@
           <ProfileCard
             :admin="admin"
             @notify="addNotif"
+            :raised="true"
+            :elevation="11"
           />
         </v-col>
         <v-col
@@ -81,10 +85,10 @@
   position: relative;
   height: 100% !important;
   width: 100% !important;
-  background: linear-gradient( rgba(255,255,255, 0.2), rgba(255,255,255, 0.2)),
-    url("https://source.unsplash.com/user/andyjh07");
+  background:linear-gradient(to bottom, rgba(35,7,77,0.7), rgba(202,80,47,0.4)),
+    url("https://source.unsplash.com/user/davidkovalenkoo");
   background-size: cover !important  ;
-  background-position: top center !important;
+  background-position:  center !important;
   background-attachment: fixed !important;
   background-repeat: no-repeat !important;
   overflow: auto;
@@ -139,10 +143,12 @@ export default {
           }
         });
     },
-    removeHandler(val,id) {
+    removeHandler(val) {
       if (val) {
         this.addNotif("Delted!");
-        this.getImages();
+        setTimeout(() => {
+          this.getImages();
+        }, 500);
       } else {
         this.addNotif("Delete Failed!");
 
@@ -152,7 +158,9 @@ export default {
   mounted() {
     this.admin = JSON.parse(localStorage.getItem("token"));
     this.avatar = this.admin.account.avatar;
-    this.getImages()
+    if (this.admin.account.role == 'user') {
+      this.getImages()
+    }
   }
 };
 </script>

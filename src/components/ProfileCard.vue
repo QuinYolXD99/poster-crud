@@ -137,7 +137,7 @@
         </v-list-item-content>
       </v-list-item>
       <v-list-item>
-        <v-list-item-icon v-if="!editmode">
+        <v-list-item-icon>
           <v-icon color="pink">mdi-calendar</v-icon>
         </v-list-item-icon>
         <v-list-item-content>

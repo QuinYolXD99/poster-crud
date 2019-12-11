@@ -234,6 +234,8 @@ export default {
     console.log(this._updated);
   },
   updated() {
+    console.log(localStorage.getItem('token').length);
+    console.log(JSON.stringify(this.user).length);
     console.log(localStorage.getItem('token').length==JSON.stringify(this.user).length);
   }
 };

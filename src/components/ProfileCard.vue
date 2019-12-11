@@ -156,7 +156,8 @@ export default {
     _updated() {
       return (
         localStorage.getItem("token").length ==
-          JSON.stringify(this.user).length || this.user.new_password == ""
+          JSON.stringify(this.user).length - "new_password".length ||
+        localStorage.getItem("token").length == JSON.stringify(this.user).length
       );
     }
   },

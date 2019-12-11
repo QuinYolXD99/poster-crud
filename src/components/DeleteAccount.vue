@@ -1,10 +1,6 @@
 <template>
   <v-row justify="center">
-    <v-dialog
-      v-model="dialog"
-      persistent
-      max-width="290"
-    >
+    <v-dialog v-model="dialog" persistent max-width="290">
       <v-card>
         <v-card-title class="headline">Delete Account?</v-card-title>
 
@@ -13,17 +9,9 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn
-            color="red darken-1"
-            text
-            @click="deleteProfile"
-          >yes</v-btn>
+          <v-btn color="red darken-1" text @click="deleteProfile">yes</v-btn>
 
-          <v-btn
-            color="green darken-1"
-            text
-            @click="dialog = false"
-          >No</v-btn>
+          <v-btn color="green darken-1" text @click="dialog = false">No</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -34,25 +22,30 @@ export default {
   props: {
     id: String
   },
-  data(){
-    return{
-      dialog:false
-    }
+  data() {
+    return {
+      dialog: false
+    };
   },
   methods: {
     deleteProfile() {
       // var url = this.$_CONFIG.adminRequestURL;
       this.$axios
-        .get("http://localhost:4001/admin/deleteProfile/" + this.id)
-        .then(() => {
+        .get(this.$_CONFIG.userRequestURL + "deleteProfile/" + this.id)
+        .then(res => {
+          console.log(res);
           this.logout();
         })
         .catch(err => {
           console.log(err.response);
-          this.$emit("notify", "Error")
+          this.$emit("notify", "Error");
         });
+    },
+    logout() {
+      localStorage.removeItem("token");  
+      this.$router.replace(`/account/user/Login`);
     }
   }
-}
+};
 </script>
 

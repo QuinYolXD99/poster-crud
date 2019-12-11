@@ -234,7 +234,8 @@ export default {
     console.log(this._updated);
   },
   updated() {
-    console.log(this._updated);
+    console.log(JSON.stringify(this.admin));
+    console.log(JSON.stringify(this.user));
   }
 };
 </script>

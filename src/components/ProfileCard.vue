@@ -1,17 +1,6 @@
 <template>
-
-  <v-card
-    max-width="400"
-    raised
-    class="mx-auto"
-    :elevation="elevation"
-  >
-    <input
-      type="file"
-      ref="avatar"
-      @change="handlePreview"
-      hidden
-    />
+  <v-card max-width="400" raised class="mx-auto" :elevation="elevation">
+    <input type="file" ref="avatar" @change="handlePreview" hidden />
     <v-img
       :src="`https://source.unsplash.com/user/davidkovalenkoo`"
       :lazy-src="require('@/assets/bg.jpg')"
@@ -20,38 +9,18 @@
       dark
       gradient="to top right, rgba(0,0,0,0.5), rgba(0,0,0,0.5)"
     >
-      <v-row
-        align="center"
-        justify="center"
-      >
-
-        <v-avatar
-          size="150"
-          style="margin-top : 20%"
-        >
-          <img
-            :src="`${avatar}`"
-            alt="dp"
-          />
+      <v-row align="center" justify="center">
+        <v-avatar size="150" style="margin-top : 20%">
+          <img :src="`${avatar}`" alt="dp" />
         </v-avatar>
       </v-row>
 
-      <v-overlay
-        :absolute="true"
-        :value="editmode"
-      >
-        <v-btn
-          color="pink"
-          v-if="editmode"
-          @click="$refs.avatar.click()"
-        >Update Avatar</v-btn>
+      <v-overlay :absolute="true" :value="editmode">
+        <v-btn color="pink" v-if="editmode" @click="$refs.avatar.click()">Update Avatar</v-btn>
       </v-overlay>
     </v-img>
     <v-divider></v-divider>
-    <v-list
-      dense
-      class="px-8"
-    >
+    <v-list dense class="px-8">
       <v-list-item>
         <v-list-item-icon v-if="!editmode">
           <v-icon color="pink">mdi-account</v-icon>
@@ -70,12 +39,7 @@
               ></v-text-field>
             </v-col>
             <v-col>
-              <v-text-field
-                label="lastname"
-                dense
-                color="pink"
-                v-model="user.account.lastname"
-              ></v-text-field>
+              <v-text-field label="lastname" dense color="pink" v-model="user.account.lastname"></v-text-field>
             </v-col>
           </v-row>
 
@@ -146,29 +110,12 @@
         </v-list-item-content>
       </v-list-item>
       <v-divider v-if="$route.path!=='/feeds'"></v-divider>
-      <Delete
-        v-if="$route.path!=='/feeds'"
-        ref="prompt"
-        :id="user._id"
-      />
+      <Delete v-if="$route.path!=='/feeds'" ref="prompt" :id="user._id" />
       <v-list-item dense v-if="$route.path!=='/feeds'">
         <v-list-item-content draggable>
-          <v-row
-            v-if="!editmode"
-            justify="center"
-            align="center"
-          >
-            <v-col
-              justify-self="center"
-              align-self="center"
-            >
-              <v-btn
-                text
-                color="pink"
-                outlined
-                @click="toggleEdit()"
-                width="49%"
-              >
+          <v-row v-if="!editmode" justify="center" align="center">
+            <v-col justify-self="center" align-self="center">
+              <v-btn text color="pink" outlined @click="toggleEdit()" width="49%">
                 <v-icon>mdi-pencil</v-icon>Update
               </v-btn>&nbsp;
               <v-btn
@@ -184,25 +131,11 @@
             </v-col>
           </v-row>
           <v-row v-if="editmode">
-            <v-col
-              justify-self="center"
-              align-self="center"
-            >
-              <v-btn
-                color="pink"
-                width="48%"
-                outlined
-                @click="update"
-              >
+            <v-col justify-self="center" align-self="center">
+              <v-btn color="pink" width="48%" outlined @click="update">
                 <v-icon>mdi-check</v-icon>save
               </v-btn>
-              <v-btn
-                color="pink"
-                width="48%"
-                outlined
-                class="ma-1"
-                @click="toggleEdit()"
-              >
+              <v-btn color="pink" width="48%" outlined class="ma-1" @click="toggleEdit()">
                 <v-icon>mdi-wrong</v-icon>cancel
               </v-btn>
             </v-col>
@@ -210,7 +143,6 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
-
   </v-card>
 </template>
 <script>
@@ -226,18 +158,18 @@ export default {
       mask: "+639##-###-####",
       avatar: null,
       user: this.admin
-    }
+    };
   },
   components: {
-    Delete: () => import("./DeleteAccount"),
+    Delete: () => import("./DeleteAccount")
   },
   directives: {
     mask
   },
   methods: {
-    toggleEdit(){
+    toggleEdit() {
       this.editmode = !this.editmode;
-       this.$emit('isEdit', this.editmode)
+      localStorage.setItem("edit", this.editmode);
     },
     handlePreview() {
       this.admin.account.avatar = this.$refs.avatar.files[0];
@@ -264,14 +196,13 @@ export default {
     update() {
       if (this.user.account.new_password) {
         if (this.user.account.new_password.length < 8) {
-          this.$emit('notify', "Password too weak")
+          this.$emit("notify", "Password too weak");
         } else {
           this.sendRequest();
         }
       } else {
         this.sendRequest();
       }
-
     },
     sendRequest() {
       var url = this.$_CONFIG.adminRequestURL;
@@ -285,17 +216,16 @@ export default {
           this.editmode = false;
           this.user = res.data.token;
           localStorage.setItem("token", JSON.stringify(res.data.token));
-          this.$emit('notify', "Update successful!")
+          this.$emit("notify", "Update successful!");
         })
         .catch(err => {
           console.log(err);
-          this.$emit('notify', "Update Failed!")
+          this.$emit("notify", "Update Failed!");
         });
     }
   },
   mounted() {
     this.avatar = this.admin.account.avatar;
-  },
- 
-}
+  }
+};
 </script>

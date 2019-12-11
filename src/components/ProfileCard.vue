@@ -154,7 +154,10 @@ export default {
   },
   computed: {
     _updated() {
-      return localStorage.getItem('token').length==JSON.stringify(this.user).length
+      return (
+        localStorage.getItem("token").length ==
+          JSON.stringify(this.user).length || this.user.new_password == ""
+      );
     }
   },
   data() {
@@ -234,9 +237,11 @@ export default {
     console.log(this._updated);
   },
   updated() {
-    console.log(localStorage.getItem('token').length);
+    console.log(localStorage.getItem("token").length);
     console.log(JSON.stringify(this.user).length);
-    console.log(localStorage.getItem('token').length==JSON.stringify(this.user).length);
+    console.log(
+      localStorage.getItem("token").length == JSON.stringify(this.user).length
+    );
   }
 };
 </script>

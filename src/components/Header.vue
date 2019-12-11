@@ -44,8 +44,8 @@ export default {
   },
   methods: {
     logout() {
-      this.$router.replace(`/account/user/login`);
       localStorage.removeItem("token");
+      this.$router.replace(`/account/user/login`);
     },
   },
 

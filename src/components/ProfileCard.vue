@@ -154,7 +154,7 @@ export default {
   },
   computed: {
     _updated() {
-      return JSON.stringify(this.admin) == JSON.stringify(this.user);
+      return localStorage.getItem('token').length==JSON.stringify(this.user).length
     }
   },
   data() {
@@ -234,8 +234,6 @@ export default {
     console.log(this._updated);
   },
   updated() {
-    console.log(JSON.stringify(this.admin).length);
-    console.log(JSON.stringify(this.user).length);
     console.log(localStorage.getItem('token').length==JSON.stringify(this.user).length);
   }
 };

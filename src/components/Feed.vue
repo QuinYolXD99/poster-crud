@@ -33,7 +33,8 @@
       >
         <v-img
           :src="details.images[0]"
-          height="auto"
+          contain
+          max-height="300"
         ></v-img>
       </a>
       <v-card-text class="title black--text">

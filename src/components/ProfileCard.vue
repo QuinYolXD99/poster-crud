@@ -151,7 +151,7 @@
         ref="prompt"
         :id="user._id"
       />
-      <v-list-item dense>
+      <v-list-item dense v-if="$route.path!=='/feeds'">
         <v-list-item-content draggable>
           <v-row
             v-if="!editmode"
@@ -166,7 +166,7 @@
                 text
                 color="pink"
                 outlined
-                @click="editmode = !editmode"
+                @click="toggleEdit()"
                 width="49%"
               >
                 <v-icon>mdi-pencil</v-icon>Update
@@ -201,7 +201,7 @@
                 width="48%"
                 outlined
                 class="ma-1"
-                @click="editmode = false  "
+                @click="toggleEdit()"
               >
                 <v-icon>mdi-wrong</v-icon>cancel
               </v-btn>
@@ -235,6 +235,10 @@ export default {
     mask
   },
   methods: {
+    toggleEdit(){
+      this.editmode = !this.editmode;
+       this.$emit('isEdit', this.editmode)
+    },
     handlePreview() {
       this.admin.account.avatar = this.$refs.avatar.files[0];
       this.encode(this.admin.account.avatar).then(res => {
@@ -291,6 +295,7 @@ export default {
   },
   mounted() {
     this.avatar = this.admin.account.avatar;
-  }
+  },
+ 
 }
 </script>

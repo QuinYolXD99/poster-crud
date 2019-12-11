@@ -14,7 +14,7 @@
   position: relative;
   height: 100% !important;
   width: 100% !important;
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
     url("https://source.unsplash.com/user/andyjh07");
   background-size: cover !important  ;
   background-position: top center !important;

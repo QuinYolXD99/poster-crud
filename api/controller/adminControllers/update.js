@@ -5,10 +5,6 @@ const update = (reqBody, res) => {
         reqBody.account.password = bcrypt.hashSync(reqBody.account.new_password, 10);
     }
     delete reqBody.account.new_password;
-    console.log(reqBody._id);
-
-
-
     models.User.findByIdAndUpdate(reqBody._id, { $set: { account: reqBody.account } }, { new: true }, (err, saved) => {
         // Handle any possible database errors
         if (err) {

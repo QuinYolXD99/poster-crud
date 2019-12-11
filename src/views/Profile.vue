@@ -8,7 +8,6 @@
     <br><br><br>
     <v-card-text>
       <v-row
-      no-gutters
         justify="center"
         align="center"
       >
@@ -22,12 +21,13 @@
           <ProfileCard
             :admin="admin"
             @notify="addNotif"
+            @isEdit="editmode"
             :raised="true"
             :elevation="11"
           />
         </v-col>
         <v-col
-          v-if="admin.account.role == 'user'"
+          v-if="admin.account.role == 'user' && !editmode"
           md="8"
           sm="8"
           lg="8"
@@ -52,12 +52,18 @@
             </v-toolbar>
             <v-sheet
               id="scrolling-techniques"
-              class="overflow-y-auto"
+              :class="logs.length?'overflow-y-auto':'overflow-y-hidden'"
               max-height="540"
             >
               <v-container style="height: 1000px;">
+                <v-img
+                  v-if="!logs.length"
+                  src="https://www.dailydot.com/wp-content/uploads/e52/31/87610fa1a0ae891d.png"
+                  height="350"
+                  contain
+                ></v-img>
                 <ListView
-                  v-if="logs.length"
+                  v-else
                   :logs="logs"
                   @removed="removeHandler"
                 />
@@ -102,6 +108,7 @@ export default {
     return {
       dialog: false,
       text: "",
+      editmode:false,
       notif: false,
       admin: JSON.parse(localStorage.getItem('token')),
       logs: []
@@ -113,6 +120,9 @@ export default {
     Modal: () => import("../components/Modal"),
   },
   methods: {
+     editHandler(val){
+      this.editmode = val;
+    },
     updateLogs(log) {
       this.logs.push(log);
     },
@@ -153,7 +163,8 @@ export default {
         this.addNotif("Delete Failed!");
 
       }
-    }
+    },
+   
   },
   mounted() {
     this.admin = JSON.parse(localStorage.getItem("token"));

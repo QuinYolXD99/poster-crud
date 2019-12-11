@@ -1,17 +1,32 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="dialog" persistent max-width="290">
+    <v-dialog
+      v-model="dialog"
+      persistent
+      max-width="290"
+    >
       <v-card>
-        <v-card-title class="headline">Delete Account?</v-card-title>
+        <v-card-title class="headline black--text pink lighten-2"><v-icon large color="black" class="ma-2">mdi-account-remove</v-icon>  Delete Account?</v-card-title>
+        <br>
+        <v-card-text class="black--text">Your account will be permanently deleted! Retype the Captcha to proceed.</v-card-text>
 
-        <v-card-text>Your account will be permanently deleted! Do you want to proceed ?</v-card-text>
+       
 
+        <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn color="red darken-1" text @click="deleteProfile">yes</v-btn>
+          <v-btn
+            color="red darken-1"
+            outlined
+            @click="deleteProfile"
+          >yes</v-btn>
 
-          <v-btn color="green darken-1" text @click="dialog = false">No</v-btn>
+          <v-btn
+            color="green darken-1"
+            outlined
+            @click="dialog = false"
+          >No</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -33,7 +48,6 @@ export default {
       this.$axios
         .get(this.$_CONFIG.userRequestURL + "deleteProfile/" + this.id)
         .then(res => {
-          console.log(res);
           this.logout();
         })
         .catch(err => {
@@ -42,10 +56,11 @@ export default {
         });
     },
     logout() {
-      localStorage.removeItem("token");  
+      localStorage.removeItem("token");
       this.$router.replace(`/account/user/Login`);
     }
-  }
+  },
+
 };
 </script>
 

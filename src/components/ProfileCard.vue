@@ -132,7 +132,7 @@
           </v-row>
           <v-row v-if="editmode">
             <v-col justify-self="center" align-self="center">
-              <v-btn color="pink" width="48%" outlined @click="update">
+              <v-btn :disabled="!_updated" color="pink" width="48%" outlined @click="update">
                 <v-icon>mdi-check</v-icon>save
               </v-btn>
               <v-btn color="pink" width="48%" outlined class="ma-1" @click="toggleEdit()">
@@ -152,12 +152,18 @@ export default {
     admin: Object,
     elevation: Number
   },
+  computed:{
+    _updated(){
+      return JSON.stringify(this.admin) == JSON.stringify(this.user)
+    }
+  },
   data() {
     return {
       editmode: false,
       mask: "+639##-###-####",
       avatar: null,
-      user: this.admin
+      user: this.admin,
+     
     };
   },
   components: {
@@ -226,6 +232,8 @@ export default {
   },
   mounted() {
     this.avatar = this.admin.account.avatar;
+    console.log(this._updated);
+    
   }
 };
 </script>

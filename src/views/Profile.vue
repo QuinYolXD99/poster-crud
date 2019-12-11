@@ -19,9 +19,7 @@
             :elevation="11"
           />
         </v-col>
-        <v-col v-if="admin.account.role == 'user' && !isEdit" md="8" sm="8" lg="8">
-          <v-card></v-card>
-
+        <v-col v-if="admin.account.role == 'user' || !isEdit" md="8" sm="8" lg="8">
           <v-card class="overflow-hidden">
             <v-toolbar flat elevation="1">
               <v-toolbar-title>Activities</v-toolbar-title>

@@ -152,9 +152,9 @@ export default {
     admin: Object,
     elevation: Number
   },
-  computed:{
-    _updated(){
-      return JSON.stringify(this.admin) == JSON.stringify(this.user)
+  computed: {
+    _updated() {
+      return JSON.stringify(this.admin) == JSON.stringify(this.user);
     }
   },
   data() {
@@ -162,8 +162,7 @@ export default {
       editmode: false,
       mask: "+639##-###-####",
       avatar: null,
-      user: this.admin,
-     
+      user: this.admin
     };
   },
   components: {
@@ -233,7 +232,9 @@ export default {
   mounted() {
     this.avatar = this.admin.account.avatar;
     console.log(this._updated);
-    
+  },
+  updated() {
+    console.log(this._updated);
   }
 };
 </script>

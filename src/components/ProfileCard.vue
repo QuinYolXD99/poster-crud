@@ -234,8 +234,7 @@ export default {
     console.log(this._updated);
   },
   updated() {
-    console.log(JSON.stringify(this.admin));
-    console.log(JSON.stringify(this.user));
+    console.log(JSON.stringify(this.admin)==JSON.stringify(this.user));
   }
 };
 </script>

@@ -8,14 +8,14 @@
     <br><br><br>
     <v-card-text>
       <v-row
+      no-gutters
         justify="center"
         align="center"
       >
         <v-col
-          cols="12"
-          :md="admin.account.role=='user'?5:12"
-          :sm="admin.account.role=='user'?5:12"
-          :lg="admin.account.role=='user'?5:12"
+          :md="admin.account.role=='user'?4:12"
+          :sm="admin.account.role=='user'?4:12"
+          :lg="admin.account.role=='user'?4:12"
           justify-self="center"
           align-self="center"
         >
@@ -28,9 +28,9 @@
         </v-col>
         <v-col
           v-if="admin.account.role == 'user'"
-          md="7"
-          sm="7"
-          lg="7"
+          md="8"
+          sm="8"
+          lg="8"
         >
           <v-card>
           </v-card>

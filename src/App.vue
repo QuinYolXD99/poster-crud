@@ -1,6 +1,13 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer  temporary v-model="drawer" v-if="$route.name !=='Login'" width="300" app id>
+    <v-navigation-drawer
+      temporary
+      v-model="drawer"
+      v-if="$route.name !=='Login'"
+      width="300"
+      app
+      id
+    >
       <v-img
         :aspect-ratio="16/9"
         height="250"
@@ -14,7 +21,7 @@
             <v-list>
               <v-list-item>
                 <v-list-item-avatar size="100">
-                  <v-img  :src="admin.account.avatar"></v-img>
+                  <v-img :src="admin.account.avatar"></v-img>
                 </v-list-item-avatar>
               </v-list-item>
 
@@ -69,7 +76,10 @@
           </v-list-item-content>
         </v-list-item>
         <!-- reports -->
-        <v-list-item @click="$route.path !== '/feeds'?$router.push('/feeds'):''" v-if=" admin.account.role !== 'user'">
+        <v-list-item
+          @click="$route.path !== '/feeds'?$router.push('/feeds'):''"
+          v-if=" admin.account.role !== 'user'"
+        >
           <v-list-item-icon>
             <v-icon color="pink">mdi-monitor</v-icon>
           </v-list-item-icon>
@@ -78,7 +88,7 @@
             <v-list-item-title>Reports</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <br>
+        <br />
         <v-divider></v-divider>
         <v-list-item>
           <v-list-item-content>
@@ -99,7 +109,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar app hide-on-scroll v-if="$route.name !=='Login'" >
+    <v-app-bar app hide-on-scroll v-if="$route.name !=='Login'">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title>PicTalk | {{$route.name}}</v-toolbar-title>
     </v-app-bar>
@@ -134,11 +144,15 @@ export default {
     source: String
   },
   data: () => ({
-    drawer: false,
-    admin: !isNull(localStorage.getItem("token"))
-      ? JSON.parse(localStorage.getItem("token"))
-      : ""
+    drawer: false
   }),
+  computed: {
+    admin() {
+      return !isNull(localStorage.getItem("token"))
+        ? JSON.parse(localStorage.getItem("token"))
+        : "";
+    }
+  },
   methods: {
     logout() {
       localStorage.clear();

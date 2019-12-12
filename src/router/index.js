@@ -83,7 +83,7 @@ const routes = [{
     }
 },
 {
-    path: "/account/:user/:page?",
+    path: "/account/user/:page?",
     component: Login,
     props: true,
     name: "Login",

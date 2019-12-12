@@ -1,8 +1,6 @@
 <template>
   <v-card height="100%" elevation="1" id="body">
     <br />
-    <br />
-    <br />
     <v-card-text>
       <v-row justify="center" align="center">
         <v-col
@@ -139,6 +137,7 @@ export default {
   },
   mounted() {
     this.admin = JSON.parse(localStorage.getItem("token"));
+    this.admin.account.new_password=""
     this.avatar = this.admin.account.avatar;
     if (this.admin.account.role == "user") {
       this.getImages();

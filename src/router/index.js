@@ -3,12 +3,17 @@ import VueRouter from "vue-router";
 import Dashboard from "../views/Dashboard.vue";
 import Home from "../views/Home.vue";
 import Login from "../views/LoginSignup.vue";
+import News from "../views/News.vue";
 import NotFound from "../views/404.vue";
 import { isNullOrUndefined } from "util";
 
 Vue.use(VueRouter);
 
 const routes = [{
+        path: "/news",
+        component: News
+    },
+    {
         path: "/",
         redirect: {
             path: isNullOrUndefined(localStorage.getItem("token")) ? '/analytics' : "/account/user/Login"
@@ -81,7 +86,8 @@ const routes = [{
                 next();
             }
         }
-    }
+    },
+
 ]
 
 const router = new VueRouter({

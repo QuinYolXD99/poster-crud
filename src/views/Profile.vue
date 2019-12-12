@@ -10,21 +10,16 @@
           justify-self="center"
           align-self="center"
         >
-          <ProfileCard
-            :admin="admin"
-            @notify="addNotif"
-            :raised="true"
-            :elevation="11"
-          />
+          <ProfileCard :admin="admin" @notify="addNotif" :raised="true" @toggled="toggleMode" :elevation="11" />
         </v-col>
-        <v-col v-if="admin.account.role == 'user' || !isEdit" md="8" sm="8" lg="8">
+        <v-col v-if="admin.account.role == 'user' " v-show="!isEdit" md="8" sm="8" lg="8">
           <v-card class="overflow-hidden">
             <v-toolbar flat elevation="1">
               <v-toolbar-title>Activities</v-toolbar-title>
 
               <v-spacer></v-spacer>
               <template v-if="$vuetify.breakpoint.smAndUp">
-                <Modal @notify="addNotif" @addLogs="updateLogs" />
+                <Modal @notify="addNotif" v-if="!isEdit" @addLogs="updateLogs" />
               </template>
             </v-toolbar>
             <v-sheet
@@ -78,15 +73,14 @@ export default {
     return {
       dialog: false,
       text: "",
+      isEdit: false,
       notif: false,
       admin: JSON.parse(localStorage.getItem("token")),
       logs: []
     };
   },
-  computed:{
-    isEdit(){
-      return localStorage.getItem('edit')
-    }
+  computed: {
+    
   },
   components: {
     ProfileCard: () => import("../components/ProfileCard"),
@@ -105,6 +99,9 @@ export default {
       this.logs = [];
       var url = this.$_CONFIG.userRequestURL + "retrieve";
       this.sendImageRequest(url);
+    },
+    toggleMode(val){
+      this.isEdit = val
     },
     sendImageRequest(url) {
       this.logs = [];
@@ -137,12 +134,11 @@ export default {
   },
   mounted() {
     this.admin = JSON.parse(localStorage.getItem("token"));
-    this.admin.account.new_password=""
+    this.admin.account.new_password = "";
     this.avatar = this.admin.account.avatar;
     if (this.admin.account.role == "user") {
       this.getImages();
     }
-    localStorage.setItem("edit", false);
-  }
+  },
 };
 </script>

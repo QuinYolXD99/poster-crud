@@ -338,17 +338,14 @@ export default {
     },
     toggleForm() {
       if (this.$route.params.user == "user") {
-        switch (this.signup) {
-          case true:
-            this.title = "Sign up";
-            this.$router.push(`/account/user/${this.title.replace(" ", "")}`);
-            this.step = 1;
-            break;
-          case false:
-            this.title = "Login";
-            this.$router.push(`/account/user/${this.title.replace(" ", "")}`);
-            this.step = 1;
-            break;
+        if (this.signup) {
+          this.title = "Sign up";
+          this.$router.push(`/account/user/${this.title.replace(" ", "")}`);
+          this.step = 1;
+        } else {
+          this.title = "Login";
+              this.$router.push(`/account/user/${this.title.replace(" ", "")}`);
+              this.step = 1;
         }
         this.$refs.snackbar.message(this.title);
         this.reset();
@@ -416,7 +413,6 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err.response);
           this.loading = false;
           this.$refs.snackbar.message("Something went wrong!");
         });
@@ -434,9 +430,6 @@ export default {
   },
   mounted() {
     this.signup = this.$route.params.page.toLowerCase() !== "login";
-    if (this.$route.params.user == "admin") {
-      this.signup = false;
-    }
     this.reset();
     this.toggleForm();
   }

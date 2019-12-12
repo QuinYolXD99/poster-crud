@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const config = require("./config/DB");
 const routes = require("./router");
 const path = require('path');
+const createAdmin = require("./createAdmin")
 mongoose.Promise = global.Promise;
 console.log("connecting....");
 
@@ -31,7 +32,8 @@ app.use("/admin", routes.adminRoutes);
 app.use("/user", routes.userRoutes);
 
 app.use('/files', express.static(path.join(__dirname, 'public/uploads')))
-    // app.use("/user", routes);
 app.listen(PORT, () => {
+    createAdmin();
     console.log("Server is running on Port:", PORT);
 })
+

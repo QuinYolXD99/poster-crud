@@ -1,36 +1,19 @@
 <template>
   <div>
-    <v-dialog
-      v-model="dialog"
-      max-width="600"
-    >
+    <v-dialog v-model="dialog" max-width="600">
       <template v-slot:activator="{ on }">
-        <v-btn
-          large
-          icon
-          color="pink"
-          v-on="on"
-        >
-          <v-icon>mdi-plus-circle</v-icon>
-        </v-btn>
-
+        <v-btn  small text color="pink" outlined rounded v-on="on">post report</v-btn>
       </template>
 
-      <v-card
-        id="body "
-        max-width="700px"
-      >
+      <v-card id="body " max-width="700px">
         <v-card-title>
           <span class="title text-center">{{item?'Update ':'Create '}}Post</span>
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text class="px-12">
-          <v-form
-            ref="form"
-            lazy-validation
-          >
+          <v-form ref="form" lazy-validation>
             <v-row class="justify-center px-md-10">
-              <br>
+              <br />
               <img
                 :src="preview"
                 v-if="file"
@@ -48,10 +31,7 @@
                 contain
                 @click="$refs.myFiles.click()"
               ></v-img>
-              <v-col
-                cols="12"
-                md="11"
-              >
+              <v-col cols="12" md="11">
                 <v-text-field
                   v-model="title"
                   outlined
@@ -250,15 +230,15 @@ export default {
         .then(res => {
           this.upload_indicator = false;
           if (!res.data.error) {
-            this.$emit('reload')
+            this.$emit("reload");
             this.closeDialog();
           } else {
-            this.$emit('notify', "Update failed!");
+            this.$emit("notify", "Update failed!");
           }
         })
         .catch(err => {
           this.upload_indicator = false;
-          this.$emit('notify', "Update failed!");
+          this.$emit("notify", "Update failed!");
           console.error(err); // eslint-disable-line no-console
         });
     },
@@ -270,25 +250,24 @@ export default {
         .then(res => {
           if (!res.data.error) {
             console.log(res.data);
-            this.$emit('addLogs', res.data.data)
-            this.$emit('notify,', "File uploaded Sucessfully!");
+            this.$emit("addLogs", res.data.data);
+            this.$emit("notify,", "File uploaded Sucessfully!");
             this.closeDialog();
           }
         })
         .catch(err => {
-          this.$emit('notify,', "Upload Failed");
+          this.$emit("notify,", "Upload Failed");
           console.error(err); // eslint-disable-line no-console
         });
     },
     notify(message) {
-      this.$emit("notify", message)
+      this.$emit("notify", message);
     },
     closeDialog() {
       this.$refs.form.reset();
       this.dialog = false;
       this.file = null;
-    },
-
+    }
   },
   mounted() {
     if (!this.isUpdate) {

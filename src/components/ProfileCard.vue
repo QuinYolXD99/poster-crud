@@ -190,7 +190,6 @@
               align-self="center"
             >
               <v-btn
-                :disabled="!$updated"
                 color="pink"
                 width="48%"
                 outlined
@@ -232,11 +231,7 @@ export default {
   components: {
     Delete: () => import("./DeleteAccount")
   },
-  computed: {
-    $updated() {
-      return JSON.stringify(this.user) == localStorage.getItem('token')
-    }
-  },
+
   directives: {
     mask
   },
@@ -244,6 +239,7 @@ export default {
     toggleEdit() {
       this.editmode = !this.editmode;
       localStorage.setItem("edit", this.editmode);
+      this.$emit('toggled' , this.editmode)
     },
     handlePreview() {
       this.admin.account.avatar = this.$refs.avatar.files[0];
@@ -300,7 +296,6 @@ export default {
   },
   mounted() {
     this.avatar = this.admin.account.avatar;
-    
   },
  
 

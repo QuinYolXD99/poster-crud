@@ -1,0 +1,20 @@
+Tools needed
+
+node / npm
+mongodb
+vue cli 
+vue dev tools
+
+instructions
+
+in terminal 
+run cd api then npm install
+then run npm start
+
+then in another terminal 
+run npm install
+then npm run serve
+
+admin : 
+username :  @admin
+password : admin1234

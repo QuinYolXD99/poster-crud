@@ -239,7 +239,7 @@ export default {
     toggleEdit() {
       this.editmode = !this.editmode;
       localStorage.setItem("edit", this.editmode);
-      this.$emit('toggled' , this.editmode)
+      this.$emit('toggled' , this.editmode);
     },
     handlePreview() {
       this.admin.account.avatar = this.$refs.avatar.files[0];
@@ -286,10 +286,13 @@ export default {
           this.editmode = false;
           this.user = res.data.token;
           localStorage.setItem("token", JSON.stringify(res.data.token));
+          localStorage.setItem("avatar", res.data.token.account.avatar);
           this.$emit("notify", "Update successful!");
+          this.$emit("_updated", true);
         })
         .catch(err => {
           console.log(err);
+          this.$emit("_updated", false);
           this.$emit("notify", "Update Failed!");
         });
     }

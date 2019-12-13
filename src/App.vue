@@ -21,7 +21,7 @@
             <v-list>
               <v-list-item>
                 <v-list-item-avatar size="100">
-                  <v-img :src="admin.account.avatar"></v-img>
+                  <v-img :src="avatar"></v-img>
                 </v-list-item-avatar>
               </v-list-item>
 
@@ -115,7 +115,7 @@
     </v-app-bar>
 
     <v-content transition="slide-x-transition">
-      <router-view />
+      <router-view  @_updated="update_content"/>
     </v-content>
   </v-app>
 </template>
@@ -143,21 +143,31 @@ export default {
   props: {
     source: String
   },
+
   data: () => ({
-    drawer: false
+    drawer: false,
+    avatar : ""
   }),
   computed: {
     admin() {
       return !isNull(localStorage.getItem("token"))
         ? JSON.parse(localStorage.getItem("token"))
         : "";
-    }
+    },
   },
   methods: {
+    update_content(val){
+      if (val) {
+        this.avatar = localStorage.getItem("avatar")
+      }
+    },
     logout() {
       localStorage.clear();
       this.$router.replace(`/account/user/login`);
     }
+  },
+  beforeMount(){
+    this.avatar = this.admin.account.avatar
   }
 };
 </script>

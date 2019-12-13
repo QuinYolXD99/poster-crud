@@ -10,7 +10,7 @@
           justify-self="center"
           align-self="center"
         >
-          <ProfileCard :admin="admin" @notify="addNotif" :raised="true" @toggled="toggleMode" :elevation="11" />
+          <ProfileCard :admin="admin" @notify="addNotif" @_updated="updated_" :raised="true" @toggled="toggleMode" :elevation="11" />
         </v-col>
         <v-col v-if="admin.account.role == 'user' " v-show="!isEdit" md="8" sm="8" lg="8">
           <v-card class="overflow-hidden">
@@ -94,6 +94,9 @@ export default {
     addNotif(message) {
       this.text = message;
       this.notif = true;
+    },
+    updated_(val){
+      this.$emit("_updated" , val)
     },
     getImages() {
       this.logs = [];

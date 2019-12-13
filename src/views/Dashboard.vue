@@ -7,13 +7,13 @@
       color="basil"
       grow
     >
-      <v-tab @click="getByLocation()">
+      <v-tab @click.stop="getByLocation()">
         Location
       </v-tab>
-      <v-tab @click="getByCategory()">
+      <v-tab @click.stop="getByCategory()">
         Category
       </v-tab>
-      <v-tab @click="getByMonth()">
+      <v-tab @click.stop="getByMonth()">
         Month
       </v-tab>
     </v-tabs>
@@ -25,6 +25,7 @@
       <v-card-title>
         Results | 2019
         <Graph
+          v-if="!isEmpty"
           :dataTitle="filter"
           :labels="labels"
           :datasets="datasets"
@@ -69,11 +70,13 @@ export default {
       filter: '',
       headers: [],
       records: [],
+      isEmpty: true
     }
   },
   methods: {
     getByLocation() {
-
+      this.labels = []
+      this.datasets = []
       this.filter = "Location";
       this.headers = [
         { text: '', value: 'action', align: 'left', sortable: false },
@@ -136,6 +139,9 @@ export default {
         });
     },
     getByCategory() {
+
+      this.labels = []
+      this.datasets = []
       this.filter = "Category";
       this.records = [];
       this.headers = [
@@ -148,6 +154,9 @@ export default {
         .get(this.$_CONFIG.adminRequestURL + "analyzeByCategory")
         .then(res => {
           this.records = res.data
+          if (this.records.length) {
+            this.isEmpty = false
+          }
           var data = [];
           this.records.map(record => {
             this.labels.includes(record.category) ? '' : this.labels.push(record.category);
@@ -166,6 +175,8 @@ export default {
         });
     },
     getByMonth() {
+      this.labels = []
+      this.datasets = []
       this.page = 12;
       this.filter = "Month";
       var months = [
@@ -198,10 +209,18 @@ export default {
         .get(this.$_CONFIG.adminRequestURL + "analyzeByMonth")
         .then(res => {
           var keep = [];
+          if (res.data.length) {
+            this.isEmpty = false
+          }
           months.map(month => {
             var record = {};
             record.month = month;
-            record.reports = {}
+            record.reports = {
+              Crime: 0,
+              Accidents: 0,
+              Waste: 0,
+            }
+            record.total = 0
             keep.push(record)
           })
 

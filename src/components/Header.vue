@@ -1,5 +1,9 @@
 <template>
-  <v-app-bar fixed>
+  <v-app-bar
+    elevation='11'
+    fixed
+    hide-on-scroll
+  >
     <v-toolbar-title @click="admin.account.role !== 'user'?$router.push('/feeds'):''">PicTalk | {{$route.name}}</v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items>
@@ -40,8 +44,8 @@ export default {
   },
   methods: {
     logout() {
-      this.$router.replace(`/account/user/login`);
       localStorage.removeItem("token");
+      this.$router.replace(`/account/user/login`);
     },
   },
 

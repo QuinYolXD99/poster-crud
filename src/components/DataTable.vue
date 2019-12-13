@@ -9,12 +9,12 @@
     :search="search"
     :sort-by="['item.total']"
     :sort-desc="[true]"
-    :items-per-page="page==0?10:12"
+    :items-per-page="page==0?10:6"
     class="elevation-1"
   >
     <template v-slot:item.action="{ item }">
       <StatsInfo
-        v-if="item.total !== 0"
+        v-if="item.total"
         :location="item.location?item.location:''"
         :category="item.category?item.category:''"
         :month="item.month?item.month:''"
@@ -36,6 +36,6 @@ export default {
   }
   , components: {
     StatsInfo
-  },
+  }
 }
 </script>

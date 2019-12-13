@@ -1,7 +1,9 @@
 <template>
   <v-card
     max-width="400"
+    raised
     class="mx-auto"
+    :elevation="elevation"
   >
     <input
       type="file"
@@ -11,7 +13,7 @@
     />
     <v-img
       :src="`https://source.unsplash.com/user/davidkovalenkoo`"
-      lazy-src="@/assets/bg.jpg"
+      :lazy-src="require('@/assets/bg.jpg')"
       cover
       height="300px"
       dark
@@ -21,7 +23,6 @@
         align="center"
         justify="center"
       >
-
         <v-avatar
           size="150"
           style="margin-top : 20%"
@@ -50,28 +51,32 @@
       class="px-8"
     >
       <v-list-item>
-        <v-list-item-icon>
+        <v-list-item-icon v-if="!editmode">
           <v-icon color="pink">mdi-account</v-icon>
         </v-list-item-icon>
 
         <v-list-item-content>
           <br />
-          <v-text-field
-            dense
-            label="firstname"
-            v-if="editmode"
-            outlined
-            class="px-2"
-            v-model="user.account.firstname"
-          ></v-text-field>&nbsp;
-          <v-text-field
-            label="lastname"
-            dense
-            class="px-2"
-            outlined
-            v-if="editmode"
-            v-model="user.account.lastname"
-          ></v-text-field>
+          <v-row v-if="editmode">
+            <v-col>
+              <v-text-field
+                dense
+                label="firstname"
+                color="pink"
+                prepend-icon="mdi-account"
+                v-model="user.account.firstname"
+              ></v-text-field>
+            </v-col>
+            <v-col>
+              <v-text-field
+                label="lastname"
+                dense
+                color="pink"
+                v-model="user.account.lastname"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+
           <v-list-item-title
             v-if="!editmode"
             class="text-capitalize"
@@ -80,7 +85,7 @@
         </v-list-item-content>
       </v-list-item>
       <v-list-item>
-        <v-list-item-icon>
+        <v-list-item-icon v-if="!editmode">
           <v-icon color="pink">mdi-account-circle</v-icon>
         </v-list-item-icon>
         <v-list-item-content>
@@ -88,7 +93,7 @@
             dense
             label="username"
             v-if="editmode"
-            outlined
+            prepend-icon="mdi-account-circle"
             class="px-2"
             v-model="user.account.username"
           ></v-text-field>
@@ -97,7 +102,7 @@
         </v-list-item-content>
       </v-list-item>
       <v-list-item>
-        <v-list-item-icon>
+        <v-list-item-icon v-if="!editmode">
           <v-icon color="pink">mdi-phone</v-icon>
         </v-list-item-icon>
         <v-list-item-content>
@@ -105,7 +110,8 @@
             dense
             label="contact"
             v-if="editmode"
-            outlined
+            prepend-icon="mdi-phone"
+            v-mask="mask"
             class="px-2"
             v-model="user.account.contact"
           ></v-text-field>
@@ -114,14 +120,14 @@
         </v-list-item-content>
       </v-list-item>
       <v-list-item v-if="editmode">
-        <v-list-item-icon>
+        <v-list-item-icon v-if="!editmode">
           <v-icon color="pink">mdi-key-variant</v-icon>
         </v-list-item-icon>
         <v-list-item-content>
           <v-text-field
             dense
+            prepend-icon="mdi-key-variant"
             label="new password"
-            outlined
             type="password"
             class="px-2"
             v-model="user.account.new_password"
@@ -137,12 +143,16 @@
           <v-list-item-subtitle>joined</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
-      <v-divider></v-divider>
+      <v-divider v-if="$route.path!=='/feeds'"></v-divider>
       <Delete
+        v-if="$route.path!=='/feeds'"
         ref="prompt"
         :id="user._id"
       />
-      <v-list-item dense>
+      <v-list-item
+        dense
+        v-if="$route.path!=='/feeds'"
+      >
         <v-list-item-content draggable>
           <v-row
             v-if="!editmode"
@@ -154,10 +164,10 @@
               align-self="center"
             >
               <v-btn
-                outlined
                 text
                 color="pink"
-                @click="editmode = !editmode"
+                outlined
+                @click="toggleEdit()"
                 width="49%"
               >
                 <v-icon>mdi-pencil</v-icon>Update
@@ -180,20 +190,19 @@
               align-self="center"
             >
               <v-btn
-                text
                 color="pink"
-                width="50%"
-                @click="update"
+                width="48%"
                 outlined
+                @click="update"
               >
                 <v-icon>mdi-check</v-icon>save
               </v-btn>
               <v-btn
-                text
                 color="pink"
-                width="50%"
-                @click="editmode = false  "
+                width="48%"
                 outlined
+                class="ma-1"
+                @click="toggleEdit()"
               >
                 <v-icon>mdi-wrong</v-icon>cancel
               </v-btn>
@@ -202,25 +211,36 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
-
   </v-card>
 </template>
 <script>
+import { mask } from "vue-the-mask";
 export default {
   props: {
-    admin: Object
+    admin: Object,
+    elevation: Number
   },
   data() {
     return {
       editmode: false,
+      mask: "+639##-###-####",
       avatar: null,
-      user:this.admin
-    }
+      user: this.admin,
+    };
   },
   components: {
-    Delete: () => import("./DeleteAccount"),
+    Delete: () => import("./DeleteAccount")
+  },
+
+  directives: {
+    mask
   },
   methods: {
+    toggleEdit() {
+      this.editmode = !this.editmode;
+      localStorage.setItem("edit", this.editmode);
+      this.$emit('toggled' , this.editmode);
+    },
     handlePreview() {
       this.admin.account.avatar = this.$refs.avatar.files[0];
       this.encode(this.admin.account.avatar).then(res => {
@@ -243,35 +263,45 @@ export default {
       this.$router.push("/user/account/login");
       localStorage.removeItem("token");
     },
-    update() {      
+    update() {
       if (this.user.account.new_password) {
         if (this.user.account.new_password.length < 8) {
-          this.$emit('notify', "Password too weak")
+          this.$emit("notify", "Password too weak");
         } else {
-          var url = this.$_CONFIG.adminRequestURL;
-          this.editmode = false;
-          var data = new FormData();
-          data.append("avatar", this.admin.account.avatar);
-          data.append("credentials", JSON.stringify(this.admin));
-          this.$axios
-            .post(url + "update", data)
-            .then(res => {
-              this.editmode = false;
-              this.user = res.data.token;
-              localStorage.setItem("token", JSON.stringify(res.data.token));
-              this.$emit('notify', "Update successful!")
-            })
-            .catch(err => {
-              console.log(err);
-              this.$emit('notify', "Update Failed!")
-            });
+          this.sendRequest();
         }
+      } else {
+        this.sendRequest();
       }
-
     },
+    sendRequest() {
+      var url = this.$_CONFIG.adminRequestURL;
+      this.editmode = false;
+      var data = new FormData();
+      data.append("avatar", this.admin.account.avatar);
+      data.append("credentials", JSON.stringify(this.admin));
+      this.$axios
+        .post(url + "update", data)
+        .then(res => {
+          this.editmode = false;
+          this.user = res.data.token;
+          localStorage.setItem("token", JSON.stringify(res.data.token));
+          localStorage.setItem("avatar", res.data.token.account.avatar);
+          this.$emit("notify", "Update successful!");
+          this.$emit("_updated", true);
+        })
+        .catch(err => {
+          console.log(err);
+          this.$emit("_updated", false);
+          this.$emit("notify", "Update Failed!");
+        });
+    }
   },
   mounted() {
     this.avatar = this.admin.account.avatar;
-  }
-}
+  },
+ 
+
+
+};
 </script>

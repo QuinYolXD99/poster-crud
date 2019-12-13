@@ -18,7 +18,7 @@
 
       <v-card>
         <v-card-title
-          class="headline red darken-2"
+          class="headline red lighten-2"
           primary-title
         >
           Remove Activity
@@ -62,7 +62,7 @@ export default {
   },
   methods: {
     removeActivity() {
-      this.$axios.get(`http://localhost:4001/user/${this.id}`)
+      this.$axios.get(`http://localhost:4001/user/deletePost/${this.id}`)
         .then(res => {
           this.$emit('removed', this.id)
         }).catch(err => {

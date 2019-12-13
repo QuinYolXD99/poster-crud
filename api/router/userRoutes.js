@@ -35,12 +35,13 @@ routes.route("/update_post").post(upload.single("avatar"), (req, res) => {
 });
 // delete
 routes.route("/deletePost/:id").get((req, res) => {
-    console.log(req.params.id);
+
     main_contoller.remove_post(req.params.id, res);
 });
 
-routes.route("/deleteProfile").post((req, res) => {
-    main_contoller.deleteProfile(req.body, res);
+routes.route("/deleteProfile/:id").get((req, res) => {
+    console.log(req.params.id);
+    main_contoller.deleteProfile(req.params.id, res);
 });
 // login
 routes.route("/login").post((req, res) => {

@@ -7,6 +7,7 @@
       <template v-slot:activator="{ on }">
         <v-icon
           v-on="on"
+          color="pink"
           small
         >
           mdi-information

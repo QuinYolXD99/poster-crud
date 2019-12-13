@@ -1,78 +1,49 @@
 <template>
-  <v-card
-    id="body"
-    height="100%"
-    elevation="1"
-  >
+  <v-card height="100%" elevation="1" id="body">
+    <br />
     <v-card-text>
-      <v-row
-        justify="center"
-        align="center"
-      >
+      <v-row justify="center" align="center">
         <v-col
-          cols="12"
-          :md="admin.account.role=='user'?5:12"
-          :sm="admin.account.role=='user'?5:12"
-          :lg="admin.account.role=='user'?5:12"
+          :md="admin.account.role=='user'?4:12"
+          :sm="admin.account.role=='user'?4:12"
+          :lg="admin.account.role=='user'?4:12"
           justify-self="center"
           align-self="center"
         >
-          <ProfileCard
-            :admin="admin"
-            @notify="addNotif"
-          />
+          <ProfileCard :admin="admin" @notify="addNotif" @_updated="updated_" :raised="true" @toggled="toggleMode" :elevation="11" />
         </v-col>
-        <v-col
-          v-if="admin.account.role == 'user'"
-          md="7"
-          sm="7"
-          lg="7"
-        >
-          <v-card>
-          </v-card>
-
+        <v-col v-if="admin.account.role == 'user' " v-show="!isEdit" md="8" sm="8" lg="8">
           <v-card class="overflow-hidden">
-            <v-toolbar
-              flat
-              elevation="1"
-            >
+            <v-toolbar flat elevation="1">
               <v-toolbar-title>Activities</v-toolbar-title>
 
               <v-spacer></v-spacer>
               <template v-if="$vuetify.breakpoint.smAndUp">
-                <Modal
-                  @notify="addNotif"
-                  @addLogs="updateLogs"
-                />
+                <Modal @notify="addNotif" v-if="!isEdit" @addLogs="updateLogs" />
               </template>
             </v-toolbar>
             <v-sheet
               id="scrolling-techniques"
-              class="overflow-y-auto"
+              :class="logs.length?'overflow-y-auto':'overflow-y-hidden'"
               max-height="540"
             >
               <v-container style="height: 1000px;">
-                <ListView
-                  v-if="logs.length"
-                  :logs="logs"
-                  @removed="removeHandler"
-                />
+                <v-img
+                  v-if="!logs.length"
+                  src="https://www.dailydot.com/wp-content/uploads/e52/31/87610fa1a0ae891d.png"
+                  height="350"
+                  contain
+                ></v-img>
+                <ListView v-else :logs="logs" @removed="removeHandler" />
               </v-container>
             </v-sheet>
           </v-card>
         </v-col>
       </v-row>
     </v-card-text>
-    <v-snackbar
-      v-model="notif"
-      :timeout="2000"
-    >
+    <v-snackbar v-model="notif" :timeout="2000">
       {{ text }}
-      <v-btn
-        color="pink"
-        text
-        @click="snackbar = false"
-      >Close</v-btn>
+      <v-btn color="pink" text @click="snackbar = false">Close</v-btn>
     </v-snackbar>
   </v-card>
 </template>
@@ -81,10 +52,14 @@
   position: relative;
   height: 100% !important;
   width: 100% !important;
-  background: linear-gradient( rgba(255,255,255, 0.2), rgba(255,255,255, 0.2)),
-    url("https://source.unsplash.com/user/andyjh07");
+  background: linear-gradient(
+      to bottom,
+      rgba(35, 7, 77, 0.7),
+      rgba(202, 80, 47, 0.4)
+    ),
+    url("https://source.unsplash.com/user/davidkovalenkoo");
   background-size: cover !important  ;
-  background-position: top center !important;
+  background-position: center !important;
   background-attachment: fixed !important;
   background-repeat: no-repeat !important;
   overflow: auto;
@@ -98,15 +73,19 @@ export default {
     return {
       dialog: false,
       text: "",
+      isEdit: false,
       notif: false,
-      admin: JSON.parse(localStorage.getItem('token')),
+      admin: JSON.parse(localStorage.getItem("token")),
       logs: []
     };
   },
+  computed: {
+    
+  },
   components: {
-    ProfileCard: () => import('../components/ProfileCard'),
+    ProfileCard: () => import("../components/ProfileCard"),
     ListView: () => import("../components/ListView"),
-    Modal: () => import("../components/Modal"),
+    Modal: () => import("../components/Modal")
   },
   methods: {
     updateLogs(log) {
@@ -116,10 +95,16 @@ export default {
       this.text = message;
       this.notif = true;
     },
+    updated_(val){
+      this.$emit("_updated" , val)
+    },
     getImages() {
       this.logs = [];
       var url = this.$_CONFIG.userRequestURL + "retrieve";
       this.sendImageRequest(url);
+    },
+    toggleMode(val){
+      this.isEdit = val
     },
     sendImageRequest(url) {
       this.logs = [];
@@ -139,20 +124,24 @@ export default {
           }
         });
     },
-    removeHandler(val,id) {
+    removeHandler(val) {
       if (val) {
         this.addNotif("Delted!");
-        this.getImages();
+        setTimeout(() => {
+          this.getImages();
+        }, 500);
       } else {
         this.addNotif("Delete Failed!");
-
       }
     }
   },
   mounted() {
     this.admin = JSON.parse(localStorage.getItem("token"));
+    this.admin.account.new_password = "";
     this.avatar = this.admin.account.avatar;
-    this.getImages()
-  }
+    if (this.admin.account.role == "user") {
+      this.getImages();
+    }
+  },
 };
 </script>

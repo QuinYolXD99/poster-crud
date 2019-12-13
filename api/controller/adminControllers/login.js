@@ -23,17 +23,14 @@ module.exports = function(credentials, res) {
                         }
                     })
                     .catch(err => {
-                        console.log(err);
                         res.json(err);
                     });
             } else {
-                console.log("not found!");
                 return res.status(200).send({ error: true, auth: false, token: null });
             }
         }
     }).catch(err => {
         if (err) {
-            console.log(err);
             res.status(503).send({ error: true, auth: false, token: null });
         }
     });

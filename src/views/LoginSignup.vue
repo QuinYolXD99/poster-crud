@@ -109,6 +109,7 @@
                       :disabled="!step1_completed"
                       color="pink"
                       outlined
+                      ref="loginBtn"
                       v-else
                       width="200"
                       @click="validate"
@@ -204,7 +205,7 @@
             </v-card-text>
             <v-divider></v-divider>
 
-            <v-card-actions v-if="$route.params.user =='user'">
+            <v-card-actions>
               <v-spacer></v-spacer>
               <span class="caption" v-if="!signup">
                 New user ?
@@ -337,22 +338,17 @@ export default {
       return result_base64;
     },
     toggleForm() {
-      if (this.$route.params.user == "user") {
-        switch (this.signup) {
-          case true:
-            this.title = "Sign up";
-            this.$router.push(`/account/user/${this.title.replace(" ", "")}`);
-            this.step = 1;
-            break;
-          case false:
-            this.title = "Login";
-            this.$router.push(`/account/user/${this.title.replace(" ", "")}`);
-            this.step = 1;
-            break;
-        }
-        this.$refs.snackbar.message(this.title);
-        this.reset();
+      if (this.signup) {
+        this.title = "Sign up";
+        this.$router.push(`/account/user/${this.title.replace(" ", "")}`);
+        this.step = 1;
+      } else {
+        this.title = "Login";
+        this.$router.push(`/account/user/${this.title.replace(" ", "")}`);
+        this.step = 1;
       }
+      this.$refs.snackbar.message(this.title);
+      this.reset();
     },
     next() {
       this.step += 1;
@@ -403,8 +399,11 @@ export default {
           this.loading = false;
           if (res.data.auth) {
             this.$refs.snackbar.message("Welcome " + this.credentials.username);
+            this.$router.replace(`/news`);
+            location.reload();
+            // this.$refs.loginBtn.click();
             localStorage.setItem("token", JSON.stringify(res.data.token));
-            this.$router.push(`/profile`);
+
           } else {
             if (this.signup) {
               if (res.data.exist) {
@@ -416,7 +415,6 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err.response);
           this.loading = false;
           this.$refs.snackbar.message("Something went wrong!");
         });

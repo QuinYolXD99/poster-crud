@@ -28,7 +28,6 @@ module.exports = (res) => {
         if (err) {
             return res.send(err)
         }
-        console.log(data);
         res.send(data)
     })
 }

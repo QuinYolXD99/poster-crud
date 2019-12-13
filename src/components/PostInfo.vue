@@ -33,6 +33,7 @@
             <v-img
               :src="!post.images[0]?placeholder:post.images[0]"
               aspect-ratio="1"
+              contain
               class="grey lighten-2 ma-2"
               max-width="500"
               max-height="300"
@@ -90,7 +91,7 @@
           <v-spacer></v-spacer>
           <DeletePrompt
             :id="post._id"
-            @removed="removed"
+            @removed="removedHandler"
           />
           <v-btn
             color="secondary"
@@ -120,7 +121,7 @@ export default {
     }
   },
   methods: {
-    removed(id) {
+    removedHandler(id) {
       if (id) {
         this.$emit('removed', true)
       } else {

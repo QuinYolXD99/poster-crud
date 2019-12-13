@@ -3,15 +3,27 @@ import VueRouter from "vue-router";
 import Dashboard from "../views/Dashboard.vue";
 import Home from "../views/Home.vue";
 import Login from "../views/LoginSignup.vue";
+import News from "../views/News.vue";
 import NotFound from "../views/404.vue";
 import { isNullOrUndefined } from "util";
 
 Vue.use(VueRouter);
 
 const routes = [{
+    path: "/news",
+    component: News,
+    beforeEnter: (to, from, next) => {
+        if (isNullOrUndefined(localStorage.getItem("token"))) {
+            next("/account/user/Login");
+        } else {
+            next();
+        }
+    }
+},
+{
     path: "/",
     redirect: {
-        path: isNullOrUndefined(localStorage.getItem("token")) ? '/analytics/' : "/account/user/Login"
+        path: isNullOrUndefined(localStorage.getItem("token")) ? '/analytics' : "/account/user/Login"
     }
 }, {
     path: "/analytics",
@@ -32,14 +44,14 @@ const routes = [{
 },
 {
     path: "/404",
-    redirect: {
-        path: "*"
-    }
+    name: "404",
+    component: NotFound
 },
 {
     path: "*",
-    name: "404",
-    component: NotFound
+    redirect: {
+        path: "/404"
+    }
 },
 {
     path: "/profile",
@@ -71,17 +83,19 @@ const routes = [{
     }
 },
 {
-    path: "/account/:user/:page",
+    path: "/account/user/:page?",
     component: Login,
     props: true,
+    name: "Login",
     beforeEnter: (to, from, next) => {
-        if (isNullOrUndefined(localStorage.getItem("token"))) {
-            next();
-        } else {
+        if (!isNullOrUndefined(localStorage.getItem("token"))) {
             next("/profile");
+        } else {
+            next();
         }
     }
-}
+},
+
 ]
 
 const router = new VueRouter({
